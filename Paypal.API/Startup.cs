@@ -7,6 +7,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Paypal.API.Interfaces;
+using Paypal.API.Options;
+using Paypal.API.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,6 +35,8 @@ namespace Paypal.API
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Paypal.API", Version = "v1" });
             });
+            services.Configure<PaypalOptions>(Configuration.GetSection(PaypalOptions.Paypal));
+            services.AddScoped<IPaymentService, PaymentService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Paypal.API.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,12 @@ namespace Paypal.API.Controllers
     [Route("api/payments")]
     public class PaymentController : ControllerBase
     {
+        private readonly IPaymentService _paymentService;
+
+        public PaymentController(IPaymentService paymentService)
+        {
+            _paymentService = paymentService;
+        }
 
         [HttpPost]
         public IActionResult Pay()
@@ -19,9 +26,11 @@ namespace Paypal.API.Controllers
         }
 
         [HttpGet("all")]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            return Ok("Sve kafane zatvorio Lola, od Ilidze pa do Marindvora.");
+            var nesto = _paymentService.GetPaypalHttpClient();
+            var token = await _paymentService.GetPayPalAccessTokenAsync(nesto);
+            return Ok(token);
         }
 
     }
