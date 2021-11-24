@@ -1,3 +1,5 @@
+using IdentityServer4.Models;
+using IdentityServer4.Test;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -6,17 +8,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Paypal.API.Interfaces;
-using Paypal.API.Options;
-using Paypal.API.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Paypal.API
+namespace Identity.API
 {
     public class Startup
     {
@@ -34,26 +32,14 @@ namespace Paypal.API
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Paypal.API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Identity.API", Version = "v1" });
             });
-            services.Configure<PaypalOptions>(Configuration.GetSection(PaypalOptions.Paypal));
-            services.AddScoped<IPaypalService, PaypalService>();
-
-            #region Auth
-            services.AddAuthentication("Bearer")
-             .AddJwtBearer("Bearer", options =>
-             {
-                 options.Authority = "https://localhost:44389";
-                 options.TokenValidationParameters = new TokenValidationParameters
-                 {
-                     ValidateAudience = false
-                 };
-             });
-           /* services.AddAuthorization(options =>
-            {
-                options.AddPolicy("ClientIdPolicy", policy => policy.RequireClaim("client_id", "movieClient", "klijentneki"));
-            });*/
-            #endregion
+            services.AddIdentityServer()
+              .AddInMemoryClients(Config.Clients)
+                .AddInMemoryApiScopes(Config.ApiScopes)
+                .AddInMemoryIdentityResources(Config.IdentityResources)
+                .AddTestUsers(Config.TestUsers)
+                .AddDeveloperSigningCredential();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -63,14 +49,14 @@ namespace Paypal.API
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Paypal.API v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Identity.API v1"));
             }
 
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseIdentityServer();
 
-            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

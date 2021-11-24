@@ -16,18 +16,21 @@ using System.Threading.Tasks;
 namespace Paypal.API.Services
 {
     
-    public class PaymentService :IPaymentService
+    public class PaypalService :IPaypalService
     {
         private readonly PaypalOptions _paypalOptions;
+        private HttpClient paypalClient;
+        private const string sandbox = "https://api-m.sandbox.paypal.com";
 
-        public PaymentService(IOptions<PaypalOptions> paypalOptions)
+        public PaypalService(IOptions<PaypalOptions> paypalOptions)
         {
             _paypalOptions = paypalOptions.Value;
+            paypalClient = GetPaypalHttpClient();
+
         }
 
-        public  HttpClient GetPaypalHttpClient()
+        private HttpClient GetPaypalHttpClient()
         {
-            const string sandbox = "https://api-m.sandbox.paypal.com";
 
             var http = new HttpClient
             {
@@ -38,7 +41,7 @@ namespace Paypal.API.Services
             return http;
         }
 
-        public async Task<PayPalAccessToken> GetPayPalAccessTokenAsync(HttpClient http)
+        public async Task<PayPalAccessToken> GetPayPalAccessTokenAsync()
         {
 
             byte[] bytes = Encoding.GetEncoding("iso-8859-1").GetBytes($"{_paypalOptions.PayPalClientId}:{_paypalOptions.PayPalClientSecret}");
@@ -53,14 +56,14 @@ namespace Paypal.API.Services
 
             request.Content = new FormUrlEncodedContent(form);
 
-            HttpResponseMessage response = await http.SendAsync(request);
+            HttpResponseMessage response = await paypalClient.SendAsync(request);
 
             string content = await response.Content.ReadAsStringAsync();
             PayPalAccessToken accessToken = JsonConvert.DeserializeObject<PayPalAccessToken>(content);
             return accessToken;
         }
 
-        private async Task<PayPalPaymentCreatedResponse> CreatePaypalPaymentAsync(HttpClient http, PayPalAccessToken accessToken)
+        public async Task<PayPalPaymentCreatedResponse> CreatePaypalPaymentAsync(PayPalAccessToken accessToken)
         {
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "v1/payments/payment");
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken.access_token);
@@ -76,27 +79,27 @@ namespace Paypal.API.Services
                 payer = new { payment_method = "paypal" },
                 transactions = JArray.FromObject(new[]
                 {
-            new
-            {
-                amount = new
-                {
-                    total = 7.47,
-                    currency = "USD"
-                }
-            }
-        })
+                    new
+                    {
+                        amount = new
+                        {
+                            total = 7.47,
+                            currency = "USD"
+                        }
+                    }
+                 })
             });
 
             request.Content = new StringContent(JsonConvert.SerializeObject(payment), Encoding.UTF8, "application/json");
 
-            HttpResponseMessage response = await http.SendAsync(request);
+            HttpResponseMessage response = await paypalClient.SendAsync(request);
 
             string content = await response.Content.ReadAsStringAsync();
             PayPalPaymentCreatedResponse paypalPaymentCreated = JsonConvert.DeserializeObject<PayPalPaymentCreatedResponse>(content);
             return paypalPaymentCreated;
         }
 
-        private async Task<PayPalPaymentExecutedResponse> ExecutePaypalPaymentAsync(HttpClient http, PayPalAccessToken accessToken, string paymentId, string payerId)
+        public async Task<PayPalPaymentExecutedResponse> ExecutePaypalPaymentAsync(PayPalAccessToken accessToken, string paymentId, string payerId)
         {
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, $"v1/payments/payment/{paymentId}/execute");
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken.access_token);
@@ -108,7 +111,7 @@ namespace Paypal.API.Services
 
             request.Content = new StringContent(JsonConvert.SerializeObject(payment), Encoding.UTF8, "application/json");
 
-            HttpResponseMessage response = await http.SendAsync(request);
+            HttpResponseMessage response = await paypalClient.SendAsync(request);
             string content = await response.Content.ReadAsStringAsync();
             PayPalPaymentExecutedResponse executedPayment = JsonConvert.DeserializeObject<PayPalPaymentExecutedResponse>(content);
             return executedPayment;

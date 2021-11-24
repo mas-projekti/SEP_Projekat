@@ -3,15 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31229.75
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paypal.API", "Paypal.API\Paypal.API.csproj", "{14026488-ABDE-4AFB-B0A2-3532BEA3FE72}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paypal.API", "Paypal.API\Paypal.API.csproj", "{14026488-ABDE-4AFB-B0A2-3532BEA3FE72}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Paypal", "Paypal", "{2442DC01-40D7-48FD-A210-5A3FC7862DD5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ApiGateways", "ApiGateways", "{3B3A743D-1BA2-4372-9220-351A2F04BBF1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web.PSP.Aggregator", "Web.PSP.Aggregator\Web.PSP.Aggregator.csproj", "{F9008522-A6C9-4093-8534-50AAD98166CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OcelotApiGw", "OcelotApiGw\OcelotApiGw.csproj", "{0E1CA126-21A5-4246-BCE4-9B3338C82F5A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OcelotApiGw", "OcelotApiGw\OcelotApiGw.csproj", "{0E1CA126-21A5-4246-BCE4-9B3338C82F5A}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Identity", "Identity", "{CA23AC2B-9B26-4203-A0D1-77257CA7B2D4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.API", "Identity.API\Identity.API.csproj", "{36AA7A76-3092-4E84-8A56-760F25C346CE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,22 +25,22 @@ Global
 		{14026488-ABDE-4AFB-B0A2-3532BEA3FE72}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{14026488-ABDE-4AFB-B0A2-3532BEA3FE72}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{14026488-ABDE-4AFB-B0A2-3532BEA3FE72}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F9008522-A6C9-4093-8534-50AAD98166CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F9008522-A6C9-4093-8534-50AAD98166CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F9008522-A6C9-4093-8534-50AAD98166CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F9008522-A6C9-4093-8534-50AAD98166CF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0E1CA126-21A5-4246-BCE4-9B3338C82F5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0E1CA126-21A5-4246-BCE4-9B3338C82F5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0E1CA126-21A5-4246-BCE4-9B3338C82F5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0E1CA126-21A5-4246-BCE4-9B3338C82F5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36AA7A76-3092-4E84-8A56-760F25C346CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36AA7A76-3092-4E84-8A56-760F25C346CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36AA7A76-3092-4E84-8A56-760F25C346CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36AA7A76-3092-4E84-8A56-760F25C346CE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{14026488-ABDE-4AFB-B0A2-3532BEA3FE72} = {2442DC01-40D7-48FD-A210-5A3FC7862DD5}
-		{F9008522-A6C9-4093-8534-50AAD98166CF} = {3B3A743D-1BA2-4372-9220-351A2F04BBF1}
 		{0E1CA126-21A5-4246-BCE4-9B3338C82F5A} = {3B3A743D-1BA2-4372-9220-351A2F04BBF1}
+		{36AA7A76-3092-4E84-8A56-760F25C346CE} = {CA23AC2B-9B26-4203-A0D1-77257CA7B2D4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {46C5B46D-88E6-4243-AD59-E803B69C9F5F}

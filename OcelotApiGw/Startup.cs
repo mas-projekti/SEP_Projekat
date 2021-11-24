@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 using System;
@@ -27,7 +28,17 @@ namespace OcelotApiGw
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            var authenticationProviderKey = "IdentityApiKey";
+            services.AddAuthentication()
+            .AddJwtBearer(authenticationProviderKey, x =>
+            {
+                x.Authority = "https://localhost:44389"; 
+                                    
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateAudience = false
+                };
+            });
             services.AddOcelot();
         }
 

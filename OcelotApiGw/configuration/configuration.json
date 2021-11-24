@@ -1,4 +1,5 @@
 {
+  
   "ReRoutes": [
     {
       "DownstreamPathTemplate": "/api/payments/{everything}",
@@ -11,9 +12,12 @@
       ],
       "UpstreamPathTemplate": "/paypal/payments/{everything}",
       "UpstreamHttpMethod": [ "POST", "PUT", "GET", "DELETE" ],
-      "DangerousAcceptAnyServerCertificateValidator": true
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "IdentityApiKey",
+        "AllowedScopes": ["paypal-api"]
+      }
 
-    },
+    }
 
   ],
   "GlobalConfiguration": {

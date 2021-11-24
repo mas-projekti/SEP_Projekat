@@ -12,24 +12,27 @@ namespace Paypal.API.Controllers
     [Route("api/payments")]
     public class PaymentController : ControllerBase
     {
-        private readonly IPaymentService _paymentService;
+        private readonly IPaypalService _paypalService;
 
-        public PaymentController(IPaymentService paymentService)
+        public PaymentController(IPaypalService paymentService)
         {
-            _paymentService = paymentService;
+            _paypalService = paymentService;
         }
 
         [HttpPost]
-        public IActionResult Pay()
+        public async Task<IActionResult> Test()
         {
-            return Ok("Platio si baki, sve je ok");
+            var token = await _paypalService.GetPayPalAccessTokenAsync();
+            var createdPayment = await _paypalService.CreatePaypalPaymentAsync(token);
+            //var executedPayment = await _paypalService.ExecutePaypalPaymentAsync(token, createdPayment.id, "dmsad0a");
+            return Ok(createdPayment);
         }
 
+        [Authorize]
         [HttpGet("all")]
         public async Task<IActionResult> Get()
         {
-            var nesto = _paymentService.GetPaypalHttpClient();
-            var token = await _paymentService.GetPayPalAccessTokenAsync(nesto);
+            var token = await _paypalService.GetPayPalAccessTokenAsync();
             return Ok(token);
         }
 
