@@ -2,7 +2,7 @@
   
   "ReRoutes": [
     {
-      "DownstreamPathTemplate": "/api/payments/{everything}",
+      "DownstreamPathTemplate": "/api/orders/{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -10,11 +10,29 @@
           "Port": 44310
         }
       ],
-      "UpstreamPathTemplate": "/paypal/payments/{everything}",
+      "UpstreamPathTemplate": "/paypal/orders/{everything}",
       "UpstreamHttpMethod": [ "POST", "PUT", "GET", "DELETE" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "IdentityApiKey",
-        "AllowedScopes": ["paypal-api"]
+        "AllowedScopes": [ "paypal-api" ]
+      }
+
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/orders",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44310
+        }
+      ],
+      "UpstreamPathTemplate": "/paypal/orders",
+      "UpstreamHttpMethod": [ "POST", "PUT", "GET", "DELETE" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "IdentityApiKey",
+        "AllowedScopes": [ "paypal-api" ]
       }
 
     }

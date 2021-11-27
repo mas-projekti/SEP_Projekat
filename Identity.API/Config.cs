@@ -26,6 +26,16 @@ namespace Identity.API
                 AllowedScopes = { "paypal-api", "bitcoin-api" }
              },
              new Client
+             {
+                 ClientId = "jasna_skomrak",
+                 AllowedGrantTypes = GrantTypes.ClientCredentials,
+                 ClientSecrets =
+                 {
+                 new Secret("tajnavinoveloze".Sha256())
+                 },
+                AllowedScopes = { "bitcoin-api" }
+             },
+             new Client
                    {
                        ClientId = "klijent_neki_drugi",
                        ClientName = "Amazon",

@@ -18,6 +18,7 @@ namespace OcelotApiGw
 {
     public class Startup
     {
+        private readonly string _cors = "cors";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -28,6 +29,16 @@ namespace OcelotApiGw
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //TODO: Change before production
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: _cors, builder => {
+                    builder.AllowAnyOrigin()
+                           .AllowAnyHeader()
+                           .AllowAnyMethod();
+                });
+            });
+
             var authenticationProviderKey = "IdentityApiKey";
             services.AddAuthentication()
             .AddJwtBearer(authenticationProviderKey, x =>
@@ -51,6 +62,7 @@ namespace OcelotApiGw
             }
 
             app.UseHttpsRedirection();
+            app.UseCors(_cors);
 
             app.UseRouting();
 

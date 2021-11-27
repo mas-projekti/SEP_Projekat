@@ -5,10 +5,9 @@ using System.Threading.Tasks;
 
 namespace Paypal.API.IntegrationModels
 {
-    public class Amount
+    public class SellerProtection
     {
-        public string total { get; set; }
-        public string currency { get; set; }
-        public Details details { get; set; }
+        public string status { get; set; }
+        public string[] dispute_categories { get; set; }
     }
 }

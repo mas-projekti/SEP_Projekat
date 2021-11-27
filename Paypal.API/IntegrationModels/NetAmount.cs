@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace Paypal.API.IntegrationModels
 {
-    public class TransactionFee
+    public class NetAmount
     {
-        public string value { get; set; }
-        public string currency { get; set; }
+        public string currency_code { get; set; }
+        public double value { get; set; }
     }
 }

@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 
 namespace Paypal.API.IntegrationModels
 {
-    public class Details
+    public class Name
     {
-        public string subtotal { get; set; }
+        public string given_name { get;set;}
+        public string surname { get; set; }
     }
 }

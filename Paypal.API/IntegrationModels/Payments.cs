@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace Paypal.API.IntegrationModels
 {
-    public class RelatedResources
+    public class Payments
     {
-        public Sale sale { get; set; }
+        public Capture[] captures { get; set; }
     }
 }

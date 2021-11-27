@@ -7,8 +7,8 @@ namespace Paypal.API.IntegrationModels
 {
     public class Payer
     {
-        public string payment_method { get; set; }
-        public string status { get; set; }
-        public PayerInfo payer_info { get; set; }
+        public string email_address { get; set; }
+        public string payer_id { get; set; }
+        public Name name { get; set; }
     }
 }

@@ -1,4 +1,6 @@
-﻿using Paypal.API.IntegrationModels;
+﻿using Newtonsoft.Json.Linq;
+using Paypal.API.Dto;
+using Paypal.API.IntegrationModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +12,7 @@ namespace Paypal.API.Interfaces
     public interface IPaypalService
     {
         Task<PayPalAccessToken> GetPayPalAccessTokenAsync();
-        Task<PayPalPaymentCreatedResponse> CreatePaypalPaymentAsync(PayPalAccessToken accessToken);
-        Task<PayPalPaymentExecutedResponse> ExecutePaypalPaymentAsync(PayPalAccessToken accessToken, string paymentId, string payerId);
+        Task<PaypalOrderCreatedResponse> CreatePaypalOrderAsync(CreateOrderDto order);
+        Task<PaypalOrderCapturedResponse> CapturePaypalOrderAsync(string orderId);
     }
 }

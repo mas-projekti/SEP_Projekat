@@ -5,9 +5,7 @@ using System.Threading.Tasks;
 
 namespace Paypal.API.IntegrationModels
 {
-    public class RedirectUrls
+    public class Order
     {
-        public string return_url { get; set; }
-        public string cancel_url { get; set; }
     }
 }
