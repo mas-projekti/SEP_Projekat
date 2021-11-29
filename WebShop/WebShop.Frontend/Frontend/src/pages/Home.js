@@ -2,6 +2,18 @@ import Item from "../components/Item"
 import MainBar from "../components/MainBar"
 
 const Home = () => {
+
+    /* 1)   const fetchTasks = async () => {
+            const res = await fetch('http://localhost:5000/tasks')
+            const data = await res.json()
+            return data
+            }
+            
+       2)   {items.map((item, index) => (
+                <Item key={index} item={item} />
+            ))}
+    */
+
     return (
         <div className="page-div" style={{backgroundColor:'black'}}>
             <MainBar/>
