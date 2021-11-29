@@ -10,7 +10,7 @@ const MainBar = () => {
     return (
         <Navbar bg="dark" 
                 variant="dark" 
-                style={{height:'50px'}} 
+                style={{maxHeight:'50px'}} 
                 className="shadow-lg p-4">
                 <Navbar.Brand href="/" >
                     <img
@@ -21,14 +21,19 @@ const MainBar = () => {
                     className="d-inline-block align-top mx-2"/>
                 WebShop MAS
                 </Navbar.Brand>
-                <Navbar.Collapse id="responsive-navbar-nav">
-                    <Nav className="mx-auto">
+                <Navbar.Collapse id="responsive-navbar-nav ">
+                    <Nav className="me-auto ">
                         <Nav.Link href="#query=?">New Items</Nav.Link>
                         <Nav.Link href="#query=?">Best Rated Items</Nav.Link>
                         <input s type="text" placeholder="Enter query" />
                         <button type="button" class="btn btn-outline-light">Search</button>
                     </Nav>
                 </Navbar.Collapse>
+                <Nav>
+                    <Nav.Link href="/about">
+                        About
+                    </Nav.Link>
+                </Nav>
                     {isLoggedIn ?
                         (<Nav>
                             <Nav.Link href="#profile">
@@ -42,13 +47,16 @@ const MainBar = () => {
                         </Nav>)
                         :
                         (<Nav>
-                            <Nav.Link href="#login">
+                            <Nav.Link href="/login">
                                 <img alt={"Lock"}
                                 src={lock}
                                 width="30"
                                 height="30"
                                 className="d-inline-block align-top mx-2"/>
                                 Login
+                            </Nav.Link>
+                            <Nav.Link href="/register">
+                                Register
                             </Nav.Link>
                         </Nav>)
                     }
