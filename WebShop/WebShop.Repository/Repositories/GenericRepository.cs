@@ -38,19 +38,21 @@ namespace WebShop.Repository.Repositories
             return entity;
         }
 
-        public async Task<T> Get(int id)
-        {
-            return await _context.Set<T>().FindAsync(id);
-        }
+        public async Task<T> Get(int id) => await _context.Set<T>().FindAsync(id);
 
-        public async Task<IEnumerable<T>> GetAll()
-        {
-            return await _context.Set<T>().ToListAsync();
-        }
+        public async Task<IEnumerable<T>> GetAll() => await _context.Set<T>().ToListAsync();
 
-        public async Task<T> Update(T entity)
-        {
-            _context.Entry(entity).State = EntityState.Modified;
+
+        public async Task<T> Update(int id, T entity)
+        {       
+            var findEntity = await _context.Set<T>().FindAsync(id);
+            if (findEntity == null)
+            {
+                return findEntity;
+            }
+
+            _context.Entry(findEntity).CurrentValues.SetValues(entity);
+
             await _context.SaveChangesAsync();
             return entity;
         }

@@ -30,6 +30,7 @@ namespace WebShop.Infrastructure.Configurations
                 .IsRequired();
 
             builder.Property(i => i.Price)
+                .HasPrecision(18, 6)
                 .IsRequired();
 
             builder.Property(u => u.CategoryType)

@@ -12,7 +12,7 @@ namespace WebShop.Service.Contract.Services
     {
         Task<IEnumerable<ProductDto>> GetAllProducts();
         Task<ProductDto> GetProductById(int productId);
-        Task<ProductDto> Add(ProductDto newProduct);
+        Task<ProductDto> InsertProduct(ProductDto newProduct);
         Task<ProductDto> UpdateProduct(ProductDto product);
         Task<bool> DeleteProduct(int productId);
     }

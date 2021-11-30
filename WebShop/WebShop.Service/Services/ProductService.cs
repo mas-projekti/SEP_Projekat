@@ -25,25 +25,27 @@ namespace WebShop.Service.Services
             _mapper = mapper;
         }
 
-        public async Task<ProductDto> Add(ProductDto newProduct)
+        public async Task<ProductDto> InsertProduct(ProductDto newProduct)
         {
             ValidateProduct(newProduct);
 
             newProduct.Id = 0;
 
-            return _mapper.Map<ProductDto>(await _productRepository.Add(_mapper.Map<Product>(newProduct)));
+            Product product = await _productRepository.Add(_mapper.Map<Product>(newProduct));
+
+            return _mapper.Map<ProductDto>(product);
         }
 
-        public Task<bool> DeleteProduct(int productId)
+        public async Task<bool> DeleteProduct(int productId)
         {
-            //Product product = await _productRepository.Get(productId);
+            Product product = await _productRepository.Get(productId);
 
-            //if (product == null)
-            //    throw new Exception($"Product with {productId} does not exist!");
+            if (product == null)
+                throw new Exception($"Product with {productId} does not exist!");
 
-            //return await _productRepository.Delete(productId);
+            var condition = await _productRepository.Delete(productId);
 
-            throw new NotImplementedException();
+            return condition != null ? true : false;
 
         }
 
@@ -63,7 +65,7 @@ namespace WebShop.Service.Services
             if (oldProduct == null)
                 throw new Exception($"Product with Id = {updatedProduct.Id} does not exists!");
 
-            return _mapper.Map<ProductDto>(await _productRepository.Update(updatedProduct));
+            return _mapper.Map<ProductDto>(await _productRepository.Update(updatedProduct.Id, updatedProduct));
         }
 
         #region Validations

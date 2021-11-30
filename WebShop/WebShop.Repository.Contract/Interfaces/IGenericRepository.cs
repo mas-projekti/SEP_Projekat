@@ -12,7 +12,7 @@ namespace WebShop.Repository.Contract.Interfaces
         Task<IEnumerable<T>> GetAll();
         Task<T> Get(int id);
         Task<T> Add(T entity);
-        Task<T> Update(T entity);
+        Task<T> Update(int id, T entity);
         Task<T> Delete(int id);
     }
 }
