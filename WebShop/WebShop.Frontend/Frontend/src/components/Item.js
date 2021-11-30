@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import "./../styles/Item.css"
 
-const Item = ({title, imgSrc, description, cost, ammount, onClick}) => {
+const Item = ({title, imgSrc, description, cost, amount, onClick}) => {
 
     return (
         <div className="col cardHover" style={{cursor: 'pointer'}} onClick={onClick}>
@@ -14,8 +14,8 @@ const Item = ({title, imgSrc, description, cost, ammount, onClick}) => {
                         alt=""
                         style={{height:'200px'}}/>
                 <div className="card-body" style={cardStyle}>
-                    <h5>Cost: {cost}</h5>
-                    <h5>Ammount available: {ammount}</h5>
+                    <h5>Cost: ${cost}</h5>
+                    <h5>Amount available: {amount}</h5>
                     <p className="card-text" style={{textOverflow:'ellipsis', overflow:'hidden', height:'30px'}}> Description: {description}</p>
                 </div>
             </div>
@@ -28,7 +28,7 @@ Item.defaultProps = {
     imgSrc: 'imgSrc default',
     description: 'Description default',
     cost: 'Cost default',
-    ammount: 'Ammount default',
+    amount: 'amount default',
   }
   
   // After connecting to server set to .isRequired
