@@ -58,7 +58,7 @@ const Home = () => {
                     <Nav.Link href="#query=?">New Items</Nav.Link>
                     <Nav.Link href="#query=?">Best Rated Items</Nav.Link>
                     <input className="mx-3" type="text" placeholder="Enter query" />
-                    <button type="button" className="btn btn-outline-light" style={{alignItems:'center'}}>Search</button>
+                    <button type="button" className="btn btn-outline-light" >Search</button>
                 </Nav>
                 <div className="col-3" />
             </div>

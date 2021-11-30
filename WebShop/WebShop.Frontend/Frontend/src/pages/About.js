@@ -23,15 +23,15 @@ export const About = () => {
                         <h3>Designed by</h3>
                         <div className="row">
                             <div className="col-4">
-                                <img src={nm} alt="NM" width="200px" height="200px" className="rounded-circle"/>
+                                <img src={pg} alt="PG" width="200px" height="200px" className="rounded-circle"/>
                                 <h4>
-                                    Nikola Mijonić<br/>E2 45/2021
+                                    Predrag Glavaš<br/>E2 38/2021
                                 </h4>
                             </div>
                             <div className="col-4">
-                                <img src={pg} alt="PG" width="200px" height="200px" className="rounded-circle"/>
+                                <img src={nm} alt="NM" width="200px" height="200px" className="rounded-circle"/>
                                 <h4>
-                                    Predrag Glavaš<br/>E2 45/2021
+                                    Nikola Mijonić<br/>E2 45/2021
                                 </h4>
                             </div>
                             <div className="col-4">

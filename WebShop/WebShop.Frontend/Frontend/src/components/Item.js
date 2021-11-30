@@ -16,7 +16,7 @@ const Item = ({title, imgSrc, description, cost, ammount, onClick}) => {
                 <div className="card-body" style={cardStyle}>
                     <h5>Cost: {cost}</h5>
                     <h5>Ammount available: {ammount}</h5>
-                    <p className="card-text" style={{textOverflow:'ellipsis', overflow:'hidden', height:'30px'}}> Description: gfd gdg dfgfd gfd gdf {description}</p>
+                    <p className="card-text" style={{textOverflow:'ellipsis', overflow:'hidden', height:'30px'}}> Description: {description}</p>
                 </div>
             </div>
         </div>
