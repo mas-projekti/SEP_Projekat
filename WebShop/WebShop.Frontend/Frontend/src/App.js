@@ -12,10 +12,10 @@ function App() {
       <Router>
         <Routes>
           <Route path='/' exact element={<Home/>} />
-          <Route path='/about' element={<About/>}/>
-          <Route path='/item' element={<ItemPage/>}/>
-          <Route path='/login' element={<Login/>}/>
-          <Route path='/register' element={<Register/>}/>
+          <Route path='about' element={<About/>}/>
+          <Route path='item/:itemId' element={<ItemPage/>}/>
+          <Route path='login' element={<Login/>}/>
+          <Route path='register' element={<Register/>}/>
         </Routes>
       </Router>
     </div>
