@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 import MainBar from "../components/MainBar"
 
 const Register = () => {
@@ -40,7 +41,7 @@ const Register = () => {
                             </div>
                             <div className="col">
                                 <p>You have an account?</p>
-                                <a href="/login">Click here to login now</a>
+                                <Link to="/login">Click here to login now</Link>
                             </div>
                         </div>
                     </div>
