@@ -1,18 +1,22 @@
 import PropTypes from 'prop-types'
+import "./../styles/Item.css"
 
-const Item = ({title, imgSrc, description, cost, ammount}) => {
+const Item = ({title, imgSrc, description, cost, ammount, onClick}) => {
+
     return (
-        <div className="col" style={cardStyle}>
+        <div className="col cardHover" style={{cursor: 'pointer'}} onClick={onClick}>
             <div className="card" >
+            <div className="card-body" style={cardStyle}>
+                <h3 className="card-title">{title}</h3>
+            </div>
                 <img    src={imgSrc} 
                         className="card-img-top" 
                         alt=""
-                        style={{width:'200px', height:'200px'}}/>
+                        style={{height:'200px'}}/>
                 <div className="card-body" style={cardStyle}>
-                    <h5 className="card-title">{title}</h5>
-                    <h3>{cost}</h3>
-                    <h3>{ammount}</h3>
-                    <p class="card-text">{description}</p>
+                    <h5>Cost: {cost}</h5>
+                    <h5>Ammount available: {ammount}</h5>
+                    <p className="card-text" style={{textOverflow:'ellipsis', overflow:'hidden', height:'30px'}}> Description: gfd gdg dfgfd gfd gdf {description}</p>
                 </div>
             </div>
         </div>
@@ -34,10 +38,14 @@ Item.defaultProps = {
     description: PropTypes.string,
     cost: PropTypes.number,
     ammount: PropTypes.number,
+
+    onClick: PropTypes.func
   }
 
   const cardStyle = {
-      color:'black'
+      color:'black',
+      cursor:'pointer',
+      transition: 'all 0.3s ease 0s',
   }
 
 export default Item

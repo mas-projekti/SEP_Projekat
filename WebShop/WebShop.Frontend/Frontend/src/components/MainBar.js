@@ -22,12 +22,7 @@ const MainBar = () => {
                 WebShop MAS
                 </Navbar.Brand>
                 <Navbar.Collapse id="responsive-navbar-nav ">
-                    <Nav className="me-auto ">
-                        <Nav.Link href="#query=?">New Items</Nav.Link>
-                        <Nav.Link href="#query=?">Best Rated Items</Nav.Link>
-                        <input s type="text" placeholder="Enter query" />
-                        <button type="button" class="btn btn-outline-light">Search</button>
-                    </Nav>
+                    
                 </Navbar.Collapse>
                 <Nav>
                     <Nav.Link href="/about">
