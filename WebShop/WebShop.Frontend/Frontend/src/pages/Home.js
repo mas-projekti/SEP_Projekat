@@ -1,5 +1,5 @@
 import Item from "../components/Item"
-import MainBar from "../components/MainBar"
+// import MainBar from "../components/MainBar"
 import { Nav } from "react-bootstrap"
 import { useNavigate } from "react-router"
 
@@ -57,7 +57,7 @@ const Home = () => {
 
     return (
         <div className="page-div" style={{backgroundColor:'black'}}>
-            <MainBar/>
+            {/* <MainBar/> */}
             <h1>WebShop MAS</h1>
             <div className="row center" style={{width:'100%'}}>
                 <div className="col-3" />

@@ -2,13 +2,13 @@ import React from 'react'
 import nm from "../img/nm.jpeg"
 import pg from "../img/pg.jpeg"
 import mk from "../img/mk.jpeg"
-import MainBar from '../components/MainBar'
+// import MainBar from '../components/MainBar'
 
 
 export const About = () => {
     return (
         <div>
-            <MainBar/>
+            {/* <MainBar/> */}
             <div className="container">
                 <div className="row">
                     <div className="col"/>

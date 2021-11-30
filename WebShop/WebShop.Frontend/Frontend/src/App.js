@@ -5,11 +5,13 @@ import About from './pages/About';
 import ItemPage from './pages/ItemPage';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import MainBar from './components/MainBar';
 
 function App() {
   return (
     <div className="App">
       <Router>
+        <MainBar/>
         <Routes>
           <Route path='/' exact element={<Home/>} />
           <Route path='about' element={<About/>}/>

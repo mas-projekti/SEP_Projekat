@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom"
-import MainBar from "../components/MainBar"
+// import MainBar from "../components/MainBar"
 
 const Login = () => {
     return (
         <div>
-            <MainBar/>
+            {/* <MainBar/> */}
             <div className="container">
                 <div className="row" style={{height:"20vh"}}/>
                 <div className="row">
