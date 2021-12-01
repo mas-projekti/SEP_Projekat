@@ -6,7 +6,7 @@ const Register = () => {
         <div className="page">
             {/* <MainBar/> */}
             <div className="container">
-                <div className="row" style={{height:"5vh"}}/>
+                <div className="row" style={{margin:"3%"}}/>
                 <div className="row">
                     <div className="col-4"/>
                     <div className="col-4">
@@ -41,7 +41,9 @@ const Register = () => {
                             </div>
                             <div className="col">
                                 <p>You have an account?</p>
-                                <Link to="/login">Click here to login now</Link>
+                                <button type="button" class="btn btn-outline-light">
+                                    <Link to="/login">Login</Link>
+                                </button>
                             </div>
                         </div>
                     </div>

@@ -6,7 +6,7 @@ const Login = () => {
         <div className="page">
             {/* <MainBar/> */}
             <div className="container">
-                <div className="row" style={{height:"20vh"}}/>
+                <div className="row" style={{margin:"3%"}}/>
                 <div className="row">
                     <div className="col-4"/>
                     <div className="col-4">
@@ -30,7 +30,9 @@ const Login = () => {
                             </div>
                             <div className="col">
                                 <p>You don't have an account?</p>
-                                <Link to="/register">Click here to register now</Link>
+                                <button type="button" class="btn btn-outline-light">
+                                    <Link to="/register">Register</Link>
+                                </button>
                             </div>
                         </div>
                     </div>

@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { Nav } from 'react-bootstrap';
 import { useParams } from 'react-router'
 // import MainBar from '../components/MainBar';
 
@@ -16,7 +15,8 @@ const ItemPage = () => {
         description: "This is the best item you can find on the market, eventualy you can find it on buvljak on Klisa, Novi Sad :).",
     }
     
-    const params = useParams()
+    // Item id from route
+    // const params = useParams()
 
     // Fetch Item by id
     // const fetchItem = async (id) => {
