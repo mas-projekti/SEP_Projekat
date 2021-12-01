@@ -15,7 +15,7 @@ const ItemPage = () => {
         //     <h1>Item ID: {params.itemId}</h1>
         // </div>
 
-        <div className="page-div" style={{backgroundColor:'black'}}>
+        <div className="page-div page" style={{backgroundColor:'black'}}>
             {/* <MainBar/> */}
             <h1>ITEM NAME - Item ID : {params.itemId}</h1>
             {/* <div className="row center" style={{width:'100%'}}>

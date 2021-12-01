@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 
 const Register = () => {
     return (
-        <div>
+        <div className="page">
             {/* <MainBar/> */}
             <div className="container">
                 <div className="row" style={{height:"5vh"}}/>

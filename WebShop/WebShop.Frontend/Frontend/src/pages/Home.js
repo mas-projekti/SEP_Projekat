@@ -1,7 +1,7 @@
 import Item from "../components/Item"
 // import MainBar from "../components/MainBar"
 import { Nav } from "react-bootstrap"
-import { useNavigate } from "react-router"
+import { useHistory } from "react-router-dom"
 
 const Home = () => {
 
@@ -16,7 +16,7 @@ const Home = () => {
             ))}
     */
 
-    const navigate = useNavigate();
+    const history = useHistory();
 
     const items = [
         {
@@ -53,10 +53,8 @@ const Home = () => {
         }
     ] 
 
-    
-
     return (
-        <div className="page-div" style={{backgroundColor:'black'}}>
+        <div className="page-div page" style={{backgroundColor:'black'}}>
             {/* <MainBar/> */}
             <h1>WebShop MAS</h1>
             <div className="row center" style={{width:'100%'}}>
@@ -82,14 +80,13 @@ const Home = () => {
                                 description={item.description}
                                 cost={item.cost}
                                 ammount={item.ammount}
-                                onClick={() => {navigate(`item/${item.id}`)}}/>
+                                onClick={() => {history.push(`item/${item.id}`)}}/>
                             ))}
                         </div>
                     </div>
                     <div className="col" />
                 </div>
             </div>
-            
         </div>
     )
 }

@@ -7,7 +7,7 @@ import mk from "../img/mk.jpeg"
 
 export const About = () => {
     return (
-        <div>
+        <div className="page">
             {/* <MainBar/> */}
             <div className="container">
                 <div className="row">
