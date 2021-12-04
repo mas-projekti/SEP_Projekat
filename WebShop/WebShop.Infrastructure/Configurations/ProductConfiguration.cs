@@ -44,6 +44,17 @@ namespace WebShop.Infrastructure.Configurations
             builder.Property(i => i.ImageURL)
                 .IsRequired();
 
+            builder.HasOne(i => i.User)
+                .WithMany(p => p.Products)
+                .HasForeignKey(i => i.UserId);
+
+            builder.HasOne(i => i.OrderItem)
+              .WithOne(p => p.Product)
+              .HasForeignKey<Product>(i => i.OrderItemId)
+              .IsRequired(false)
+               .OnDelete(DeleteBehavior.Restrict);
+
+
         }
     }
 }

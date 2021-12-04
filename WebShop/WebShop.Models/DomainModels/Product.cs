@@ -16,7 +16,12 @@ namespace WebShop.Models.DomainModels
         public CategoryType CategoryType  { get; set; }
         public int Warranty { get; set; }
         public string Description { get; set; }       
+        public int Amount { get; set; }
         public string ImageURL { get; set; }
+        public int UserId { get; set; }
+        public User User { get; set; }
+        public int? OrderItemId { get; set; }
+        public OrderItem OrderItem { get; set; }
 
     }
 }

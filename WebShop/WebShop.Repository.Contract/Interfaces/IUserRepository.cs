@@ -7,8 +7,8 @@ using WebShop.Models.DomainModels;
 
 namespace WebShop.Repository.Contract.Interfaces
 {
-    public interface IProductRepository : IGenericRepository<Product>
+    public interface IUserRepository : IGenericRepository<User>
     {
-
+       
     }
 }

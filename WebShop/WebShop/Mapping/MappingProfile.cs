@@ -16,7 +16,10 @@ namespace WebShop.Mapping
             CreateMap<Product, ProductDto>()
                .ForMember(mem => mem.CategoryType, op => op.MapFrom(o => o.CategoryType))
                .ReverseMap();
-               
+
+            CreateMap<User, UserDto>().ReverseMap();
+
+
 
         }
     }
