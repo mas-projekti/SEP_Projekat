@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebShop.Models.Enums;
 using WebShop.Service.Contract.Dto;
 using WebShop.Service.Contract.Services;
 
@@ -21,11 +23,21 @@ namespace WebShop.Controllers
         }
 
         [HttpGet("all")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<ProductDto>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ProductDto>))]
         public async Task<IActionResult> GetProducts()
         {
             return Ok(await _productService.GetAllProducts());
 
+        }
+
+
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductListDto))]
+        public async Task<IActionResult> GetProductsPaged([FromQuery] ProductField sortBy, [FromQuery] SortingDirection direction,
+                                  [FromQuery][BindRequired] int page, [FromQuery][BindRequired] int perPage)
+        {
+
+            return Ok(await _productService.GetProductsPaged(sortBy, direction, page, perPage));
         }
 
         [HttpGet("{id}")]

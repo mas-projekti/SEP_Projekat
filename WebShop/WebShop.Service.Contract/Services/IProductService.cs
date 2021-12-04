@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using WebShop.Models.Enums;
 using WebShop.Service.Contract.Dto;
 
 namespace WebShop.Service.Contract.Services
@@ -15,5 +16,6 @@ namespace WebShop.Service.Contract.Services
         Task<ProductDto> InsertProduct(ProductDto newProduct);
         Task<ProductDto> UpdateProduct(ProductDto product);
         Task<bool> DeleteProduct(int productId);
+        Task<ProductListDto> GetProductsPaged(ProductField sortBy, SortingDirection direction, int page, int perPage);
     }
 }

@@ -51,10 +51,8 @@ namespace WebShop.Service.Services
 
         public async Task<IEnumerable<ProductDto>> GetAllProducts() => _mapper.Map<IEnumerable<ProductDto>>(await _productRepository.GetAll());
       
-
         public async Task<ProductDto> GetProductById(int productId) => _mapper.Map<ProductDto>(await _productRepository.Get(productId));
        
-
         public async Task<ProductDto> UpdateProduct(ProductDto product)
         {
             ValidateProduct(product);
@@ -66,6 +64,68 @@ namespace WebShop.Service.Services
                 throw new Exception($"Product with Id = {updatedProduct.Id} does not exists!");
 
             return _mapper.Map<ProductDto>(await _productRepository.Update(updatedProduct.Id, updatedProduct));
+        }
+
+        public async Task<ProductListDto> GetProductsPaged(ProductField sortBy, SortingDirection direction, int page, int perPage)
+        {
+            IEnumerable<Product> productsPaged = await _productRepository.GetAll();
+            productsPaged = SortProducts(productsPaged, sortBy, direction);
+ 
+
+            int resourceCount = productsPaged.Count();
+            productsPaged = productsPaged.Skip(page * perPage)
+                                         .Take(perPage);
+
+            ProductListDto returnValue = new ProductListDto()
+            {
+                Products = _mapper.Map<List<ProductDto>>(productsPaged),
+                TotalCount = resourceCount
+            };
+
+            return returnValue;
+        }
+
+        private IEnumerable<Product> SortProducts(IEnumerable<Product> products, ProductField sortBy, SortingDirection direction)
+        {
+
+            if (direction == SortingDirection.Asc)
+            {
+                switch (sortBy)
+                {
+                    case ProductField.Id:
+                        return products.OrderBy(x => x.Id);
+                    case ProductField.Manufacturer:
+                        return products.OrderBy(x => x.Manufacturer);
+                    case ProductField.Model:
+                        return products.OrderBy(x => x.Model);
+                    case ProductField.Price:
+                        return products.OrderBy(x => x.Price);
+                    case ProductField.Warrany:
+                        return products.OrderBy(x => x.Warranty);
+
+                }
+
+            }
+            else
+            {
+                switch (sortBy)
+                {
+                    case ProductField.Id:
+                        return products.OrderByDescending(x => x.Id);
+                    case ProductField.Manufacturer:
+                        return products.OrderByDescending(x => x.Manufacturer);
+                    case ProductField.Model:
+                        return products.OrderByDescending(x => x.Model);
+                    case ProductField.Price:
+                        return products.OrderByDescending(x => x.Price);
+                    case ProductField.Warrany:
+                        return products.OrderByDescending(x => x.Warranty);
+
+                }
+
+            }
+
+            return products;
         }
 
         #region Validations
@@ -95,6 +155,8 @@ namespace WebShop.Service.Services
 
 
         }
+
+       
         #endregion
 
     }
