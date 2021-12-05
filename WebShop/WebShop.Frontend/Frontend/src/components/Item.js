@@ -1,51 +1,74 @@
-import PropTypes from 'prop-types'
-import "./../styles/Item.css"
+import PropTypes from "prop-types";
+import "./../styles/Item.css";
+import { Link } from "react-router-dom";
 
-const Item = ({title, imgSrc, description, cost, amount, onClick}) => {
-
-    return (
-        <div className="col cardHover" style={{cursor: 'pointer'}} onClick={onClick}>
-            <div className="card" >
-            <div className="card-body" style={cardStyle}>
-                <h3 className="card-title">{title}</h3>
-            </div>
-                <img    src={imgSrc} 
-                        className="card-img-top" 
-                        alt=""
-                        style={{height:'200px'}}/>
-                <div className="card-body" style={cardStyle}>
-                    <h5>Cost: ${cost}</h5>
-                    <h5>Amount available: {amount}</h5>
-                    <p className="card-text" style={{textOverflow:'ellipsis', overflow:'hidden', height:'30px'}}> Description: {description}</p>
-                </div>
-            </div>
+const Item = (props) => {
+  return (
+    <Link to={"/item/" + props.product.id}>
+      <div className="col cardHover" style={{ cursor: "pointer" }}>
+        <div className="card">
+          <div className="card-body" style={cardStyle}>
+            <h3 className="card-title">
+              {props.product.manufacturer + " " + props.product.model}
+            </h3>
+          </div>
+          <img
+            src={props.product.imageURL}
+            className="card-img-top"
+            alt=""
+            style={{ height: "200px" }}
+          />
+          <div className="card-body" style={cardStyle}>
+            <h5>Price: ${props.product.price}</h5>
+            <h5>Amount available: {props.product.amount}</h5>
+            <p
+              className="card-text"
+              style={{
+                textOverflow: "ellipsis",
+                overflow: "hidden",
+                height: "30px",
+              }}
+            >
+              Description: {props.product.description}
+            </p>
+          </div>
         </div>
-    )
-}
+      </div>
+    </Link>
+  );
+};
 
 Item.defaultProps = {
-    title: 'Item default',
-    imgSrc: 'imgSrc default',
-    description: 'Description default',
-    cost: 'Cost default',
-    amount: 'amount default',
-  }
-  
-  // After connecting to server set to .isRequired
-  Item.propTypes = {
-    title: PropTypes.string,
-    imgSrc: PropTypes.string,
-    description: PropTypes.string,
-    cost: PropTypes.number,
-    ammount: PropTypes.number,
+  id: "",
+  price: "",
+  manufacturer: "",
+  model: "",
+  categoryType: "",
+  warranty: "",
+  desription: "",
+  amount: "",
+  imageUrl: "",
+};
 
-    onClick: PropTypes.func
-  }
+// After connecting to server set to .isRequired
+Item.propTypes = {
+  id: PropTypes.string,
+  price: PropTypes.string,
+  manufacturer: PropTypes.string,
+  model: PropTypes.string,
+  categoryType: PropTypes.string,
+  warranty: PropTypes.string,
+  desription: PropTypes.string,
+  amount: PropTypes.string,
+  imageUrl: PropTypes.string,
 
-  const cardStyle = {
-      color:'black',
-      cursor:'pointer',
-      transition: 'all 0.3s ease 0s',
-  }
+  onClick: PropTypes.func,
+};
 
-export default Item
+const cardStyle = {
+  color: "black",
+  cursor: "pointer",
+  transition: "all 0.3s ease 0s",
+};
+
+export default Item;

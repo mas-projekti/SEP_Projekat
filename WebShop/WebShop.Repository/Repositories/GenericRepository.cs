@@ -19,8 +19,9 @@ namespace WebShop.Repository.Repositories
         }
         public async Task<T> Add(T entity)
         {
-            _context.Set<T>().Add(entity);
+            _context.Set<T>().Add(entity);  
             await _context.SaveChangesAsync();
+          
             return entity;
         }
 

@@ -61,7 +61,7 @@ namespace WebShop
             services.AddCors(options =>
             {
                 options.AddPolicy(name: _cors, builder => {
-                    builder.WithOrigins("https://localhost:4200", "http://localhost:4200").AllowAnyHeader()
+                    builder.WithOrigins("https://localhost:3000", "http://localhost:3000").AllowAnyHeader()
                                         .AllowAnyMethod().AllowCredentials();
                 });
             });
