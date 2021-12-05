@@ -7,7 +7,6 @@ namespace Paypal.API.Dto
 {
     public class CreateOrderDto
     {
-        public string MerchantID { get; set; }
         public List<OrderItemDto> Items { get; set; }
     }
 }

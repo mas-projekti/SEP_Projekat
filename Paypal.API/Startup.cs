@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Paypal.API.DataAdapter;
 using Paypal.API.Interfaces;
 using Paypal.API.Options;
 using Paypal.API.Services;
@@ -38,6 +39,7 @@ namespace Paypal.API
             });
             services.Configure<PaypalOptions>(Configuration.GetSection(PaypalOptions.Paypal));
             services.AddScoped<IPaypalService, PaypalService>();
+            services.AddSingleton<IDataAdapter, OrderDataAdapter>();
 
             #region Auth
             services.AddAuthentication("Bearer")

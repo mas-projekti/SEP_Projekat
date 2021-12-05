@@ -12,7 +12,7 @@ const initialOptions = {
   'client-id': "ATa_snSHZWQqqwq_ahDhynNClktGWCdwLr_bTbNCNxE-h8j4gZ3ByOYwrtu-PC2l3aFO8Wf_Pyaj71Xl",
   currency: "USD",
   intent: "capture",
-  'merchant-id': "KXJ2PH4QBBC9N",
+  'merchant-id': ["KXJ2PH4QBBC9N","J9FGMF2MVAENC"],
 };
 
 
@@ -56,7 +56,35 @@ function App() {
             }
           }
              createOrder={(data, actions) => {
-              const createOrderDto = {merchantId:"KXJ2PH4QBBC9N", items:[]} //Ovde isto staviti konfigurabilne podatke
+              const createOrderDto = 
+              {items:[
+                {
+                  name:"Racunar",
+                  description:"Lep neki komp",
+                  quantity: 1,
+                  currency: "USD",
+                  value: 1000,
+                  merchantID:'KXJ2PH4QBBC9N'
+                },
+                {
+                  name:"Mis",
+                  description:"Misic mali",
+                  quantity: 1,
+                  currency: "USD",
+                  value: 10,
+                  merchantID:'KXJ2PH4QBBC9N'
+                },
+                {
+                  name:"Stolica",
+                  description:"fotelja neka mnogo dobrA",
+                  quantity: 1,
+                  currency: "USD",
+                  value: 100,
+                  merchantID:'J9FGMF2MVAENC'
+                },
+
+
+              ]} //Ovde isto staviti konfigurabilne podatke
               return apiPaypalProvider.createOrder(createOrderDto)
                   .then(function(data) {
                     console.log(data)

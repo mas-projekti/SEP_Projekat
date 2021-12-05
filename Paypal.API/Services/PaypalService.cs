@@ -22,11 +22,13 @@ namespace Paypal.API.Services
         private readonly PaypalOptions _paypalOptions;
         private HttpClient paypalClient;
         private const string sandbox = "https://api-m.sandbox.paypal.com";
+        private readonly IDataAdapter dataAdapter;
 
-        public PaypalService(IOptions<PaypalOptions> paypalOptions)
+        public PaypalService(IOptions<PaypalOptions> paypalOptions, IDataAdapter dataAdapter)
         {
             _paypalOptions = paypalOptions.Value;
             paypalClient = GetPaypalHttpClient();
+            this.dataAdapter = dataAdapter;
 
         }
 
@@ -73,52 +75,13 @@ namespace Paypal.API.Services
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, $"v2/checkout/orders");
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token.access_token);
 
-            var orderNew = JObject.FromObject(new
-            {
-                intent = "CAPTURE",
-                merchant_id =  order.MerchantID,
-                purchase_units = JArray.FromObject(new[]
-                {
-                    new
-                    {
-                        amount = new
-                        {
-                            value = 100,
-                            currency_code = "USD",
+            JObject orderObj = dataAdapter.RepackOrderToJObject(order);
 
-                            breakdown = new
-                            {
-                                item_total = new
-                                {
-                                    currency_code = "USD",
-                                    value = 100,
-                                }
-                            }
-                        },
-
-                        items = JArray.FromObject(new[]
-                        {
-                           new
-                           {
-                               name = "Amanita Verna",
-                               description = "a tasty mushroom",
-                               unit_amount = new
-                               {
-                                   currency_code = "USD",
-                                   value = 50
-                               },
-                               quantity = 2
-                           }
-                        }),
-                    }
-                 })
-            });
-
-            request.Content = new StringContent(JsonConvert.SerializeObject(orderNew), Encoding.UTF8, "application/json");
+            request.Content = new StringContent(JsonConvert.SerializeObject(orderObj), Encoding.UTF8, "application/json");
 
             HttpResponseMessage response = await paypalClient.SendAsync(request);
             string content = await response.Content.ReadAsStringAsync();
-            PaypalOrderCreatedResponse createdOrder= JsonConvert.DeserializeObject<PaypalOrderCreatedResponse>(content);
+            PaypalOrderCreatedResponse createdOrder = JsonConvert.DeserializeObject<PaypalOrderCreatedResponse>(content);
             return createdOrder;
         }
 
