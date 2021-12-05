@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Paypal.API.CustomMiddleware;
 using Paypal.API.DataAdapter;
 using Paypal.API.Interfaces;
 using Paypal.API.Options;
@@ -63,7 +64,7 @@ namespace Paypal.API
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Paypal.API v1"));
             }
-
+            app.UseCustomExceptionHandler();
             app.UseHttpsRedirection();
 
             app.UseRouting();
