@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -23,12 +24,14 @@ namespace Paypal.API.Services
         private HttpClient paypalClient;
         private const string sandbox = "https://api-m.sandbox.paypal.com";
         private readonly IDataAdapter dataAdapter;
+        private readonly ILogger<PaypalService> _logger;
 
-        public PaypalService(IOptions<PaypalOptions> paypalOptions, IDataAdapter dataAdapter)
+        public PaypalService(IOptions<PaypalOptions> paypalOptions, IDataAdapter dataAdapter, ILogger<PaypalService> logger)
         {
             _paypalOptions = paypalOptions.Value;
             paypalClient = GetPaypalHttpClient();
             this.dataAdapter = dataAdapter;
+            _logger = logger;
 
         }
 
@@ -46,7 +49,7 @@ namespace Paypal.API.Services
 
         public async Task<PayPalAccessToken> GetPayPalAccessTokenAsync()
         {
-
+            _logger.LogInformation("Getting token from paypal, to server request.");
             byte[] bytes = Encoding.GetEncoding("iso-8859-1").GetBytes($"{_paypalOptions.PayPalClientId}:{_paypalOptions.PayPalClientSecret}");
 
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "/v1/oauth2/token");
@@ -70,6 +73,7 @@ namespace Paypal.API.Services
 
         public async Task<PaypalOrderCreatedResponse> CreatePaypalOrderAsync(CreateOrderDto order)
         {
+            _logger.LogInformation($"Creating order with {order.Items.Count} items.");
             PayPalAccessToken token = await GetPayPalAccessTokenAsync();
 
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, $"v2/checkout/orders");
@@ -82,11 +86,20 @@ namespace Paypal.API.Services
             HttpResponseMessage response = await paypalClient.SendAsync(request);
             string content = await response.Content.ReadAsStringAsync();
             PaypalOrderCreatedResponse createdOrder = JsonConvert.DeserializeObject<PaypalOrderCreatedResponse>(content);
+            if(createdOrder.id == null)
+            {
+                _logger.LogError($"Order was not created, Paypal returned {createdOrder.links[0].href}");
+            }
+            else
+            {
+                _logger.LogInformation($"Order with id {createdOrder.id} created.");
+            }
             return createdOrder;
         }
 
         public async Task<PaypalOrderCapturedResponse> CapturePaypalOrderAsync(string orderId)
         {
+            _logger.LogInformation($"Capturing order with ID = {orderId}.");
             PayPalAccessToken token = await GetPayPalAccessTokenAsync();
 
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, $"v2/checkout/orders/{orderId}/capture");
@@ -96,6 +109,14 @@ namespace Paypal.API.Services
             HttpResponseMessage response = await paypalClient.SendAsync(request);
             string content = await response.Content.ReadAsStringAsync();
             PaypalOrderCapturedResponse createdOrder = JsonConvert.DeserializeObject<PaypalOrderCapturedResponse>(content);
+            if (createdOrder.status == "FAILED")
+            {
+                _logger.LogError($"Order was not completed, Paypal returned {createdOrder.links[0].href}");
+            }
+            else
+            {
+                _logger.LogInformation($"Order with id {createdOrder.id} captured.");
+            }
             return createdOrder;
 
         }

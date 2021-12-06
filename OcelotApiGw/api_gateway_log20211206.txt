@@ -1,0 +1,59 @@
+2021-12-06 17:25:07.180 +01:00 [INF] Starting web host
+2021-12-06 17:25:16.861 +01:00 [INF] User profile is available. Using 'C:\Users\Predrag\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2021-12-06 17:25:20.509 +01:00 [INF] Application started. Press Ctrl+C to shut down.
+2021-12-06 17:25:20.524 +01:00 [INF] Hosting environment: Development
+2021-12-06 17:25:20.579 +01:00 [INF] Content root path: C:\Users\Predrag\source\repos\SEP_Projekat\OcelotApiGw
+2021-12-06 17:25:20.949 +01:00 [INF] Request starting HTTP/2 GET https://localhost:44313/ - -
+2021-12-06 17:25:21.379 +01:00 [WRN] requestId: 8000003d-0005-fe00-b63f-84710c7967bb, previousRequestId: no previous request id, message: DownstreamRouteFinderMiddleware setting pipeline errors. IDownstreamRouteFinder returned Error Code: UnableToFindDownstreamRouteError Message: Failed to match ReRoute configuration for upstream path: /, verb: GET.
+2021-12-06 17:25:21.391 +01:00 [WRN] requestId: 8000003d-0005-fe00-b63f-84710c7967bb, previousRequestId: no previous request id, message: Error Code: UnableToFindDownstreamRouteError Message: Failed to match ReRoute configuration for upstream path: /, verb: GET. errors found in ResponderMiddleware. Setting error response for request path:/, request method: GET
+2021-12-06 17:25:21.410 +01:00 [INF] HTTP GET / responded 404 in 77.4922 ms
+2021-12-06 17:25:21.576 +01:00 [INF] Request finished HTTP/2 GET https://localhost:44313/ - - - 404 - - 645.0239ms
+2021-12-06 17:27:39.813 +01:00 [INF] Request starting HTTP/2 OPTIONS https://localhost:44313/paypal/orders - -
+2021-12-06 17:27:40.323 +01:00 [INF] CORS policy execution successful.
+2021-12-06 17:27:40.357 +01:00 [INF] Request finished HTTP/2 OPTIONS https://localhost:44313/paypal/orders - - - 204 - - 544.7758ms
+2021-12-06 17:27:40.479 +01:00 [INF] Request starting HTTP/2 POST https://localhost:44313/paypal/orders application/json 375
+2021-12-06 17:27:40.547 +01:00 [INF] CORS policy execution successful.
+2021-12-06 17:27:41.572 +01:00 [INF] requestId: 80000007-0000-fb00-b63f-84710c7967bb, previousRequestId: no previous request id, message: EndpointRateLimiting is not enabled for /api/orders
+2021-12-06 17:27:41.766 +01:00 [INF] requestId: 80000007-0000-fb00-b63f-84710c7967bb, previousRequestId: no previous request id, message: /paypal/orders is an authenticated route. AuthenticationMiddleware checking if client is authenticated
+2021-12-06 17:27:47.866 +01:00 [INF] Failed to validate the token.
+Microsoft.IdentityModel.Tokens.SecurityTokenExpiredException: IDX10223: Lifetime validation failed. The token is expired. ValidTo: 'System.DateTime', Current time: 'System.DateTime'.
+   at Microsoft.IdentityModel.Tokens.Validators.ValidateLifetime(Nullable`1 notBefore, Nullable`1 expires, SecurityToken securityToken, TokenValidationParameters validationParameters)
+   at System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.ValidateLifetime(Nullable`1 notBefore, Nullable`1 expires, JwtSecurityToken jwtToken, TokenValidationParameters validationParameters)
+   at System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.ValidateTokenPayload(JwtSecurityToken jwtToken, TokenValidationParameters validationParameters)
+   at System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.ValidateToken(String token, TokenValidationParameters validationParameters, SecurityToken& validatedToken)
+   at Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerHandler.HandleAuthenticateAsync()
+2021-12-06 17:27:48.231 +01:00 [INF] IdentityApiKey was not authenticated. Failure message: IDX10223: Lifetime validation failed. The token is expired. ValidTo: 'System.DateTime', Current time: 'System.DateTime'.
+2021-12-06 17:27:48.250 +01:00 [WRN] requestId: 80000007-0000-fb00-b63f-84710c7967bb, previousRequestId: no previous request id, message: Client has NOT been authenticated for /paypal/orders and pipeline error set. Request for authenticated route /paypal/orders by  was unauthenticated
+2021-12-06 17:27:48.295 +01:00 [WRN] requestId: 80000007-0000-fb00-b63f-84710c7967bb, previousRequestId: no previous request id, message: Error Code: UnauthenticatedError Message: Request for authenticated route /paypal/orders by  was unauthenticated errors found in ResponderMiddleware. Setting error response for request path:/paypal/orders, request method: POST
+2021-12-06 17:27:48.310 +01:00 [INF] HTTP POST /paypal/orders responded 401 in 7667.6775 ms
+2021-12-06 17:27:48.327 +01:00 [INF] Request finished HTTP/2 POST https://localhost:44313/paypal/orders application/json 375 - 401 - - 7847.6032ms
+2021-12-06 17:27:55.091 +01:00 [INF] Request starting HTTP/2 OPTIONS https://localhost:44313/paypal/orders - -
+2021-12-06 17:27:55.113 +01:00 [INF] CORS policy execution successful.
+2021-12-06 17:27:55.169 +01:00 [INF] Request finished HTTP/2 OPTIONS https://localhost:44313/paypal/orders - - - 204 - - 78.5076ms
+2021-12-06 17:27:55.202 +01:00 [INF] Request starting HTTP/2 POST https://localhost:44313/paypal/orders application/json 375
+2021-12-06 17:27:55.217 +01:00 [INF] CORS policy execution successful.
+2021-12-06 17:27:55.236 +01:00 [INF] requestId: 80000012-0005-fb00-b63f-84710c7967bb, previousRequestId: no previous request id, message: EndpointRateLimiting is not enabled for /api/orders
+2021-12-06 17:27:55.266 +01:00 [INF] requestId: 80000012-0005-fb00-b63f-84710c7967bb, previousRequestId: no previous request id, message: /paypal/orders is an authenticated route. AuthenticationMiddleware checking if client is authenticated
+2021-12-06 17:27:55.440 +01:00 [INF] Successfully validated the token.
+2021-12-06 17:27:55.450 +01:00 [INF] requestId: 80000012-0005-fb00-b63f-84710c7967bb, previousRequestId: no previous request id, message: Client has been authenticated for /paypal/orders
+2021-12-06 17:27:55.474 +01:00 [INF] requestId: 80000012-0005-fb00-b63f-84710c7967bb, previousRequestId: no previous request id, message: route is authenticated scopes must be checked
+2021-12-06 17:27:55.490 +01:00 [INF] requestId: 80000012-0005-fb00-b63f-84710c7967bb, previousRequestId: no previous request id, message: user scopes is authorised calling next authorisation checks
+2021-12-06 17:27:55.496 +01:00 [INF] requestId: 80000012-0005-fb00-b63f-84710c7967bb, previousRequestId: no previous request id, message: /api/orders route does not require user to be authorised
+2021-12-06 17:28:01.617 +01:00 [INF] requestId: 80000012-0005-fb00-b63f-84710c7967bb, previousRequestId: no previous request id, message: 200 (OK) status code, request uri: https://localhost:44310/api/orders
+2021-12-06 17:28:01.693 +01:00 [INF] HTTP POST /paypal/orders responded 200 in 6461.8673 ms
+2021-12-06 17:28:01.706 +01:00 [INF] Request finished HTTP/2 POST https://localhost:44313/paypal/orders application/json 375 - 200 501 application/json;+charset=utf-8 6503.9818ms
+2021-12-06 17:28:31.412 +01:00 [INF] Request starting HTTP/2 OPTIONS https://localhost:44313/paypal/orders/1AE569068E678960V/capture - -
+2021-12-06 17:28:31.417 +01:00 [INF] CORS policy execution successful.
+2021-12-06 17:28:31.423 +01:00 [INF] Request finished HTTP/2 OPTIONS https://localhost:44313/paypal/orders/1AE569068E678960V/capture - - - 204 - - 11.9422ms
+2021-12-06 17:28:31.432 +01:00 [INF] Request starting HTTP/2 POST https://localhost:44313/paypal/orders/1AE569068E678960V/capture application/json 2
+2021-12-06 17:28:31.460 +01:00 [INF] CORS policy execution successful.
+2021-12-06 17:28:31.474 +01:00 [INF] requestId: 80000016-0005-fb00-b63f-84710c7967bb, previousRequestId: no previous request id, message: EndpointRateLimiting is not enabled for /api/orders/{everything}
+2021-12-06 17:28:31.479 +01:00 [INF] requestId: 80000016-0005-fb00-b63f-84710c7967bb, previousRequestId: no previous request id, message: /paypal/orders/1AE569068E678960V/capture is an authenticated route. AuthenticationMiddleware checking if client is authenticated
+2021-12-06 17:28:31.490 +01:00 [INF] Successfully validated the token.
+2021-12-06 17:28:31.496 +01:00 [INF] requestId: 80000016-0005-fb00-b63f-84710c7967bb, previousRequestId: no previous request id, message: Client has been authenticated for /paypal/orders/1AE569068E678960V/capture
+2021-12-06 17:28:31.501 +01:00 [INF] requestId: 80000016-0005-fb00-b63f-84710c7967bb, previousRequestId: no previous request id, message: route is authenticated scopes must be checked
+2021-12-06 17:28:31.506 +01:00 [INF] requestId: 80000016-0005-fb00-b63f-84710c7967bb, previousRequestId: no previous request id, message: user scopes is authorised calling next authorisation checks
+2021-12-06 17:28:31.512 +01:00 [INF] requestId: 80000016-0005-fb00-b63f-84710c7967bb, previousRequestId: no previous request id, message: /api/orders/{everything} route does not require user to be authorised
+2021-12-06 17:28:33.934 +01:00 [INF] requestId: 80000016-0005-fb00-b63f-84710c7967bb, previousRequestId: no previous request id, message: 200 (OK) status code, request uri: https://localhost:44310/api/orders/1AE569068E678960V/capture
+2021-12-06 17:28:33.946 +01:00 [INF] HTTP POST /paypal/orders/1AE569068E678960V/capture responded 200 in 2481.5460 ms
+2021-12-06 17:28:33.974 +01:00 [INF] Request finished HTTP/2 POST https://localhost:44313/paypal/orders/1AE569068E678960V/capture application/json 2 - 200 1589 application/json;+charset=utf-8 2541.5174ms

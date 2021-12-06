@@ -13,6 +13,7 @@ using Paypal.API.DataAdapter;
 using Paypal.API.Interfaces;
 using Paypal.API.Options;
 using Paypal.API.Services;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -76,6 +77,8 @@ namespace Paypal.API
             {
                 endpoints.MapControllers();
             });
+
+            app.UseSerilogRequestLogging();
         }
     }
 }

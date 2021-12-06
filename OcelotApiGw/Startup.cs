@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -72,6 +73,7 @@ namespace OcelotApiGw
             {
                 endpoints.MapControllers();
             });
+            app.UseSerilogRequestLogging(); 
             await app.UseOcelot();
         }
     }
