@@ -12,5 +12,6 @@ namespace Paypal.API.Dto
         public string Currency { get; set; }
         public double Value { get; set; }
         public uint Quantity { get; set; }
+        public string MerchantID { get; set; }
     }
 }

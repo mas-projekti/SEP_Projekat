@@ -10,9 +10,6 @@ namespace Paypal.API.IntegrationModels
         public string name { get; set; }
         public string description { get; set; }
         public long quantity { get; set; }
-        public float price { get; set; }
-        public float tax { get; set; }
-        public string sku { get; set; }
-        public string currency { get; set; }
+        public NetAmount amount { get; set; }
     }
 }

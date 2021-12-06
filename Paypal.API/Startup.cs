@@ -8,9 +8,12 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Paypal.API.CustomMiddleware;
+using Paypal.API.DataAdapter;
 using Paypal.API.Interfaces;
 using Paypal.API.Options;
 using Paypal.API.Services;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,6 +41,7 @@ namespace Paypal.API
             });
             services.Configure<PaypalOptions>(Configuration.GetSection(PaypalOptions.Paypal));
             services.AddScoped<IPaypalService, PaypalService>();
+            services.AddSingleton<IDataAdapter, OrderDataAdapter>();
 
             #region Auth
             services.AddAuthentication("Bearer")
@@ -61,7 +65,7 @@ namespace Paypal.API
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Paypal.API v1"));
             }
-
+            app.UseCustomExceptionHandler();
             app.UseHttpsRedirection();
 
             app.UseRouting();
@@ -73,6 +77,8 @@ namespace Paypal.API
             {
                 endpoints.MapControllers();
             });
+
+            app.UseSerilogRequestLogging();
         }
     }
 }
