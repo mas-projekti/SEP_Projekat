@@ -1,58 +1,43 @@
-import React, { useState } from 'react'
-import { useParams } from 'react-router'
-// import MainBar from '../components/MainBar';
+import axios from 'axios';
+import React, { Component } from 'react'
 
-const ItemPage = () => {
-
-    const [quantity, setQuantity] = useState(1); // '' is the initial state value
-
-    const item = {
-        id: 3981239812,
-        name: 'Sava Sumanovic - Šid',
-        placeHolderImg: "https://mediasfera.rs/wp-content/uploads/2019/01/sava-2-1200x894.jpg",
-        cost: 15,
-        amount: 80,
-        description: "This is the best item you can find on the market, eventualy you can find it on buvljak on Klisa, Novi Sad :).",
-    }
-    
-    // Item id from route
-    // const params = useParams()
-
-    // Fetch Item by id
-    // const fetchItem = async (id) => {
-    //     const res = await fetch(`http://localhost:5000/tasks/${id}`)
-    //     const data = await res.json()
-    //     return data
-    // }
-
-    // Fetch User by userId in Item 
-    // const fetchUser = async (userId) => {
-    //     const res = await fetch(`http://localhost:5000/tasks/${userId}`)
-    //     const data = await res.json()
-    //     return data
-    // }
-
-    const user = {
-        imgSrc: 'https://upload.wikimedia.org/wikipedia/en/thumb/c/c7/Michael_Jordan_crying.jpg/220px-Michael_Jordan_crying.jpg',
-        name: 'Dzordan Dzordanic',
-        email: 'michaeljordan@email.com',
-        phoneNumber: '+381623456789'
+class ItemPage extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            product: {},
+            user: {},
+            quantity: 1
+        }
     }
 
-    return (
+    componentDidMount() {
+        axios.get(process.env.REACT_APP_WEB_SHOP_PRDUCTS_BACKEND_API + `/` + this.props.match.params.itemId)
+            .then((res) => { 
+                this.setState({
+                    product : res.data,
+                }); 
+                
+                // Uncomment when Users API are finished
 
-        <div className="page-div page" style={{backgroundColor:'black'}}>
-            {/* <MainBar/> */}
-            {/* <div className="row center my-2" style={{width:'100%'}}>
-                <div className="col-3" />
-                <Nav className="col" style={{alignItems:'center'}}>
-                    <Nav.Link href="#query=?">New Items</Nav.Link>
-                    <Nav.Link href="#query=?">Best Rated Items</Nav.Link>
-                    <input className="mx-3" type="text" placeholder="Enter query" />
-                    <button type="button" className="btn btn-outline-light" >Search</button>
-                </Nav>
-                <div className="col-3" />
-            </div> */}
+                // axios.get(process.env.REACT_APP_WEB_SHOP_USERS_BACKEND_API + `/` + this.state.product.userId)
+                // .then((res2) => { 
+                // this.setState({
+                //     user : res2.data,
+                // }); 
+                // });
+            });
+    }
+
+    buy() {
+        console.log(this.state);
+        // Redirect to Paypal
+    }
+
+
+    render() {
+        return (
+            <div className="page-div page" style={{backgroundColor:'black'}}>
             <div className="container my-3">
                 <div className="row">
                     <div className="col"/>
@@ -60,40 +45,41 @@ const ItemPage = () => {
                         <div className="row" style={{border:'1px solid white', borderRadius:'10px',  overflow: 'hidden', textOverflow: 'ellipsis'}}>
                             <div className="col-4">
                                 <img 
-                                    src={item.placeHolderImg} 
+                                    src={this.state.product.imageURL} 
                                     alt="itemImage" 
                                     style={{height:'90%', width:'90%', margin:'5%', borderRadius:'10px'}} />
                             </div>
                             <div className="col-4">
                                 <div className="row m-1">
                                     <div >
-                                        <h3>{item.name}</h3>
-                                        <p>Cost per item: <h5>${item.cost}</h5></p>
-                                        <p>Amount available: <h5>{item.amount}</h5></p>
+                                        <h3>{this.state.product.model}</h3>
+                                        <p>Manufacturer:  {this.state.product.manufacturer}</p>
+                                        <p>Cost per item: ${this.state.product.price}</p>
+                                        <p>Amount available: {this.state.product.amount}</p>
                                     </div>
                                     <div >
-                                        <p style={{border:'1px solid white', borderRadius:'10px', padding:'1px'}}>Description:<p>{item.description}</p></p>
+                                        <p style={{border:'1px solid white', borderRadius:'10px', padding:'1px'}}>Description: {this.state.product.description}</p>
                                     </div>
                                 </div>
                             </div>
                             <div className="col-4" style={{borderLeft: '1px dashed gray'}}>
                                 <h3>Profile Info</h3>
                                 <img 
-                                    src={user.imgSrc} 
+                                    src={this.state.user.imageURL} 
                                     alt="itemImage" 
                                     style={{height:'50%', width:'50%', margin:'5%', borderRadius:'10px'}} />
-                                <p>Name: {user.name}</p>
-                                <p>Email: {user.email}</p>
-                                <p>Phone number: {user.phoneNumber}</p>
+                                <p>Name: {this.state.user.name}</p>
+                                <p>Email: {this.state.user.email}</p>
+                                <p>Phone number: {this.state.user.phoneNumber}</p>
                             </div>
                         </div>
                         <div className="row">
-                            <nav className="my-2">
+                            <nav className="my-3">
                                 <p>
-                                    Wanted Amount: <input className="mx-2" type="number" min={1} max={item.amount} value={quantity} onChange={e => setQuantity(e.target.value)} style={{width:'100px'}}/>
-                                    Total Cost : <input className="mx-2" type="string" value={`$${quantity*item.cost}`} readonly style={{width:'100px'}}/>
+                                    Wanted Amount: <input className="mx-2" type="number" min={1} max={this.state.product.amount} defaultValue={this.state.quantity} onChange={e => this.setState({quantity: e.target.value})} style={{width:'100px'}}/>
+                                    Total Cost : <input className="mx-2" type="string" value={`$${this.state.quantity*this.state.product.price}`} readOnly style={{width:'100px'}}/>
                                 </p>
-                                <button type="button" className="btn btn-outline-light">BUY</button>
+                                <button type="button" className="btn btn-outline-light" onClick={this.buy.bind(this)}>Buy via paypal</button>
                             </nav>
                         </div>
                         {/* <div className="row">
@@ -104,7 +90,10 @@ const ItemPage = () => {
                 </div>
             </div>
         </div>
-    )
+        )
+
+        
+    }
 }
 
 export default ItemPage
