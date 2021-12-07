@@ -22,7 +22,7 @@ namespace OcelotApiGw
             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
             .Enrich.FromLogContext()
             .WriteTo.Debug(new RenderedCompactJsonFormatter())
-            .WriteTo.File("api_gateway_log.txt", rollingInterval: RollingInterval.Day, retainedFileCountLimit: 5, rollOnFileSizeLimit: true)
+            .WriteTo.File("Logs/api_gateway_log.txt", rollingInterval: RollingInterval.Day, retainedFileCountLimit: 5, rollOnFileSizeLimit: true)
             .CreateLogger();
 
             try

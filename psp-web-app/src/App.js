@@ -6,7 +6,8 @@ import {
   Routes
 } from 'react-router-dom';
 import NavBar from './components/navbar';
-import Checkout from './views/checkout'
+import Checkout from './views/checkout';
+import FrontPage from './views/frontpage';
 
 function App() {
 
@@ -16,7 +17,8 @@ function App() {
     <div>
       <NavBar></NavBar>
       <Routes>
-        <Route exact path="/" element={<Checkout/>}/>
+        <Route path="/checkout/:transactionId" element={<Checkout/>}/>
+        <Route  path="*" element={<FrontPage/>}/>
       </Routes>
     </div>
   </Router>

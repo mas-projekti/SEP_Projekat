@@ -13,7 +13,12 @@ function ccyFormat(num) {
   
   
   function total(items) {
-    return items.map(({ value }) => value).reduce((sum, i) => sum + i, 0);
+    let sum = 0;
+    items.forEach(item =>{
+      sum += item.quantity * item.value
+    });
+
+    return sum
   }
 
 
@@ -51,16 +56,18 @@ function OrderBreakdown(props) {
                  < TableCell>{item.name}</TableCell>
                 <TableCell>{item.description}</TableCell>
                 <TableCell align="right">{item.quantity}</TableCell>
-                <TableCell align="right">{item.value / item.quantity} {item.currency}</TableCell>
-                <TableCell align="right">{ccyFormat(item.value)} {item.currency}</TableCell>
+                <TableCell align="right">{item.value} {item.currency}</TableCell>
+                <TableCell align="right">{ccyFormat(item.value * item.quantity)} {item.currency}</TableCell>
               </TableRow>
             ))}
-  
+            { props.items[0]? (
             <TableRow>
               <TableCell rowSpan={4} />
               <TableCell colSpan={3}><b>TOTAL</b></TableCell>
               <TableCell align="right">{ccyFormat(total(props.items))} {props.items[0].currency}</TableCell>
-            </TableRow>
+            </TableRow>) : (
+              <div></div>
+            )}
           </TableBody>
         </Table>
       </TableContainer>

@@ -56,6 +56,8 @@ namespace PSP.API.Services
 
         private TransactionDto CreateTransactionDto(Transaction transaction)
         {
+            if (transaction == null)
+                return null;
 
             List<ItemDto> items = _mapper.Map<List<ItemDto>>(transaction.Items);
             List<string> merchantIds = new List<string>();
@@ -63,7 +65,8 @@ namespace PSP.API.Services
 
             foreach(Item item in transaction.Items)
             {
-                merchantIds.Add(item.MerchantId);
+                if(!merchantIds.Contains(item.MerchantId))
+                    merchantIds.Add(item.MerchantId);
             }
 
             return new TransactionDto()

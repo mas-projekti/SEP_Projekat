@@ -42,7 +42,7 @@ namespace Paypal.API.DataAdapter
                 JArray itemsArray = new JArray();
                 foreach(OrderItemDto item in kvp.Value)
                 {
-                    purchaseUnitTotal += item.Value;
+                    purchaseUnitTotal += item.Value * item.Quantity;
                     itemsArray.Add(JObject.FromObject( 
                         new
                         {
