@@ -26,8 +26,8 @@ function AnimatedRoutes() {
             <Route path='/about'>
               <About/>
             </Route>
-            <Route path='/item/:itemId'>
-              <ItemPage/>
+            <Route path='/item/:itemId' render={(props) => <ItemPage {...props} />} >
+              {/* <ItemPage/> */}
             </Route>
             <Route path='/login'>
               <Login/>
