@@ -69,7 +69,7 @@ function Checkout() {
                     <PayPalButtons
                     style={{ layout: "horizontal" }}
                     onApprove={(data, actions) => onApproveCallback(data, actions, orderItems)}
-                    createOrder={(data, actions) => onCreateOrder(data, actions, orderItems)}
+                    createOrder={(data, actions) => onCreateOrder(data, actions, orderItems, routeParams.transactionId)}
                     />
             </PayPalScriptProvider>
         </Grid>
@@ -117,9 +117,13 @@ function onApproveCallback(data, actions, orderItems){
                   
 }
 
-function onCreateOrder(data, actions, orderItems){
+function onCreateOrder(data, actions, orderItems, transactionId){
   const createOrderDto = 
-  {items:orderItems} //Ovde isto staviti konfigurabilne podatke
+  {
+    cancelUrl:`http://localhost:3000/checkout/${transactionId}`,
+    returnUrl:`http://localhost:3001/`,
+    items:orderItems
+  } //Ovde isto staviti konfigurabilne podatke
   return apiPaypalProvider.createOrder(createOrderDto)
       .then(function(data) {
           console.log(data)

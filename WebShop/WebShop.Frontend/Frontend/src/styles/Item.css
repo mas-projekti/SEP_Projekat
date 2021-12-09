@@ -1,0 +1,10 @@
+.cardHover {
+    color:'black';
+    cursor:'pointer';
+    transition: all 0.3s ease 0s;
+}
+
+.cardHover:hover {
+    transform: scale(1.03);
+    cursor:'pointer';
+}

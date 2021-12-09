@@ -93,7 +93,11 @@ namespace Paypal.API.DataAdapter
             new
             {
                 purchase_units = purchaseUnits,
-                intent = "CAPTURE"
+                intent = "CAPTURE",
+                application_context =new {
+                    cancel_url=dto.CancelUrl,
+                    return_url=dto.ReturnUrl
+                }
             });
             return order;
         }
