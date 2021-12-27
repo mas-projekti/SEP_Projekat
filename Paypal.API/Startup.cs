@@ -1,3 +1,4 @@
+using Common.ServiceDiscovery;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -33,7 +34,7 @@ namespace Paypal.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            ConfigureConsul(services);
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -80,5 +81,16 @@ namespace Paypal.API
 
             app.UseSerilogRequestLogging();
         }
+
+
+        private void ConfigureConsul(IServiceCollection services)
+        {
+            var serviceConfig = Configuration.GetServiceConfig();
+
+            services.RegisterConsulServices(serviceConfig);
+        }
+
     }
+
+
 }

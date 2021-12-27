@@ -1,4 +1,5 @@
 using AutoMapper;
+using Common.ServiceDiscovery;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -36,7 +37,7 @@ namespace PSP.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            ConfigureConsul(services);
             services.AddControllers().AddJsonOptions(options =>
                                      options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter())); ;
 
@@ -109,6 +110,13 @@ namespace PSP.API
                 var context = serviceScope.ServiceProvider.GetService<PaymentServiceProviderDbContext>();
                 context.Database.Migrate();
             }
+        }
+
+        private void ConfigureConsul(IServiceCollection services)
+        {
+            var serviceConfig = Configuration.GetServiceConfig();
+
+            services.RegisterConsulServices(serviceConfig);
         }
     }
 }

@@ -4,17 +4,15 @@
     {
       "DownstreamPathTemplate": "/api/orders/{everything}",
       "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 44310
-        }
-      ],
       "UpstreamPathTemplate": "/paypal/orders/{everything}",
       "UpstreamHttpMethod": [ "POST", "PUT", "GET", "DELETE" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "IdentityApiKey",
         "AllowedScopes": [ "paypal-api" ]
+      },
+      "ServiceName": "paypal",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
       }
 
     },
@@ -22,17 +20,15 @@
     {
       "DownstreamPathTemplate": "/api/orders",
       "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 44310
-        }
-      ],
       "UpstreamPathTemplate": "/paypal/orders",
       "UpstreamHttpMethod": [ "POST", "PUT", "GET", "DELETE" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "IdentityApiKey",
         "AllowedScopes": [ "paypal-api" ]
+      },
+      "ServiceName": "paypal",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
       }
 
     },
@@ -40,17 +36,15 @@
     {
       "DownstreamPathTemplate": "/api/transactions",
       "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 44327
-        }
-      ],
       "UpstreamPathTemplate": "/payment-service/transactions",
       "UpstreamHttpMethod": [ "POST", "PUT", "GET", "DELETE" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "IdentityApiKey",
         "AllowedScopes": []
+      },
+      "ServiceName": "identity",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
       }
 
     },
@@ -59,23 +53,27 @@
     {
       "DownstreamPathTemplate": "/api/transactions/{everything}",
       "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "localhost",
-          "Port": 44327
-        }
-      ],
       "UpstreamPathTemplate": "/payment-service/transactions/{everything}",
       "UpstreamHttpMethod": [ "POST", "PUT", "GET", "DELETE" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "IdentityApiKey",
         "AllowedScopes": []
+      },
+      "ServiceName": "psp",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
       }
 
     }
 
   ],
   "GlobalConfiguration": {
+
+    "ServiceDiscoveryProvider": {
+      "Host": "localhost",
+      "Port": 8500,
+      "Type": "Consul"
+    },
     "BaseUrl": "https://localhost:44313",
     "DangerousAcceptAnyServerCertificateValidator": true
   }

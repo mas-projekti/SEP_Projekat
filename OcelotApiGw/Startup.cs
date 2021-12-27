@@ -1,3 +1,5 @@
+using Common.ServiceDiscovery;
+using Consul;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -9,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
+using Ocelot.Provider.Consul;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -51,7 +54,7 @@ namespace OcelotApiGw
                     ValidateAudience = false
                 };
             });
-            services.AddOcelot();
+            services.AddOcelot().AddConsul();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -76,5 +79,6 @@ namespace OcelotApiGw
             app.UseSerilogRequestLogging(); 
             await app.UseOcelot();
         }
+
     }
 }
