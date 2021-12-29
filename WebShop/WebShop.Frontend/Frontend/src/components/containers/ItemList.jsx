@@ -9,7 +9,7 @@ class ItemList extends Component {
 
   componentDidMount() {
     axios
-      .get(process.env.REACT_APP_WEB_SHOP_PRDUCTS_BACKEND_API + `/all`)
+      .get(process.env.REACT_APP_WEB_SHOP_PRODUCTS_BACKEND_API + `/all`)
       .then((res) => {
         const products = res.data;
         this.setState({ products });

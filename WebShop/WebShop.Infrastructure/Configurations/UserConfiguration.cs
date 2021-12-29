@@ -48,7 +48,33 @@ namespace WebShop.Infrastructure.Configurations
             builder.Property(i => i.ImageURL)
                 .IsRequired(false);
 
-
+            builder.HasData(
+                new User { 
+                    Id = 1, 
+                    Name = "John", 
+                    Lastname = "Doe", 
+                    BirthDay = new DateTime(1990, 12, 12), 
+                    Email = "johndoe@email.com", 
+                    ImageURL = "https://upload.wikimedia.org/wikipedia/commons/f/fc/Zodiac-Killer.jpg", 
+                    Username = "johndoe@email.com", 
+                    Password = "secret", 
+                    UserType = UserType.Salesman, 
+                    MerchantId = Guid.NewGuid().ToString()
+                },
+                new User
+                {
+                    Id = 2,
+                    Name = "Mira",
+                    Lastname = "Markovic",
+                    BirthDay = new DateTime(1990, 12, 12),
+                    Email = "miramarkovic@email.com",
+                    ImageURL = "https://upload.wikimedia.org/wikipedia/en/thumb/0/07/Mirjana_Markovi%C4%87.webp/302px-Mirjana_Markovi%C4%87.webp.png",
+                    Username = "miramarkovic@email.com",
+                    Password = "secret",
+                    UserType = UserType.Customer,
+                    MerchantId = Guid.NewGuid().ToString()
+                }
+            );
   
         }
             

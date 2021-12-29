@@ -19,15 +19,25 @@ const Register = () => {
                             <div className="w-100 my-2"/>
                             <div className="col">Password*:</div>
                             <div className="col">
-                                <input type="text" />
+                                <input type="password" />
                             </div>
                             <div className="w-100 my-2"/>
                             <div className="col">Confirm Password*:</div>
                             <div className="col">
-                                <input type="text" />
+                                <input type="password" />
                             </div>
                             <div className="w-100 my-2"/>
                             <div className="col">Email*:</div>
+                            <div className="col">
+                                <input type="text" />
+                            </div>
+                            <div className="w-100 my-2"/>
+                            <div className="col">Name*:</div>
+                            <div className="col">
+                                <input type="text" />
+                            </div>
+                            <div className="w-100 my-2"/>
+                            <div className="col">Lastname*:</div>
                             <div className="col">
                                 <input type="text" />
                             </div>

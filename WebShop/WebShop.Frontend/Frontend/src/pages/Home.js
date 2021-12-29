@@ -54,7 +54,7 @@ const Home = () => {
 
   return (
     <div className="page-div page" style={{ backgroundColor: "black" }}>
-      s{/* <MainBar/> */}
+      {/* <MainBar/> */}
       <h1>WebShop MAS</h1>
       <div className="row center" style={{ width: "100%" }}>
         <div className="col-3" />
