@@ -48,11 +48,9 @@ namespace WebShop.Infrastructure.Configurations
                 .WithMany(p => p.Products)
                 .HasForeignKey(i => i.UserId);
 
-            builder.HasOne(i => i.OrderItem)
-              .WithOne(p => p.Product)
-              .HasForeignKey<Product>(i => i.OrderItemId)
-              .IsRequired(false)
-               .OnDelete(DeleteBehavior.Restrict);
+    
+
+
 
             builder.HasData(
                 new Product { 
