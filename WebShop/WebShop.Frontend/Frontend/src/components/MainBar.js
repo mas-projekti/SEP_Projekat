@@ -9,7 +9,7 @@ import jwtDecode from "jwt-decode"
 // import { MDBInput, MDBCol } from "mdbreact";
 
 
-const MainBar = () => {
+const MainBar = (props) => {
     var history = useHistory();
     const [ isLoggedIn, setIsLoggedIn ] = useState(false);
     const [ username, setUsername ] = useState(null);
@@ -69,7 +69,15 @@ const MainBar = () => {
                 <Navbar.Collapse id="responsive-navbar-nav ">
                 </Navbar.Collapse>
                 <Nav>
-                    
+                <NavLink to="/cart">
+                    Cart{' '}
+                    {props.countCartItems ? (
+                        <span className="btn btn-secondary rounded">{props.countCartItems}</span>
+                    ) : (
+                        ''
+                    )}
+                </NavLink>
+                <div className="mx-4">|</div>
                 </Nav>
                     {isLoggedIn ?
                         (<Nav>

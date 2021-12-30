@@ -7,7 +7,8 @@ class ItemPage extends Component {
         this.state = {
             product: {},
             user: {},
-            quantity: 1
+            quantity: 1,
+            onAdd : props.onAdd
         }
     }
 
@@ -22,15 +23,6 @@ class ItemPage extends Component {
                 .then((userRes) => {
                     this.setState({ user: userRes.data });
                 })
-                
-                // Uncomment when Users API are finished
-
-                // axios.get(process.env.REACT_APP_WEB_SHOP_USERS_BACKEND_API + `/` + this.state.product.userId)
-                // .then((res2) => { 
-                // this.setState({
-                //     user : res2.data,
-                // }); 
-                // });
             });
     }
 
@@ -84,7 +76,7 @@ class ItemPage extends Component {
                                     Wanted Amount: <input className="mx-2" type="number" min={1} max={this.state.product.amount} defaultValue={this.state.quantity} onChange={e => this.setState({quantity: e.target.value})} style={{width:'100px'}}/>
                                     Total Cost : <input className="mx-2" type="string" value={`$${this.state.quantity*this.state.product.price}`} readOnly style={{width:'100px'}}/>
                                 </p>
-                                <button type="button" className="btn btn-outline-light" onClick={this.buy.bind(this)}>Add to cart</button>
+                                <button type="button" className="btn btn-outline-light" onClick={() => this.state.onAdd(this.state.product, this.state.quantity)}>Add to cart</button>
                             </nav>
                         </div>
                         {/* <div className="row">

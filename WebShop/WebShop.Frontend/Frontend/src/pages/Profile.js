@@ -5,7 +5,8 @@ export class Profile extends Component {
     constructor(){
         super();
         this.state = {
-            user: {}
+            user: {},
+            orderList: []
         }
     }
 
@@ -15,7 +16,11 @@ export class Profile extends Component {
         axios.get(process.env.REACT_APP_WEB_SHOP_USERS_BACKEND_API + `/` + this.props.match.params.userId)
         .then((resp) => {
             this.setState({user: resp.data});
-            console.log(this.state);
+            axios.get(process.env.REACT_APP_WEB_SHOP_ORDERS_BACKEND_API + `/user/` + this.props.match.params.userId + `/orders`)
+            .then((resp) => {
+                this.setState({ orderList: resp.data})
+                console.log(this.state);
+            })
         })
         .catch((err) => {
 
@@ -29,45 +34,45 @@ export class Profile extends Component {
                     <div className='col-2'>
                     </div>
                     <div className='col'>
-                        <div class="login-form bg-dark my-3 p-4">
-                            <h4 class="text-center">User Info</h4>
-                            <div class="row">
-                                <div class="col text-center">
+                        <div className="login-form bg-dark my-3 p-4">
+                            <h4 className="text-center">User Info</h4>
+                            <div className="row">
+                                <div className="col text-center">
                                     <h4>Username:</h4>
                                 </div>
-                                <div class="col text-center">
+                                <div className="col text-center">
                                     <h4>{this.state.user.username}</h4>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col text-center">
+                            <div className="row">
+                                <div className="col text-center">
                                     <h4>Name:</h4>
                                 </div>
-                                <div class="col text-center">
+                                <div className="col text-center">
                                     <h4>{this.state.user.name}</h4>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col text-center">
+                            <div className="row">
+                                <div className="col text-center">
                                     <h4>Lastname:</h4>
                                 </div>
-                                <div class="col text-center">
+                                <div className="col text-center">
                                     <h4>{this.state.user.lastname}</h4>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col text-center">
+                            <div className="row">
+                                <div className="col text-center">
                                     <h4>email:</h4>
                                 </div>
-                                <div class="col text-center">
+                                <div className="col text-center">
                                     <h4>{this.state.user.email}</h4>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col text-center">
+                            <div className="row">
+                                <div className="col text-center">
                                     <h4>Role:</h4>
                                 </div>
-                                <div class="col text-center">
+                                <div className="col text-center">
                                     <h4>{this.state.user.userType}</h4>
                                 </div>
                             </div>
@@ -87,23 +92,18 @@ export class Profile extends Component {
                     <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Mobile</th>
-                            <th scope="col">X coordinate</th>
-                            <th scope="col">Y coordinate</th>
-                            <th scope="col">Last heard</th>
-                            <th scope="col"></th>
+                            <th scope="col">OrderStatus</th>
+                            <th scope="col">TimeStamp</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {/* { transactionList.map((t, i) => (
+                        { this.state.orderList.map((o, i) => (
                             <tr>
                             <th scope="row">{i+1}</th>
-                            <td>{t.name}</td>
-                            <td>{t.isMobile ? 'Yes' : 'No'}</td>
-                            <td>{t.x}</td>
-                            <td>{t.y}</td>
-                            <td>{this.datepipe.transform(t.timeStamp, "dd.MM.yyyy. HH:mm:ss")}</td>
+                            <td>{o.name}</td>
+                            <td>{o.isMobile ? 'Yes' : 'No'}</td>
+                            <td>{o.x}</td>
+                            <td>{o.y}</td>
                             <td>
                                 <button class="btn btn-outline-dark d-flex edit-btn" routerLink="/camera/{{camera.name}}" >
                                     <i class="fas fa-video me-2 mt-1 rounded"></i>
@@ -113,7 +113,7 @@ export class Profile extends Component {
                         </tr>
                         ))
         
-                        } */}
+                        }
                     </tbody>
                 </table>
                         </div>
