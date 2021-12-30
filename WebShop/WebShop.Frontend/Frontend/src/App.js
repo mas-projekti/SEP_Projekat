@@ -11,7 +11,6 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 
 function AnimatedRoutes() {
-
   // const location = useLocation();
 
   return (
@@ -52,8 +51,8 @@ function App() {
   return (
     <div className="App">
       <Router>
-        <MainBar/>
-        <AnimatedRoutes/>
+        <MainBar />
+        <AnimatedRoutes />
       </Router>
     </div>
   );

@@ -19,9 +19,8 @@ namespace WebShop.Models.DomainModels
         public int Amount { get; set; }
         public string ImageURL { get; set; }
         public int UserId { get; set; }
-        public User User { get; set; }
-        public int? OrderItemId { get; set; }
-        public OrderItem OrderItem { get; set; }
+        public User User { get; set; }       
+        public List<OrderItem> OrderItems { get; set; }
 
     }
 }

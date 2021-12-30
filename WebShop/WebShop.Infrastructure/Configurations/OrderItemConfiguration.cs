@@ -31,6 +31,11 @@ namespace WebShop.Infrastructure.Configurations
               .WithMany(p => p.OrderItems)
               .HasForeignKey(i => i.OrderId);
 
+            builder.HasOne(i => i.Product)
+              .WithMany(p => p.OrderItems)
+              .HasForeignKey(i => i.ProductId)
+              .OnDelete(DeleteBehavior.ClientSetNull);
+
 
         }
     }
