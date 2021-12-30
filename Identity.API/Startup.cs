@@ -1,3 +1,4 @@
+using Common.ServiceDiscovery;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Mappers;
 using IdentityServer4.Models;
@@ -34,7 +35,7 @@ namespace Identity.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            ConfigureConsul(services);
             //TODO: Change before production
             services.AddCors(options =>
             {
@@ -138,6 +139,13 @@ namespace Identity.API
                     context.SaveChanges();
                 }
             }
+        }
+
+        private void ConfigureConsul(IServiceCollection services)
+        {
+            var serviceConfig = Configuration.GetServiceConfig();
+
+            services.RegisterConsulServices(serviceConfig);
         }
     }
 }
