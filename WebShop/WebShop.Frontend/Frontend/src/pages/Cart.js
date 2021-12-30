@@ -64,9 +64,18 @@ export default function Cart(props) {
                     </div>
                     <hr/>
                     <div className="row">
-                        <button className="btn btn-secondary" onClick={() => alert('Implement Checkout!')}>
-                        Checkout
-                        </button>
+                        <div className='col-4'>
+
+                        </div>
+                        <div className='col-4'>
+                            <button className="btn btn-secondary" onClick={() => alert('Implement Checkout!')}>
+                                Checkout
+                            </button>
+                        </div>
+                        <div className='col-4'>
+
+                        </div>
+                        
                     </div>
                 </>
             )}
