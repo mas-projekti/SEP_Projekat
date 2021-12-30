@@ -46,7 +46,9 @@ namespace WebShop.Service.Services
             var claims = new List<Claim>()
             {
                 new Claim(ClaimTypes.Name, userDTO.Username),
-                new Claim(ClaimTypes.Role, userDTO.UserType.ToString())
+                new Claim(ClaimTypes.Role, userDTO.UserType.ToString()),
+                new Claim(ClaimTypes.Actor, userDTO.ImageURL),
+                new Claim(ClaimTypes.SerialNumber, userDTO.Id.ToString())
             };
 
             var tokenOptions = new JwtSecurityToken(

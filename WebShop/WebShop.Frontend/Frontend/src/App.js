@@ -6,7 +6,9 @@ import ItemPage from './pages/ItemPage';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import MainBar from './components/MainBar';
+import Profile from './pages/Profile';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
+
 
 function AnimatedRoutes() {
 
@@ -34,6 +36,9 @@ function AnimatedRoutes() {
             </Route>
             <Route path='/register'>
               <Register/>
+            </Route>
+            <Route path='/user/:userId' render={(props) => <Profile {...props} />}>
+              {/* <Profile/> */}
             </Route>
           </Switch>
       </CSSTransition>
