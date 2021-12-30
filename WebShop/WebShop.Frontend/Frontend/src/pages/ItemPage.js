@@ -26,12 +26,6 @@ class ItemPage extends Component {
             });
     }
 
-    buy() {
-        console.log(this.state);
-        // Redirect to Paypal
-    }
-
-
     render() {
         return (
             <div className="page-div page" style={{backgroundColor:'black'}}>

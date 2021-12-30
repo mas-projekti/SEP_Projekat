@@ -29,7 +29,6 @@ const MainBar = (props) => {
         let token = localStorage.getItem(`jwt`);
         if (token === null) return;
         let decodedToken = jwtDecode(token);
-        console.log(decodedToken);
         setUsername(decodedToken[`http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name`]);
         setimageURL(decodedToken[`http://schemas.xmlsoap.org/ws/2009/09/identity/claims/actor`]);
         setId(decodedToken[`http://schemas.microsoft.com/ws/2008/06/identity/claims/serialnumber`]);

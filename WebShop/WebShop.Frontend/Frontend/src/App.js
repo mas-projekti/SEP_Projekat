@@ -60,6 +60,10 @@ function App() {
     setCartItems(cartItems.filter((x) => x.id !== product.id));
   };
 
+  const emptyCart = () => {
+    setCartItems([]);
+  };
+
   return (
     <div className="App">
       <Router>
@@ -90,7 +94,7 @@ function App() {
                   {/* <Profile/> */}
                 </Route>
                 <Route path='/cart'>
-                  <Cart cartItems={cartItems} onAdd={onAdd} onRemove={onRemove} onRemoveEntire={onRemoveEntire}/>
+                  <Cart cartItems={cartItems} onAdd={onAdd} onRemove={onRemove} onRemoveEntire={onRemoveEntire} emptyCart={emptyCart}/>
                 </Route>
               </Switch>
             </CSSTransition>
