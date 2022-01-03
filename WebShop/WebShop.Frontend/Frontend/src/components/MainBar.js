@@ -11,10 +11,11 @@ import jwtDecode from "jwt-decode"
 
 const MainBar = (props) => {
     var history = useHistory();
-    const [ isLoggedIn, setIsLoggedIn ] = useState(false);
-    const [ username, setUsername ] = useState(null);
-    const [ id, setId ] = useState(null);
-    const [ imageURL, setimageURL ] = useState(``);
+    let startDecodedToken = localStorage.getItem(`jwt`) !== null ? jwtDecode(localStorage.getItem(`jwt`)) : null;
+    const [ isLoggedIn, setIsLoggedIn ] = useState(startDecodedToken !== null ? true : false);
+    const [ username, setUsername ] = useState(startDecodedToken !== null ? startDecodedToken[`http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name`] : `` );
+    const [ id, setId ] = useState(startDecodedToken !== null ? startDecodedToken[`http://schemas.microsoft.com/ws/2008/06/identity/claims/serialnumber`] : `` );
+    const [ imageURL, setimageURL ] = useState(startDecodedToken !== null ? startDecodedToken[`http://schemas.xmlsoap.org/ws/2009/09/identity/claims/actor`] : ``);
     // const [ link, setLink ] = useState(``);
 
     useEffect(() => {
