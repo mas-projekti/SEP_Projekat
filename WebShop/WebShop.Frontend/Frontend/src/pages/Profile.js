@@ -6,7 +6,10 @@ export class Profile extends Component {
         super();
         this.state = {
             user: {},
-            orderList: []
+            orderList: [],
+            orderItemList: [],
+            orderNumber: 0,
+            totalPrice: 0
         }
     }
 
@@ -25,6 +28,18 @@ export class Profile extends Component {
         .catch((err) => {
 
         })
+    }
+
+
+    seeFullOrder(orderNumber1, listOfItems) {
+        let value = 0;
+        listOfItems.forEach((o, i) => (
+            value +=  Number(o.amount) * Number(o.price.toFixed(2))
+        ));
+
+        console.log(value);
+
+        this.setState({ orderItemList: listOfItems, orderNumber: orderNumber1, totalPrice: value });
     }
 
     render() {
@@ -83,49 +98,70 @@ export class Profile extends Component {
                 </div>
 
                 <div className='row'>
-                    <div className='col-1 bg-primary'>
-                        AAAA
+                    <div className='col-1'>
+                        
                     </div>
-                    <div className='col  bg-secondary'>
+                    <div className='col'>
                         <div>
-                        <table  className="table table-hover mt-3 bg-light ">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">OrderStatus</th>
-                            <th scope="col">TimeStamp</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        { this.state.orderList.map((o, i) => (
-                            <tr>
-                            <th scope="row">{i+1}</th>
-                            <td>{o.name}</td>
-                            <td>{o.isMobile ? 'Yes' : 'No'}</td>
-                            <td>{o.x}</td>
-                            <td>{o.y}</td>
-                            <td>
-                                <button class="btn btn-outline-dark d-flex edit-btn" routerLink="/camera/{{camera.name}}" >
-                                    <i class="fas fa-video me-2 mt-1 rounded"></i>
-                                    <p>Info</p>
-                                </button>
-                            </td>
-                        </tr>
-                        ))
-        
-                        }
-                    </tbody>
-                </table>
+                            <table  className="table table-hover mt-3 bg-light ">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">OrderStatus</th>
+                                        <th scope="col">TimeStamp</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    { this.state.orderList.map((o, i) => (
+                                        <tr>
+                                        <th scope="row">{i+1}</th>
+                                        <td>{o.orderStatus}</td>
+                                        <td>{new Intl.DateTimeFormat('sr-Latn-CS', {year: 'numeric', month: '2-digit',day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit'}).format(new Date(o.timestamp)) }</td>
+
+                                        <td>
+                                            <button class="btn btn-outline-dark d-flex edit-btn" onClick={() => this.seeFullOrder(i+1, o.orderItems)} >
+                                                <i class="fas fa-video me-2 mt-1 rounded"></i>
+                                                <p>Info</p>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    ))
+                                    }
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                    <div className='col-1  bg-warning'>
-                        AAAA
+                    <div className='col-1'>
+                        
                     </div>
-                    <div className='col  bg-danger'>
-                        AAAA
+                    <div className='col'>
+                        <h4>You are seeing order number: <b>{this.state.orderNumber}</b></h4>
+                        <h4>Total Cost: <b>${this.state.totalPrice}</b></h4>
+                        <table  className="table table-hover mt-3 bg-light ">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Amount</th>
+                                    <th scope="col">Price</th>
+                                    <th scope='col'>Total Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                { this.state.orderItemList.map((o, i) => (
+                                <tr>
+                                    <th scope="row">{i+1}</th>
+                                    <td>{o.amount}</td>
+                                    <td>{o.price.toFixed(2)}</td>
+                                    <td>{o.amount * o.price.toFixed(2)}</td>
+                                </tr>
+                                ))
+                
+                                }
+                            </tbody>
+                        </table>
                     </div>
-                    <div className='col-1  bg-dark'>
-                        AAAA
+                    <div className='col-1'>
+                        
                     </div>
                 </div>
             </div>

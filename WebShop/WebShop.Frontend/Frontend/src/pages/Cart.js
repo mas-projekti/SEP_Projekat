@@ -1,6 +1,7 @@
 import axios from 'axios';
-import React from 'react';
+import React, { useState } from 'react';
 import jwtDecode from "jwt-decode"
+import { useHistory } from 'react-router-dom';
 
 export default function Cart(props) {
   const { cartItems, onAdd, onRemove, onRemoveEntire, emptyCart } = props;
@@ -14,16 +15,17 @@ export default function Cart(props) {
 //   };
 
   const text = `You must login first`;
-  let isTextVisible = false;
+  const [ isTextVisible, setIsTextVisible ] = useState(false);
+  const history = useHistory();
 
   function checkout() {
       
     let token = localStorage.getItem(`jwt`);
     if (token === null) {
-        isTextVisible = true;
+        setIsTextVisible(true);
         return;
     }
-    isTextVisible = false;
+    setIsTextVisible(false);
     let decodedToken = jwtDecode(token);
 
     const customerId = decodedToken[`http://schemas.microsoft.com/ws/2008/06/identity/claims/serialnumber`];
@@ -64,7 +66,7 @@ export default function Cart(props) {
 
         alert(`You ordered these items`);
         emptyCart();
-        window.history.go(`user/${customerId}`);
+        history.push(`user/${customerId}`);
         
         // Otkomentarisati posle radi PSP API-ja
 
@@ -143,7 +145,7 @@ export default function Cart(props) {
 
                         </div>
                         <div className='col-4'>
-                            <div className='bg-danger'>
+                            <div className='bg-danger my-3 rounded'>
                                 {isTextVisible ? text : null}
                             </div>
                             
