@@ -1,4 +1,7 @@
+using Common.CustomMiddleware;
 using Common.ServiceDiscovery;
+using Identity.API.Intefraces;
+using Identity.API.Services;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Mappers;
 using IdentityServer4.Models;
@@ -75,6 +78,8 @@ namespace Identity.API
                     options.TokenCleanupInterval = 30;
                 });
 
+            services.AddScoped<IClientService, ClientService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -87,7 +92,7 @@ namespace Identity.API
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Identity.API v1"));
             }
-
+            app.UseCustomExceptionHandler();
             app.UseHttpsRedirection();
             app.UseCors(_cors);
 
