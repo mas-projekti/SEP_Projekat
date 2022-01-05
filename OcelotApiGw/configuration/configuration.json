@@ -71,10 +71,6 @@
       "DownstreamScheme": "https",
       "UpstreamPathTemplate": "/payment-service/clients/{everything}",
       "UpstreamHttpMethod": [ "POST", "PUT", "GET", "DELETE" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "IdentityApiKey",
-        "AllowedScopes": []
-      },
       "ServiceName": "psp",
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
@@ -87,10 +83,6 @@
       "DownstreamScheme": "https",
       "UpstreamPathTemplate": "/payment-service/clients",
       "UpstreamHttpMethod": [ "POST", "PUT", "GET", "DELETE" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "IdentityApiKey",
-        "AllowedScopes": []
-      },
       "ServiceName": "psp",
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
