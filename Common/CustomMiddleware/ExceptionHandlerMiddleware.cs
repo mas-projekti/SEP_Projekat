@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Common.Exceptions;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using System;
@@ -35,6 +36,15 @@ namespace Common.CustomMiddleware
             var code = HttpStatusCode.BadRequest;
 
             var result = string.Empty;
+
+            switch (exception)
+            {
+                case ClientDoesntExistException validationException:
+                    code = HttpStatusCode.NotFound;
+                    result = JsonConvert.SerializeObject(validationException.Message);
+                    break;
+
+            }
 
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)code;

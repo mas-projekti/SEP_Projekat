@@ -8,6 +8,8 @@ namespace PSP.API.Interfaces
 {
     public interface IClientService
     {
-        public CreatedClientDto CreateClient(NewPspClientDto newClient);
+        public Task<CreatedPspClientDto> CreateClient(NewPspClientDto newClient);
+        public Task<PspClientDto> GetClient(int id);
+        public Task<PspClientDto> UpdateClient(int id, PspClientDto newData);
     }
 }
