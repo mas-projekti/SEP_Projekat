@@ -49,7 +49,7 @@ namespace WebShop.Service.Services
                 orderitems.Add(new OrderItem
                 {
                     Id = 0,
-                    Amount = p.Amout,
+                    Amount = p.Amount,
                     Price = p.Price,
                     ProductId = p.ProductId
 
@@ -61,7 +61,8 @@ namespace WebShop.Service.Services
                 CustomerId = orderData.CustomerId,
                 Id = 0,
                 OrderItems = orderitems,
-                OrderStatus = OrderStatus.Pending
+                OrderStatus = OrderStatus.Pending,
+                Timestamp = DateTime.Now,
             };
         }
 

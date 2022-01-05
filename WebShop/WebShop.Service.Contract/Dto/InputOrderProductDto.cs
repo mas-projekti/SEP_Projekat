@@ -9,7 +9,7 @@ namespace WebShop.Service.Contract.Dto
     public class InputOrderProductDto
     {
         public int ProductId { get; set; }
-        public int Amout { get; set; }
+        public int Amount { get; set; }
         public decimal Price { get; set; }
     }
 }
