@@ -8,6 +8,9 @@ import {
 import NavBar from './components/navbar';
 import Checkout from './views/checkout';
 import FrontPage from './views/frontpage';
+import Login from './views/login/login'
+import Registration from './views/registration/registration'
+import ClientSettings from './views/client-settings'
 
 function App() {
 
@@ -17,6 +20,9 @@ function App() {
     <div>
       <NavBar></NavBar>
       <Routes>
+        <Route path="/client-settings/:clientID" element={<ClientSettings/>}/>
+        <Route path="/login" element={<Login/>}/>
+        <Route path="/register" element={<Registration/>}/>
         <Route path="/checkout/:transactionId" element={<Checkout/>}/>
         <Route  path="*" element={<FrontPage/>}/>
       </Routes>

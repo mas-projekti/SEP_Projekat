@@ -14,6 +14,8 @@ namespace PSP.API.Mapping
         {
 
             CreateMap<Item, ItemDto>().ReverseMap();
+            CreateMap<PspClient, CreatedPspClientDto>().ReverseMap();
+            CreateMap<PspClient, PspClientDto>().ReverseMap();
 
         }
     }

@@ -42,7 +42,7 @@
         "AuthenticationProviderKey": "IdentityApiKey",
         "AllowedScopes": []
       },
-      "ServiceName": "identity",
+      "ServiceName": "psp",
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
       }
@@ -59,6 +59,30 @@
         "AuthenticationProviderKey": "IdentityApiKey",
         "AllowedScopes": []
       },
+      "ServiceName": "psp",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      }
+
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/clients/{everything}",
+      "DownstreamScheme": "https",
+      "UpstreamPathTemplate": "/payment-service/clients/{everything}",
+      "UpstreamHttpMethod": [ "POST", "PUT", "GET", "DELETE" ],
+      "ServiceName": "psp",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      }
+
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/clients",
+      "DownstreamScheme": "https",
+      "UpstreamPathTemplate": "/payment-service/clients",
+      "UpstreamHttpMethod": [ "POST", "PUT", "GET", "DELETE" ],
       "ServiceName": "psp",
       "LoadBalancerOptions": {
         "Type": "LeastConnection"

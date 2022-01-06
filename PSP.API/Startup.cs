@@ -1,4 +1,6 @@
 using AutoMapper;
+using Common.CustomMiddleware;
+using Common.Identity;
 using Common.ServiceDiscovery;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -15,6 +17,7 @@ using PSP.API.Infrastructure;
 using PSP.API.Interfaces;
 using PSP.API.Mapping;
 using PSP.API.Services;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -69,7 +72,7 @@ namespace PSP.API
             services.AddAuthentication("Bearer")
              .AddJwtBearer("Bearer", options =>
              {
-                 options.Authority = "https://localhost:44389";
+                 options.Authority = Configuration.GetIdentityConfig().IdentityURL.ToString();
                  options.TokenValidationParameters = new TokenValidationParameters
                  {
                      ValidateAudience = false
@@ -79,6 +82,7 @@ namespace PSP.API
 
             services.AddScoped<IItemService, ItemService>();
             services.AddScoped<ITransactionService, TransactionService>();
+            services.AddScoped<IClientService, ClientService>();
 
         }
 
@@ -91,13 +95,13 @@ namespace PSP.API
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "PSP.API v1"));
             }
-
+            app.UseCustomExceptionHandler();
             app.UseHttpsRedirection();
             app.UseCors(_cors);
 
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -110,6 +114,7 @@ namespace PSP.API
                 var context = serviceScope.ServiceProvider.GetService<PaymentServiceProviderDbContext>();
                 context.Database.Migrate();
             }
+            app.UseSerilogRequestLogging();
         }
 
         private void ConfigureConsul(IServiceCollection services)
