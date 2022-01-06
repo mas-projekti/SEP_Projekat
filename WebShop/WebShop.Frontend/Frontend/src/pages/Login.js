@@ -5,13 +5,15 @@ import PubSub from "pubsub-js";
 // import { Route, Router } from "workbox-routing";
 // import MainBar from "../components/MainBar"
 
-const Login = () => {
-    const history = useHistory()
+const Login = (props) => {
+    const history = useHistory();
     const [ errorMessage, setErrorMessage ] = useState("");
     const [ credentials, setCredentials ] = useState({ username: "", password: ""});
+    const { authenticated, loginGuardFunction } = props
 
     useEffect(() => {
-
+        console.log(!loginGuardFunction());
+        if (loginGuardFunction()) history.push(`/`);
     })
 
     const loginAttempt = async () => {
@@ -22,6 +24,7 @@ const Login = () => {
             setErrorMessage("");
             localStorage.setItem(`jwt`, resp.data);
             PubSub.publish(`LoginEvent`);
+            authenticated();
             console.log(`Published an event to: LoginEvent`);
             history.push(`/`);
         })

@@ -1,21 +1,22 @@
 import axios from 'axios';
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 
 export class Profile extends Component {
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
         this.state = {
             user: {},
             orderList: [],
             orderItemList: [],
             orderNumber: 0,
-            totalPrice: 0
+            totalPrice: 0,
         }
     }
 
     
 
     componentDidMount() {
+        if (!this.props.authGuardFunction()) this.props.history.push(`/login`);
         axios.get(process.env.REACT_APP_WEB_SHOP_USERS_BACKEND_API + `/` + this.props.match.params.userId)
         .then((resp) => {
             this.setState({user: resp.data});
@@ -113,14 +114,14 @@ export class Profile extends Component {
                                 </thead>
                                 <tbody>
                                     { this.state.orderList.map((o, i) => (
-                                        <tr>
+                                    <tr key={i}>
                                         <th scope="row">{i+1}</th>
                                         <td>{o.orderStatus}</td>
                                         <td>{new Intl.DateTimeFormat('sr-Latn-CS', {year: 'numeric', month: '2-digit',day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit'}).format(new Date(o.timestamp)) }</td>
 
                                         <td>
-                                            <button class="btn btn-outline-dark d-flex edit-btn" onClick={() => this.seeFullOrder(i+1, o.orderItems)} >
-                                                <i class="fas fa-video me-2 mt-1 rounded"></i>
+                                            <button className="btn btn-outline-dark d-flex edit-btn" onClick={() => this.seeFullOrder(i+1, o.orderItems)} >
+                                                <i className="fas fa-video me-2 mt-1 rounded"></i>
                                                 <p>Info</p>
                                             </button>
                                         </td>
@@ -148,7 +149,7 @@ export class Profile extends Component {
                             </thead>
                             <tbody>
                                 { this.state.orderItemList.map((o, i) => (
-                                <tr>
+                                <tr key={i}>
                                     <th scope="row">{i+1}</th>
                                     <td>{o.amount}</td>
                                     <td>{o.price.toFixed(2)}</td>

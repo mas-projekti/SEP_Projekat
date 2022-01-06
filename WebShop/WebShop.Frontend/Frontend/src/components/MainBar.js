@@ -16,6 +16,7 @@ const MainBar = (props) => {
     const [ username, setUsername ] = useState(startDecodedToken !== null ? startDecodedToken[`http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name`] : `` );
     const [ id, setId ] = useState(startDecodedToken !== null ? startDecodedToken[`http://schemas.microsoft.com/ws/2008/06/identity/claims/serialnumber`] : `` );
     const [ imageURL, setimageURL ] = useState(startDecodedToken !== null ? startDecodedToken[`http://schemas.xmlsoap.org/ws/2009/09/identity/claims/actor`] : ``);
+    const { notAuthenticated } = props;
     // const [ link, setLink ] = useState(``);
 
     useEffect(() => {
@@ -40,6 +41,7 @@ const MainBar = (props) => {
         localStorage.removeItem(`jwt`);
         setUsername(``);
         setIsLoggedIn(false);
+        notAuthenticated();
         history.push(`/login`);
     }
 

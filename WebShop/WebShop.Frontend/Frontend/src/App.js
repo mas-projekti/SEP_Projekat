@@ -8,8 +8,10 @@ import Register from './pages/Register';
 import MainBar from './components/MainBar';
 import Profile from './pages/Profile';
 import Cart from './pages/Cart';
+import CreateItemPage from './pages/CreateItemPage';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { useState } from 'react';
+
 
 
 // function AnimatedRoutes() {
@@ -25,6 +27,7 @@ import { useState } from 'react';
 
 function App() {
   const [cartItems, setCartItems] = useState([]);
+  const [isAuth, setIsAuth] = useState(false);
 
   const onAdd = (product, quantity) => {
     const exist = cartItems.find((x) => x.id === product.id);
@@ -64,10 +67,31 @@ function App() {
     setCartItems([]);
   };
 
+
+  const authenticated = () => {
+    setIsAuth(true);
+    console.log(isAuth);
+  }
+
+  const notAuthenticated = () => {
+    setIsAuth(false);
+    console.log(isAuth);
+  }
+
+
+
+  const authGuardFunction = () => {
+    return isAuth;
+  }
+
+  const loginGuardFunction = () => {
+    return isAuth;
+  }
+
   return (
     <div className="App">
       <Router>
-        <MainBar countCartItems={cartItems.length} />
+        <MainBar countCartItems={cartItems.length} notAuthenticated={notAuthenticated} />
         <Route render={({location}) => (
           <TransitionGroup>
             <CSSTransition
@@ -85,16 +109,19 @@ function App() {
                   {/* <ItemPage/> */}
                 </Route>
                 <Route path='/login'>
-                  <Login/>
+                  <Login authenticated={authenticated} loginGuardFunction={loginGuardFunction} />
                 </Route>
                 <Route path='/register'>
                   <Register/>
                 </Route>
-                <Route path='/user/:userId' render={(props) => <Profile {...props}/>}>
+                <Route path='/user/:userId' render={(props) => <Profile {...props} authGuardFunction={authGuardFunction}/>}>
                   {/* <Profile/> */}
                 </Route>
                 <Route path='/cart'>
                   <Cart cartItems={cartItems} onAdd={onAdd} onRemove={onRemove} onRemoveEntire={onRemoveEntire} emptyCart={emptyCart}/>
+                </Route>
+                <Route path='/createNewItem' >
+                  <CreateItemPage authGuardFunction={authGuardFunction}/>
                 </Route>
               </Switch>
             </CSSTransition>
