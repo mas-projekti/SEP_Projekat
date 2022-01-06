@@ -100,6 +100,12 @@ const MainBar = (props) => {
                                 
                                 <h5>{username}</h5>
                             </NavLink>
+                            <NavLink to="/createNewItem">
+                                <button className="btn btn-secondary mx-2">
+                                    Add New Item
+                                </button>
+                            </NavLink>
+                            
                             <button className="btn btn-secondary mx-2" onClick={logout}>
                                 Logout
                             </button>
