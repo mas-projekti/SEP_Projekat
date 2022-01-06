@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PSP.API.Dto;
 using PSP.API.Interfaces;
@@ -20,13 +21,15 @@ namespace PSP.API.Controllers
             _clientService = clientService;
         }
 
-        [HttpGet("{id}")]
+
+        [HttpGet("{clientID}")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PspClientDto))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetClient(int id)
+        public IActionResult GetClient(string clientID)
         {
 
-            return Ok(await _clientService.GetClient(id));
+            return Ok(_clientService.GetClientByClientID(clientID));
 
         }
 
@@ -42,6 +45,7 @@ namespace PSP.API.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PspClientDto))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateClient(int id,[FromBody] PspClientDto newClient)

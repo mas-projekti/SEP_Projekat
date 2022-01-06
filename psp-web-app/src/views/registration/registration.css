@@ -10,8 +10,21 @@
     margin-top:10px;
     margin-bottom:10px;
 }
+p {
+    color: #bf1650;
+  }
 .login-form-1 h3{
     text-align: center;
+    color: #333;
+}
+
+.login-form-1 h1{
+    text-align: center;
+    color: #333;
+}
+
+.login-form-1 h2{
+    margin-top: 40px;
     color: #333;
 }
 .login-form-2{

@@ -24,7 +24,7 @@ namespace Identity.API.Services
         public async Task<CreatedClientDto> AddClientAsync(NewClientDto dto)
         {
             RandomNumberGenerator cryptoRandomDataGenerator = new RNGCryptoServiceProvider();
-            byte[] buffer = new byte[30];
+            byte[] buffer = new byte[20];
             cryptoRandomDataGenerator.GetBytes(buffer);
             string uniq = Convert.ToBase64String(buffer);
             List<string> scopes = new List<string>();

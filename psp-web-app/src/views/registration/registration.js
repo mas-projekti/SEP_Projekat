@@ -1,31 +1,40 @@
+// @ts-nocheck
 import React from 'react';
 import './registration.css';
 import  {useState} from 'react';
 import {apiClientsProvider} from '../../services/api/client-service';
 import CircularProgress from '@mui/material/CircularProgress';
+import Button from '@mui/material/Button';
+import {
+  Link
+} from "react-router-dom";
+import { useForm } from "react-hook-form";
 
 export default function Registration() {
-  const [clientName, setClientName] = useState("");
-  const [transactionResultCallback, setTRC] = useState("");
-  const [settingsCallback, setSettingsCallback] = useState("");
-  const [paypalActive, setPaypalActive] = useState(false);
-  const [bitcoinActive, setBitcoinActive] = useState(false);
-  const [bankActive, setBankActive] = useState(false);
+    const {
+        register,
+        handleSubmit,
+        formState: { errors }
+      } = useForm({
+        defaultValues: {
+          paypalActive: true,
+        }
+      });
   const [created, setCreated] = useState(false);
   const [clientID, setClientID] = useState("");
   const [clientSecret, setClientSecret] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   
 
-  const handleSubmit = event => {
+  const onSubmit = data => {
     const createNewPspClientDto = 
     {
-        clientName:clientName,
-        transactionOutcomeCallback: transactionResultCallback,
-        settingsUpdatedCallback: settingsCallback,
-        paypalActive: paypalActive,
-        bitcoinActive: bitcoinActive,
-        bankActive: bankActive,
+        clientName:data.clientName,
+        transactionOutcomeCallback: data.transactionResultCallback,
+        settingsUpdatedCallback: data.settingsCallback,
+        paypalActive: data.paypalActive,
+        bitcoinActive: data.bitcoinActive,
+        bankActive: data.bankActive,
       
     } 
     apiClientsProvider.createNewClient(createNewPspClientDto)
@@ -34,8 +43,18 @@ export default function Registration() {
         setClientSecret(data.clientSecret)
         setCreated(true)
         setIsLoading(false)
+    }).catch((error) => {
+        // Error
+        if (error.response) {
+            
+        } else if (error.request) {
+            alert("Server could not be contacted, please try again!");
+            setIsLoading(false)
+        }
+        console.log(error.config);
     });
     setIsLoading(true)
+    
   }
   return(
 
@@ -54,30 +73,33 @@ export default function Registration() {
                             ):(
                              <> 
                             <h3>Register as a new client</h3>
-                            <form>
+                            <form onSubmit={handleSubmit(onSubmit)}>
                                 <div className="form-group">
-                                    <input type="text" className="form-control" placeholder="Your application name *"  onChange={e => setClientName(e.target.value)} />
+                                    <input {...register("clientName", { required: true, maxLength: 50 })}  type="text" className="form-control" placeholder="Your application name *"/>
+                                    {errors.clientName && <p>This field is required</p>}
                                 </div>
                                 <div className="form-group">
-                                    <input type="text" className="form-control" placeholder="Your application transaction result callback URL *" onChange={e => setTRC(e.target.value)} />
+                                    <input {...register("transactionResultCallback", { required: true })} type="text" className="form-control" placeholder="Your application transaction result callback URL *" />
+                                    {errors.transactionResultCallback && <p>This field is required</p>}
                                 </div>
                                 <div className="form-group">
-                                    <input type="text" className="form-control" placeholder="Your application settings changed callback URL *" onChange={e => setSettingsCallback(e.target.value)} />
-                                </div>
-
-                                <div className="form-group">
-                                        <input type="checkbox" checked={paypalActive} onChange={e => setPaypalActive(e.target.checked)}/> Use paypal
-                                </div>
-
-                                <div className="form-group">
-                                        <input type="checkbox" checked={bankActive} onChange={e => setBankActive(e.target.checked)}/> Use banking services
+                                    <input {...register("settingsCallback", { required: true })} type="text" className="form-control" placeholder="Your application settings changed callback URL *"  />
+                                    {errors.settingsCallback && <p>This field is required</p>}
                                 </div>
 
                                 <div className="form-group">
-                                        <input type="checkbox" checked={bitcoinActive} onChange={e => setBitcoinActive(e.target.checked)}/> Use bitcoin
+                                        <input readOnly={true} {...register("paypalActive", {})} type="checkbox" checked={true} /> Use paypal
+                                </div>
+
+                                <div className="form-group">
+                                        <input {...register("bankActive", {})} type="checkbox" /> Use banking services
+                                </div>
+
+                                <div className="form-group">
+                                        <input {...register("bitcoinActive", {})} type="checkbox" /> Use bitcoin
                                 </div>
                                 <div className="form-group">
-                                    <input type="button" className="btnSubmit" value="Register" onClick={handleSubmit} />
+                                    <input type="submit" className="btnSubmit" value="Register" />
                                 </div>
                             </form>
                             </>  
@@ -91,7 +113,8 @@ export default function Registration() {
                     <h4> Your Client ID is {clientID}</h4>
                     <h4> Your Client secret is {clientSecret}</h4>
 
-                    <h2>PLEASE STORE THEM CAREFULLY AS YOU WILL NOT BE ABLE TO RESET THEM IF LOST!</h2>
+                    <h2>PLEASE STORE THEM CAREFULLY AS YOU WILL NOT BE ABLE TO RESET THEM!</h2>
+                    <Button component={Link} to="/login" variant="contained">Proceed to Log in</Button>
                 </div>
             </div>
         )}

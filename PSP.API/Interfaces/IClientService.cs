@@ -10,6 +10,7 @@ namespace PSP.API.Interfaces
     {
         public Task<CreatedPspClientDto> CreateClient(NewPspClientDto newClient);
         public Task<PspClientDto> GetClient(int id);
+        public PspClientDto GetClientByClientID(string id);
         public Task<PspClientDto> UpdateClient(int id, PspClientDto newData);
     }
 }

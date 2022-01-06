@@ -85,7 +85,19 @@ namespace PSP.API.Services
 
         public async Task<PspClientDto> GetClient(int id)
         {
-            return _mapper.Map<PspClientDto>(await _dbContext.PspClients.FindAsync(id));
+            PspClientDto ret =  _mapper.Map<PspClientDto>(await _dbContext.PspClients.FindAsync(id));
+            if(ret == null)
+                throw new ClientDoesntExistException($"Client with id {id} does not exist.");
+            return ret;
+        }
+
+        public PspClientDto GetClientByClientID(string id)
+        {
+            PspClientDto ret = _mapper.Map<PspClientDto>( _dbContext.PspClients.FirstOrDefault(x => x.ClientID == id));
+
+            if (ret == null)
+                throw new ClientDoesntExistException($"Client with clientID {id} does not exist.");
+            return ret;
         }
 
         public async Task<PspClientDto> UpdateClient(int id, PspClientDto newData)

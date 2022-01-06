@@ -14,7 +14,6 @@ const getPSPToken = (client_id, client_secret, scopes, grant_type='client_creden
     
      return authRequest.credentials.getToken()
      .then(handleResponse) 
-     .catch(handleError); 
 }; 
 
 
