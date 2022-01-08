@@ -76,12 +76,14 @@ namespace WebShop
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IOrderItemRepository, OrderItemRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IPaymentOptionRepository, PaymentOptionRepository>();
 
 
             //Add Service implementations
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IPaymentOptionService, PaymentOptionService>();
 
 
 

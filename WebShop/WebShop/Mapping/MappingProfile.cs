@@ -25,6 +25,8 @@ namespace WebShop.Mapping
                .ForMember(mem => mem.OrderStatus, op => op.MapFrom(o => o.OrderStatus))
                .ReverseMap();
 
+            CreateMap<PaymentOption, PaymentOptionDto>().ReverseMap();
+
 
 
         }
