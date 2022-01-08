@@ -8,11 +8,11 @@ export default function Cart(props) {
   const itemsPrice = cartItems.reduce((a, c) => a + c.qty * c.price, 0);
   const totalPrice = itemsPrice;
 
-//   const BASE_URL = "https://localhost:44313";
-//   const PSP_FRONT = "http://localhost:3000/checkout/";
-//   const config = {
-//      headers: { Authorization: `Bearer ${localStorage.getItem("psp-token")}` },
-//   };
+  const BASE_URL = "https://localhost:44313";
+  const PSP_FRONT = "http://localhost:3000/checkout/";
+  const config = {
+     headers: { Authorization: `Bearer ${localStorage.getItem("psp-token")}` },
+  };
 
   const text = `You must login first`;
   const [ isTextVisible, setIsTextVisible ] = useState(false);
@@ -29,9 +29,11 @@ export default function Cart(props) {
     let decodedToken = jwtDecode(token);
 
     const customerId = decodedToken[`http://schemas.microsoft.com/ws/2008/06/identity/claims/serialnumber`];
+    const merchantId = decodedToken[`http://schemas.microsoft.com/ws/2008/06/identity/claims/userdata`];
 
     let newOrder = {
         customerId: customerId,
+        transactionId: ``,
         products: []
     }
 
@@ -39,45 +41,46 @@ export default function Cart(props) {
     let listOfOrders = []
     cartItems.map((item) => (
         listOfOrders.push({
-            id: item.id,
+            // id: item.id,
             name: item.model,
             description: item.description,
             quantity: item.qty,
             currency: "USD",
             value: item.price,
-            merchantId: item.userId   // VELIKO PITANJE: merchantId: "KXJ2PH4QBBC9N" (Guid)  ili merchantId: item.userId
+            merchantId: merchantId   // VELIKO PITANJE: merchantId: "KXJ2PH4QBBC9N" (Guid)  ili merchantId: item.userId
         })
     ));
-
-    //Lista za WebShop
-    cartItems.map((item) => (
-        newOrder.products.push({
-            productId: item.id,
-            amount: item.qty,
-            price: item.price
-        })
-    ));
-
 
     
 
-    axios.post(process.env.REACT_APP_WEB_SHOP_ORDERS_BACKEND_API, newOrder)
-    .then((resp) => {
+    
 
-        alert(`You ordered these items`);
-        emptyCart();
-        history.push(`user/${customerId}`);
-        
-        // Otkomentarisati posle radi PSP API-ja
+    // Otkomentarisati posle radi PSP API-ja
 
-        // axios.post(`${BASE_URL}/payment-service/transactions`, listOfOrders, config)
-        // .then(function (data) {
-        //     console.log(data.data);
-        //     const putanjica = PSP_FRONT + data.data.id;
-        //     console.log(putanjica);
-        //     window.open(putanjica);
-        // });
-    })
+    axios.post(`${BASE_URL}/payment-service/transactions`, listOfOrders, config)
+    .then((pspResp) => {
+        //Lista za WebShop
+        cartItems.map((item) => (
+            newOrder.products.push({
+                productId: item.id,
+                amount: item.qty,
+                price: item.price
+            })
+        ));
+
+        newOrder.transactionId = pspResp.data.id;
+
+        axios.post(process.env.REACT_APP_WEB_SHOP_ORDERS_BACKEND_API, newOrder)
+        .then((webShopResp) => {
+            alert(`You ordered these items`);
+            emptyCart();
+
+            const putanjica = PSP_FRONT + pspResp.data.id;
+            console.log(putanjica)
+            window.open(putanjica);
+            history.push(`user/${customerId}`);
+        })
+    });
   }
 
 

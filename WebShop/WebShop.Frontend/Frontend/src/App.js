@@ -27,7 +27,7 @@ import { useState } from 'react';
 
 function App() {
   const [cartItems, setCartItems] = useState([]);
-  const [isAuth, setIsAuth] = useState(false);
+  const [isAuth, setIsAuth] = useState(localStorage.getItem(`jwt`) !== null);
 
   const onAdd = (product, quantity) => {
     const exist = cartItems.find((x) => x.id === product.id);
@@ -42,8 +42,6 @@ function App() {
     } else {
       setCartItems([...cartItems, { ...product, qty: quantity}]);
     }
-
-    console.log(cartItems);
   };
 
   const onRemove = (product) => {

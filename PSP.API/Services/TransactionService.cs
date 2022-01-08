@@ -42,7 +42,14 @@ namespace PSP.API.Services
         public async Task<TransactionDto> Insert(List<ItemDto> items)
         {
             List<Item> transactionItems = _mapper.Map<List<Item>>(items);
-            Transaction t = new Transaction() {Id = Guid.Empty, Items = transactionItems };
+            Guid newGuid = Guid.NewGuid();
+            Transaction t = new Transaction() { Id = newGuid  };
+            foreach (Item item in transactionItems)
+            {
+                item.Transaction = t;
+                item.TransactionId = newGuid;
+            }
+            t.Items = transactionItems;
 
           
             await _dbContext.Transactions.AddAsync(t);

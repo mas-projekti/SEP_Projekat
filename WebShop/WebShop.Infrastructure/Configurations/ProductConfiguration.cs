@@ -48,10 +48,6 @@ namespace WebShop.Infrastructure.Configurations
                 .WithMany(p => p.Products)
                 .HasForeignKey(i => i.UserId);
 
-    
-
-
-
             builder.HasData(
                 new Product { 
                     Id = 1, 
