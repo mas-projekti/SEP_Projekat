@@ -45,7 +45,7 @@ export default function Cart(props) {
             quantity: item.qty,
             currency: "USD",
             value: item.price,
-            merchantId: item.userId   // VELIKO PITANJE: merchantId: "KXJ2PH4QBBC9N" ili merchantId: item.userId
+            merchantId: item.userId   // VELIKO PITANJE: merchantId: "KXJ2PH4QBBC9N" (Guid)  ili merchantId: item.userId
         })
     ));
 
