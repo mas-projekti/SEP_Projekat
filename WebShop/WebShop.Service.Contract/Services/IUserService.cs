@@ -12,5 +12,6 @@ namespace WebShop.Service.Contract.Services
         Task<UserDto> GetUserById(int userId);
         Task<UserDto> InsertUser(UserDto newUser);
         Task<UserDto> UpdateUser(UserDto user);
+        Task<string> GetUserByUsernameAndPassword(string username, string password);
     }
 }

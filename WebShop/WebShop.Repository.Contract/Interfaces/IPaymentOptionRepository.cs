@@ -7,8 +7,9 @@ using WebShop.Models.DomainModels;
 
 namespace WebShop.Repository.Contract.Interfaces
 {
-    public interface IProductRepository : IGenericRepository<Product>
+    public interface IPaymentOptionRepository : IGenericRepository<PaymentOption>
     {
-        Task<Product> UpdateProductAmount(int productId, int amount);
+        Task<List<PaymentOption>> GetAllSuportedPaymentOptions();
+        Task<PaymentOption> GetPaymentOptionByName(string name);
     }
 }

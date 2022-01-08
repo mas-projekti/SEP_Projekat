@@ -21,7 +21,8 @@ namespace WebShop.Infrastructure.Configurations
 
             builder.Property(i => i.Timestamp)
                 .IsRequired()
-                .HasDefaultValue(DateTime.Now);     
+                .HasDefaultValue(DateTime.Now);
+
 
             builder.Property(u => u.OrderStatus)
               .HasConversion<String>()

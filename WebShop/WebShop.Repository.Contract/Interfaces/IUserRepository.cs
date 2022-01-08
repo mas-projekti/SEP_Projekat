@@ -9,6 +9,6 @@ namespace WebShop.Repository.Contract.Interfaces
 {
     public interface IUserRepository : IGenericRepository<User>
     {
-       
+        public Task<User> GetByUsernameAndPassword(string username, string password);
     }
 }

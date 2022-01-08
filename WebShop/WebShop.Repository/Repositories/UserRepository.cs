@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,5 +13,10 @@ namespace WebShop.Repository.Repositories
     public class UserRepository : GenericRepository<User>, IUserRepository
     {
         public UserRepository(WebShopDbContext context) : base(context) { }
+
+        public async Task<User> GetByUsernameAndPassword(string username, string password)
+        {
+            return await _context.Set<User>().Where(x => x.Username == username && x.Password == password).FirstOrDefaultAsync();   
+        }
     }
 }
