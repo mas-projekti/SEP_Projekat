@@ -70,7 +70,26 @@ namespace WebShop.Controllers
             }
         }
 
- 
+
+        [HttpPut("confirm")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrderDto))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ConfirmOrder([FromBody] Guid transactionId)
+        {
+            try
+            {
+                OrderDto updatedOrder = await _orderService.UpdateOrderStatus(transactionId);
+                return CreatedAtAction(nameof(ConfirmOrder), new { id = updatedOrder.Id }, updatedOrder);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
+        }
+
+
 
     }
 }

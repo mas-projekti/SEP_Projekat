@@ -39,6 +39,26 @@ namespace WebShop.Service.Services
             return _mapper.Map<OrderDto>(order);
         }
 
+        public async Task<OrderDto> UpdateOrderStatus(Guid transactionId)
+        {
+            Order order = await _orderRepository.UpdateOrderStatus(transactionId, OrderStatus.Ordered);
+
+            await UpdateProductAmount(order);
+
+            return _mapper.Map<OrderDto>(order);
+  
+
+        }
+
+
+        private async Task UpdateProductAmount(Order order)
+        {
+            foreach(OrderItem orderItem in order.OrderItems)
+            {
+                await _productRepository.UpdateProductAmount(orderItem.ProductId, orderItem.Amount);
+            }
+        }
+
         private Order CreateNewOrder(InputOrderDto orderData)
         {
 

@@ -12,6 +12,9 @@ namespace WebShop.Service.Contract.Services
         Task<IEnumerable<OrderDto>> GetUserOrders(int userId);
         Task<OrderDto> GetOrderById(int orderId);
         Task<OrderDto> InsertOrder(InputOrderDto inputOrder);
+        Task<OrderDto> UpdateOrderStatus(Guid transactionId);
+
+        
         
     }
 }
