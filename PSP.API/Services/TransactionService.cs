@@ -39,10 +39,11 @@ namespace PSP.API.Services
             throw new NotImplementedException();
         }
 
-        public async Task<TransactionDto> Insert(List<ItemDto> items)
+        public async Task<TransactionDto> Insert(List<ItemDto> items, string clientID)
         {
+            PspClient client = _dbContext.PspClients.FirstOrDefault(x => x.ClientID == clientID);
             List<Item> transactionItems = _mapper.Map<List<Item>>(items);
-            Transaction t = new Transaction() {Id = Guid.Empty, Items = transactionItems };
+            Transaction t = new Transaction() {Id = Guid.Empty, Items = transactionItems, PspClientId = client.Id };
 
           
             await _dbContext.Transactions.AddAsync(t);

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Common.Exceptions;
 using Common.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -72,7 +73,7 @@ namespace PSP.API.Services
 
             _dbContext.PspClients.Add(client);
             await _dbContext.SaveChangesAsync();
-
+            await NotifyClientDataUpdatedAsync(client.Id);
 
             CreatedPspClientDto createdPspClient = _mapper.Map<CreatedPspClientDto>(client);
             createdPspClient.ClientName = newClient.ClientName;
@@ -100,6 +101,55 @@ namespace PSP.API.Services
             return ret;
         }
 
+        //SYNC
+        public async Task NotifyClientDataUpdatedAsync(int clientID)
+        {
+            PspClient client = _dbContext.PspClients.Find(clientID);
+
+            //Create client
+            var http = new HttpClient
+            {
+                BaseAddress = new Uri(client.SettingsUpdatedCallback.Substring(0, client.SettingsUpdatedCallback.IndexOf('/', 8))),
+                Timeout = TimeSpan.FromSeconds(30),
+            };
+
+            Dictionary<string, bool> options = new Dictionary<string, bool>();
+            options.Add("paypal", client.PaypalActive);
+            options.Add("bank", client.BankActive);
+            options.Add("bitcoin", client.BitcoinActive);
+
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Put, client.SettingsUpdatedCallback.Substring(client.SettingsUpdatedCallback.IndexOf('/')));
+            request.Content = new StringContent(JsonConvert.SerializeObject(options), Encoding.UTF8, "application/json");
+            _log.LogInformation($"Sending request to notify settings changed for client  {clientID}  with callback {request.RequestUri}.");
+            HttpResponseMessage response = await http.SendAsync(request);
+            if (!response.IsSuccessStatusCode)
+                _log.LogError($"Client { request.RequestUri }could not be contacted!!");
+            
+        }
+
+        //SYNC
+        public async Task NotifyClientTransactionFinishedAsync( Guid transactionId)
+        {
+            Transaction transaction = _dbContext.Transactions.Find(transactionId);
+            PspClient client = _dbContext.PspClients.First(x => x.Id == transaction.PspClientId);
+
+            //Create client
+            var http = new HttpClient
+            {
+                BaseAddress = new Uri(client.SettingsUpdatedCallback.Substring(0, client.TransactionOutcomeCallback.IndexOf('/', 8))),
+                Timeout = TimeSpan.FromSeconds(30),
+            };
+
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Put, client.TransactionOutcomeCallback.Substring(client.TransactionOutcomeCallback.IndexOf('/', 8) +1));
+            request.Content = new StringContent(JsonConvert.SerializeObject(transactionId), Encoding.UTF8, "application/json");
+            _log.LogInformation($"Sending request to notify transaction finished for client  {client.ClientID}  with callback {request.RequestUri}.");
+            HttpResponseMessage response = await http.SendAsync(request);
+            if (!response.IsSuccessStatusCode)
+                _log.LogError($"Client { request.RequestUri }could not be contacted!!");
+
+
+        }
+
         public async Task<PspClientDto> UpdateClient(int id, PspClientDto newData)
         {
             PspClient client = await _dbContext.PspClients.FindAsync(id);
@@ -109,8 +159,10 @@ namespace PSP.API.Services
             client.Update(_mapper.Map<PspClient>(newData));
 
             await _dbContext.SaveChangesAsync();
+            await NotifyClientDataUpdatedAsync(id);
 
             return _mapper.Map<PspClientDto>(client);
+            
 
         }
     }

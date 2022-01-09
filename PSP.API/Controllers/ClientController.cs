@@ -44,6 +44,16 @@ namespace PSP.API.Controllers
 
         }
 
+        [HttpPost("notify/{id}")]
+        public async Task<IActionResult> NotifyTransactionSuccessful(Guid id)
+        {
+
+            await _clientService.NotifyClientTransactionFinishedAsync(id);
+            return Ok();
+
+        }
+
+
         [HttpPut("{id}")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PspClientDto))]
