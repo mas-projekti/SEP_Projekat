@@ -1,18 +1,22 @@
 ﻿using AutoMapper;
 using Common.Exceptions;
 using Common.Identity;
+using Common.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using PSP.API.Dto;
 using PSP.API.Infrastructure;
 using PSP.API.Interfaces;
 using PSP.API.Models;
+using PSP.API.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,13 +28,24 @@ namespace PSP.API.Services
         private readonly IConfiguration _config;
         private readonly ILogger<ClientService> _log;
         private readonly IMapper _mapper;
+        private readonly HookSecretOptions _hookOptions;
 
-        public ClientService(PaymentServiceProviderDbContext dbContext, IConfiguration config, ILogger<ClientService> log, IMapper mapper)
+        public ClientService(IOptions<HookSecretOptions> hookOptions, PaymentServiceProviderDbContext dbContext, IConfiguration config, ILogger<ClientService> log, IMapper mapper)
         {
             _dbContext = dbContext;
             _config = config;
             _log = log;
             _mapper = mapper;
+            _hookOptions = hookOptions.Value;
+        }
+
+        public bool CheckUsersRightsToUpdate(ClaimsPrincipal principal, int clientId)
+        {
+            PspClient pspClient = _dbContext.PspClients.Find(clientId);
+
+            if (pspClient.ClientID != principal.Claims.FirstOrDefault(x => x.Type == "client_id").Value)
+                return false;
+            return true;
         }
 
         public async Task<CreatedPspClientDto> CreateClient(NewPspClientDto newClient)
@@ -60,6 +75,7 @@ namespace PSP.API.Services
             string content = await response.Content.ReadAsStringAsync();
             CreatedClientDto clientDto = JsonConvert.DeserializeObject<CreatedClientDto>(content);
 
+            AesCryptoProvider provider = new AesCryptoProvider(_hookOptions.Key);
             //Create client data in PSP
             PspClient client = new PspClient
             {
@@ -67,6 +83,7 @@ namespace PSP.API.Services
                 PaypalActive = newClient.PaypalActive,
                 BitcoinActive = newClient.BitcoinActive,
                 ClientID = clientDto.ClientID,
+                ValidatingSecret = provider.EncryptString(newClient.ValidatingSecret),
                 SettingsUpdatedCallback = newClient.SettingsUpdatedCallback,
                 TransactionOutcomeCallback = newClient.TransactionOutcomeCallback
             };
@@ -118,8 +135,12 @@ namespace PSP.API.Services
             options.Add("bank", client.BankActive);
             options.Add("bitcoin", client.BitcoinActive);
 
+            AesCryptoProvider provider = new AesCryptoProvider(_hookOptions.Key);
+            SignatureProvider signer = new SignatureProvider(provider.DecryptString(client.ValidatingSecret));
+
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Put, client.SettingsUpdatedCallback.Substring(client.SettingsUpdatedCallback.IndexOf('/')));
             request.Content = new StringContent(JsonConvert.SerializeObject(options), Encoding.UTF8, "application/json");
+            request.Headers.Add("X-Sender-Signature", signer.SignString(await request.Content.ReadAsStringAsync()));
             _log.LogInformation($"Sending request to notify settings changed for client  {clientID}  with callback {request.RequestUri}.");
             HttpResponseMessage response = await http.SendAsync(request);
             if (!response.IsSuccessStatusCode)
@@ -140,8 +161,12 @@ namespace PSP.API.Services
                 Timeout = TimeSpan.FromSeconds(30),
             };
 
+            AesCryptoProvider provider = new AesCryptoProvider(_hookOptions.Key);
+            SignatureProvider signer = new SignatureProvider(provider.DecryptString(client.ValidatingSecret));
+
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Put, client.TransactionOutcomeCallback.Substring(client.TransactionOutcomeCallback.IndexOf('/', 8) +1));
             request.Content = new StringContent(JsonConvert.SerializeObject(transactionId), Encoding.UTF8, "application/json");
+            request.Headers.Add("X-Sender-Signature", signer.SignString(await request.Content.ReadAsStringAsync()));
             _log.LogInformation($"Sending request to notify transaction finished for client  {client.ClientID}  with callback {request.RequestUri}.");
             HttpResponseMessage response = await http.SendAsync(request);
             if (!response.IsSuccessStatusCode)

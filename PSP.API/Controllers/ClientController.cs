@@ -58,10 +58,13 @@ namespace PSP.API.Controllers
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PspClientDto))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> UpdateClient(int id,[FromBody] PspClientDto newClient)
         {
+            if(_clientService.CheckUsersRightsToUpdate(User, id))
+                return Ok(await _clientService.UpdateClient(id,newClient));
 
-            return Ok(await _clientService.UpdateClient(id,newClient));
+            return Unauthorized();
 
         }
 

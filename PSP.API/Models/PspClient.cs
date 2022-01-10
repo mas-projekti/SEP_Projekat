@@ -14,6 +14,7 @@ namespace PSP.API.Models
         public bool PaypalActive { get; set; }
         public bool BitcoinActive { get; set; }
         public bool BankActive { get; set; }
+        public string ValidatingSecret { get; set; }
         public List<Transaction> Transactions { get; set; }
 
         public PspClient Update(PspClient newData)

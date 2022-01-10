@@ -19,6 +19,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using WebShop.Infrastructure;
 using WebShop.Mapping;
+using WebShop.Options;
 using WebShop.Repository.Contract.Interfaces;
 using WebShop.Repository.Repositories;
 using WebShop.Service.Contract.Services;
@@ -84,6 +85,9 @@ namespace WebShop
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IPaymentOptionService, PaymentOptionService>();
+
+            services.Configure<WebhookOptions>(Configuration.GetSection(WebhookOptions.HookSecret));
+
 
 
 
