@@ -72,11 +72,8 @@ export default function Cart(props) {
 
         axios.post(process.env.REACT_APP_WEB_SHOP_ORDERS_BACKEND_API, newOrder)
         .then((webShopResp) => {
-            alert(`You ordered these items`);
             emptyCart();
-
             const putanjica = PSP_FRONT + pspResp.data.id;
-            console.log(putanjica)
             window.open(putanjica);
             history.push(`user/${customerId}`);
         })
