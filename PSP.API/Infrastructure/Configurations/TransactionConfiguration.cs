@@ -16,6 +16,12 @@ namespace PSP.API.Infrastructure.Configurations
 
             builder.Property(i => i.Id)
                 .ValueGeneratedOnAdd();
+
+            builder.HasOne(x => x.Client)
+                .WithMany(x => x.Transactions)
+                .HasForeignKey(x => x.PspClientId)
+                .IsRequired(true)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

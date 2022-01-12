@@ -16,6 +16,7 @@ using Microsoft.OpenApi.Models;
 using PSP.API.Infrastructure;
 using PSP.API.Interfaces;
 using PSP.API.Mapping;
+using PSP.API.Options;
 using PSP.API.Services;
 using Serilog;
 using System;
@@ -83,6 +84,7 @@ namespace PSP.API
             services.AddScoped<IItemService, ItemService>();
             services.AddScoped<ITransactionService, TransactionService>();
             services.AddScoped<IClientService, ClientService>();
+            services.Configure<HookSecretOptions>(Configuration.GetSection(HookSecretOptions.HookSecret));
 
         }
 

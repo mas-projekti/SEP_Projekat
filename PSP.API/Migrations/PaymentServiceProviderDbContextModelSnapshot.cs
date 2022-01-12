@@ -88,6 +88,9 @@ namespace PSP.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ValidatingSecret")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("PspClients");
@@ -99,7 +102,12 @@ namespace PSP.API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("PspClientId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("PspClientId");
 
                     b.ToTable("Transactions");
                 });
@@ -113,6 +121,22 @@ namespace PSP.API.Migrations
                         .IsRequired();
 
                     b.Navigation("Transaction");
+                });
+
+            modelBuilder.Entity("PSP.API.Models.Transaction", b =>
+                {
+                    b.HasOne("PSP.API.Models.PspClient", "Client")
+                        .WithMany("Transactions")
+                        .HasForeignKey("PspClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Client");
+                });
+
+            modelBuilder.Entity("PSP.API.Models.PspClient", b =>
+                {
+                    b.Navigation("Transactions");
                 });
 
             modelBuilder.Entity("PSP.API.Models.Transaction", b =>

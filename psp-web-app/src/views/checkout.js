@@ -120,6 +120,7 @@ function onApproveCallback(data, actions, orderItems){
 function onCreateOrder(data, actions, orderItems, transactionId){
   const createOrderDto = 
   {
+    transactionId:transactionId,
     cancelUrl:`http://localhost:3000/checkout/${transactionId}`,
     returnUrl:`http://localhost:3001/`,
     items:orderItems

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PSP.API.Dto;
 using PSP.API.Interfaces;
@@ -22,9 +23,11 @@ namespace PSP.API.Controllers
 
 
         [HttpGet("{id}")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TransactionDto))]
         public async Task<IActionResult> GetTransactionById(Guid id)
         {
+            
             TransactionDto transactionDto = await _transactionService.Get(id);
             if (transactionDto == null)
                 return NotFound();
@@ -34,12 +37,14 @@ namespace PSP.API.Controllers
 
 
         [HttpPost]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<IActionResult> AddTransaction([FromBody] List<ItemDto> items)
         {
             try
             {
-                TransactionDto transacitonDto = await _transactionService.Insert(items);
+                var clientID = User.Claims.FirstOrDefault(x => x.Type == "client_id").Value;
+                TransactionDto transacitonDto = await _transactionService.Insert(items, clientID);
                 return CreatedAtAction(nameof(AddTransaction), new { id = transacitonDto.Id }, transacitonDto);
             }
             catch (Exception e)
