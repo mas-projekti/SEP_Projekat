@@ -44,14 +44,27 @@ namespace PSP.API.Controllers
 
         }
 
+        [HttpPost("notify/{id}")]
+        public async Task<IActionResult> NotifyTransactionSuccessful(Guid id)
+        {
+
+            await _clientService.NotifyClientTransactionFinishedAsync(id);
+            return Ok();
+
+        }
+
+
         [HttpPut("{id}")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PspClientDto))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> UpdateClient(int id,[FromBody] PspClientDto newClient)
         {
+            if(_clientService.CheckUsersRightsToUpdate(User, id))
+                return Ok(await _clientService.UpdateClient(id,newClient));
 
-            return Ok(await _clientService.UpdateClient(id,newClient));
+            return Unauthorized();
 
         }
 

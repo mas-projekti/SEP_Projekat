@@ -35,6 +35,7 @@ export default function Registration() {
         paypalActive: data.paypalActive,
         bitcoinActive: data.bitcoinActive,
         bankActive: data.bankActive,
+        validatingSecret:data.validatingSecret
       
     } 
     apiClientsProvider.createNewClient(createNewPspClientDto)
@@ -46,7 +47,8 @@ export default function Registration() {
     }).catch((error) => {
         // Error
         if (error.response) {
-            
+            setIsLoading(false)
+            alert("Server could not be contacted, please try again!");
         } else if (error.request) {
             alert("Server could not be contacted, please try again!");
             setIsLoading(false)
@@ -81,10 +83,22 @@ export default function Registration() {
                                 <div className="form-group">
                                     <input {...register("transactionResultCallback", { required: true })} type="text" className="form-control" placeholder="Your application transaction result callback URL *" />
                                     {errors.transactionResultCallback && <p>This field is required</p>}
+                                    <div>Transaction result callback URL should be HTTPS. Your application needs to provide HTTP PUT REST endpoint which will take transaction ID as body parameter.</div>
+                                    <div>Example: PUT https://www.myapp.com/api/transactions/confirm/</div>
                                 </div>
                                 <div className="form-group">
                                     <input {...register("settingsCallback", { required: true })} type="text" className="form-control" placeholder="Your application settings changed callback URL *"  />
                                     {errors.settingsCallback && <p>This field is required</p>}
+                                    <div>settings callback URL should be HTTPS. Your application needs to provide HTTP PUT REST endpoint which will take a list Dictionary od string-bool as body parameters. </div>
+                                    <div>Dictionary key is string which represents service name (ex. paypal, bank..), and value is boolean which represents if service is activated for web shop or not.</div>
+                                    <div>Example: PUT  https://www.myapp.com/api/options/</div>
+                                </div>
+
+                                <div className="form-group">
+                                    <input {...register("validatingSecret", { required: true })} type="text" className="form-control" placeholder="Enter your application validating secret*"  />
+                                    {errors.validatingSecret && <p>This field is required, with minimal length 20</p>}
+                                    <div>Validating secret is a string that will be used as key to sign web hook notifications to your application, make sure it is strong. We promise to store it safely :) </div>
+                                    <div>This IS NOT your app secret!.</div>
                                 </div>
 
                                 <div className="form-group">

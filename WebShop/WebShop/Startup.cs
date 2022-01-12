@@ -19,6 +19,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using WebShop.Infrastructure;
 using WebShop.Mapping;
+using WebShop.Options;
 using WebShop.Repository.Contract.Interfaces;
 using WebShop.Repository.Repositories;
 using WebShop.Service.Contract.Services;
@@ -85,6 +86,9 @@ namespace WebShop
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IPaymentOptionService, PaymentOptionService>();
 
+            services.Configure<WebhookOptions>(Configuration.GetSection(WebhookOptions.HookSecret));
+
+
 
 
             // Adding Authentication Service
@@ -135,11 +139,11 @@ namespace WebShop
                 endpoints.MapControllers();
             });
 
-            //using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
-            //{
-            //    var context = serviceScope.ServiceProvider.GetService<WebShopDbContext>();
-            //    context.Database.Migrate();
-            //}
+            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetService<WebShopDbContext>();
+                context.Database.Migrate();
+            }
         }
     }
 }

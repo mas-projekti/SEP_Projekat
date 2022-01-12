@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Paypal.API.Dto;
+using Paypal.API.Infrastructure;
 using Paypal.API.IntegrationModels;
 using Paypal.API.Interfaces;
 using Paypal.API.Options;
@@ -25,13 +26,14 @@ namespace Paypal.API.Services
         private const string sandbox = "https://api-m.sandbox.paypal.com";
         private readonly IDataAdapter dataAdapter;
         private readonly ILogger<PaypalService> _logger;
-
-        public PaypalService(IOptions<PaypalOptions> paypalOptions, IDataAdapter dataAdapter, ILogger<PaypalService> logger)
+        private readonly PaypalDbContext _dbContext;
+        public PaypalService(IOptions<PaypalOptions> paypalOptions, IDataAdapter dataAdapter, ILogger<PaypalService> logger, PaypalDbContext dbContext)
         {
             _paypalOptions = paypalOptions.Value;
             paypalClient = GetPaypalHttpClient();
             this.dataAdapter = dataAdapter;
             _logger = logger;
+            _dbContext = dbContext;
 
         }
 
@@ -93,10 +95,17 @@ namespace Paypal.API.Services
             else
             {
                 _logger.LogInformation($"Order with id {createdOrder.id} created.");
+                _dbContext.PaypalTransaction.Add(new Models.PaypalTransaction {
+                    TransactionId = order.TransactionID,
+                    PaypalOrderId = createdOrder.id
+                    });
+                _dbContext.SaveChanges();
+
             }
             return createdOrder;
         }
 
+        //SYNC
         public async Task<PaypalOrderCapturedResponse> CapturePaypalOrderAsync(string orderId)
         {
             _logger.LogInformation($"Capturing order with ID = {orderId}.");
@@ -116,7 +125,23 @@ namespace Paypal.API.Services
             else
             {
                 _logger.LogInformation($"Order with id {createdOrder.id} captured.");
+
+                //Create client
+                var http = new HttpClient
+                {
+                    BaseAddress = new Uri("https://localhost:44313"),
+                    Timeout = TimeSpan.FromSeconds(30),
+                };
+                Guid transId = _dbContext.PaypalTransaction.FirstOrDefault(x => x.PaypalOrderId == orderId).TransactionId;
+
+                HttpRequestMessage requestM = new HttpRequestMessage(HttpMethod.Post, $"/payment-service/clients/notify/{transId}");
+                requestM.Content = new StringContent(JsonConvert.SerializeObject(new object()), Encoding.UTF8, "application/json");
+
+                HttpResponseMessage responseM = await http.SendAsync(requestM);
+
             }
+
+
             return createdOrder;
 
         }
