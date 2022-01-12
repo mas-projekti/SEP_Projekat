@@ -48,8 +48,7 @@ namespace WebShop.Service.Services
                 new Claim(ClaimTypes.Name, userDTO.Username),
                 new Claim(ClaimTypes.Role, userDTO.UserType.ToString()),
                 new Claim(ClaimTypes.Actor, userDTO.ImageURL),
-                new Claim(ClaimTypes.SerialNumber, userDTO.Id.ToString()),
-                new Claim(ClaimTypes.UserData, userDTO.MerchantId)
+                new Claim(ClaimTypes.SerialNumber, userDTO.Id.ToString())
             };
 
             var tokenOptions = new JwtSecurityToken(
