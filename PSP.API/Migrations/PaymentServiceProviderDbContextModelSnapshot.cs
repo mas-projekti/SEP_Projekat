@@ -89,7 +89,9 @@ namespace PSP.API.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ValidatingSecret")
-                        .HasColumnType("nvarchar(max)");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValue("");
 
                     b.HasKey("Id");
 
