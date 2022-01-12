@@ -29,7 +29,7 @@ export default function Cart(props) {
     let decodedToken = jwtDecode(token);
 
     const customerId = decodedToken[`http://schemas.microsoft.com/ws/2008/06/identity/claims/serialnumber`];
-    const merchantId = decodedToken[`http://schemas.microsoft.com/ws/2008/06/identity/claims/userdata`];
+    const loggedUserMerchantId = decodedToken[`http://schemas.microsoft.com/ws/2008/06/identity/claims/userdata`];
 
     let newOrder = {
         customerId: customerId,
@@ -47,7 +47,7 @@ export default function Cart(props) {
             quantity: item.qty,
             currency: "USD",
             value: item.price,
-            merchantId: merchantId   // VELIKO PITANJE: merchantId: "KXJ2PH4QBBC9N" (Guid)  ili merchantId: item.userId
+            merchantId: item.user.merchantId   // VELIKO PITANJE: merchantId: "KXJ2PH4QBBC9N" (Guid)  ili merchantId: item.userId
         })
     ));
 
