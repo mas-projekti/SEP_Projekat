@@ -82,7 +82,7 @@ namespace WebShop.Service.Services
                 Id = 0,
                 OrderItems = orderitems,
                 OrderStatus = OrderStatus.Pending,
-                Timestamp = DateTime.Now,
+                Timestamp = DateTime.Now
             };
         }
 

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PSP.API.Infrastructure;
 
 namespace PSP.API.Migrations
 {
     [DbContext(typeof(PaymentServiceProviderDbContext))]
-    partial class PaymentServiceProviderDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220109203603_AddedValidatingSecret")]
+    partial class AddedValidatingSecret
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -89,9 +91,7 @@ namespace PSP.API.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ValidatingSecret")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

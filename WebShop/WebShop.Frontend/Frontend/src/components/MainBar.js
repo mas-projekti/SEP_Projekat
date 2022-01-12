@@ -72,6 +72,12 @@ const MainBar = (props) => {
                 </Navbar.Collapse>
                 <Nav>
                 <NavLink to="/cart">
+                    <img
+                        alt={"Logo"}
+                        src={logo}
+                        width="30"
+                        height="30"
+                        className="d-inline-block mx-2"/>
                     Cart{' '}
                     {props.countCartItems ? (
                         <span className="btn btn-secondary rounded">{props.countCartItems}</span>

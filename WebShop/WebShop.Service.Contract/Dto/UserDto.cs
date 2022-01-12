@@ -18,5 +18,6 @@ namespace WebShop.Service.Contract.Dto
         public DateTime? BirthDay { get; set; }
         public string ImageURL { get; set; }
         public UserType UserType { get; set; }
+        public string MerchantId { get; set; }
     }
 }
