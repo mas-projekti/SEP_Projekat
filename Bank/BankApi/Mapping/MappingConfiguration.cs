@@ -14,6 +14,7 @@ namespace BankApi.Mapping
         {
             CreateMap<BankClient, RegisteredClientDto>().ReverseMap();
             CreateMap<BankAccount, BankAccountDto>().ReverseMap();
+            CreateMap<PaymentCard, PaymentCardDto>().ReverseMap();
         }
     }
 }
