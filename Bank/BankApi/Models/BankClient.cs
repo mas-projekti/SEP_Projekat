@@ -13,6 +13,7 @@ namespace BankApi.Models
         public int BankAccountId { get; set; }
         public BankAccount BankAccount { get; set; }
         public List<PaymentCard> PaymentCards { get; set; }
+        public List<Transaction> Transactions { get; set; }
         public string Name { get; set; }
         public string Username { get; set; }
         public string LastName { get; set; }

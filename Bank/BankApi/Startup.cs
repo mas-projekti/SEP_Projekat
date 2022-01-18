@@ -45,6 +45,7 @@ namespace BankApi
             services.AddDbContext<BankDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("BankDatabase")));
             services.AddScoped<IBankClientService, BankClientService>();
             services.AddScoped<IPaymentCardService, PaymentCardService>();
+            services.AddScoped<IPaymentService, PaymentService>();
             services.Configure<TokenKeyOptions>(Configuration.GetSection(TokenKeyOptions.TokenKey));
             services.Configure<PaymentCardOptions>(Configuration.GetSection(PaymentCardOptions.PaymentCard));
             var mapperConfig = new MapperConfiguration(mc =>

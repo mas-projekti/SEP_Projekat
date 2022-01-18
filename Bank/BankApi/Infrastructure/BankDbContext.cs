@@ -12,6 +12,7 @@ namespace BankApi.Infrastructure
         public DbSet<BankClient> BankClients { get; set; }
         public DbSet<PaymentCard> PaymentCards { get; set; }
         public DbSet<BankAccount> BankAccounts { get; set; }
+        public DbSet<Transaction> Transactions { get; set; }
 
         public BankDbContext(DbContextOptions options) : base(options)
         {
