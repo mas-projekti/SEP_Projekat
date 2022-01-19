@@ -57,13 +57,15 @@ namespace BankApi.Services
 
             BankClient payer = _dbContext.PaymentCards.Include(x => x.BankClient).FirstOrDefault(x => x.CardNumber == paymentCardDto.CardNumber).BankClient;
             BankAccount payerAccount = _dbContext.BankAccounts.FirstOrDefault(x => x.BankClientId == payer.Id);
+            BankAccount merchantAccount = _dbContext.BankAccounts.FirstOrDefault(x => x.BankClientId == transaction.BankClientId);
             lock (balanceLock)
             {
-                if (payerAccount.MoneyAmount - payerAccount.ReservedMoneyAmount < transaction.Amount)
+                if (payerAccount.MoneyAmount  < transaction.Amount)
                 {
                     throw new InsufficientFundsException("Not enough money to process transaction.");
                 }
-                payerAccount.ReservedMoneyAmount += transaction.Amount;
+                payerAccount.MoneyAmount -= transaction.Amount;
+                merchantAccount.MoneyAmount += transaction.Amount;
                 transaction.IsCompleted = true;
                 _dbContext.SaveChanges();
             }
