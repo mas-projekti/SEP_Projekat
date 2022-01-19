@@ -119,6 +119,50 @@ namespace BankApi.Migrations
                     b.ToTable("PaymentCards");
                 });
 
+            modelBuilder.Entity("BankApi.Models.Transaction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<double>("Amount")
+                        .HasColumnType("float");
+
+                    b.Property<int>("BankClientId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ErrorURL")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FailedURL")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsCompleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("MerchantOrderID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("MerchantTimestamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PaymentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SuccessURL")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BankClientId");
+
+                    b.HasIndex("PaymentId")
+                        .IsUnique();
+
+                    b.ToTable("Transactions");
+                });
+
             modelBuilder.Entity("BankApi.Models.BankAccount", b =>
                 {
                     b.HasOne("BankApi.Models.BankClient", "BankClient")
@@ -141,11 +185,24 @@ namespace BankApi.Migrations
                     b.Navigation("BankClient");
                 });
 
+            modelBuilder.Entity("BankApi.Models.Transaction", b =>
+                {
+                    b.HasOne("BankApi.Models.BankClient", "BankClient")
+                        .WithMany("Transactions")
+                        .HasForeignKey("BankClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("BankClient");
+                });
+
             modelBuilder.Entity("BankApi.Models.BankClient", b =>
                 {
                     b.Navigation("BankAccount");
 
                     b.Navigation("PaymentCards");
+
+                    b.Navigation("Transactions");
                 });
 #pragma warning restore 612, 618
         }

@@ -9,5 +9,6 @@ namespace BankApi.Interfaces
     public interface IPaymentCardService
     {
         PaymentCardDto GeneratePaymentCard(int id);
+        bool ValidatePaymentCard(PaymentCardDto userInputData);
     }
 }

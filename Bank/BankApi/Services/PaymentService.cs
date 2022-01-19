@@ -5,6 +5,7 @@ using BankApi.Infrastructure;
 using BankApi.Interfaces;
 using BankApi.Models;
 using BankApi.Options;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -18,12 +19,14 @@ namespace BankApi.Services
         private readonly BankDbContext _dbContext;
         private readonly IMapper _mapper;
         private readonly PaymentCardOptions _paymentCardOptions;
-
-        public PaymentService(BankDbContext dbContext, IMapper mapper, IOptions<PaymentCardOptions> paymentCardOptions)
+        private readonly IPaymentCardService _paymentCardService;
+        private readonly object balanceLock = new object();
+        public PaymentService(BankDbContext dbContext, IMapper mapper, IOptions<PaymentCardOptions> paymentCardOptions, IPaymentCardService paymentCardService)
         {
             _dbContext = dbContext;
             _mapper = mapper;
             _paymentCardOptions = paymentCardOptions.Value;
+            _paymentCardService = paymentCardService;
         }
 
         public PaymentResultDto AuthorizePayment(PayWithCardDto dto)
@@ -34,9 +37,49 @@ namespace BankApi.Services
                 return null; //za sada
 
             }
-            //Validate number ovde treba uraditi
-            PaymentCard paymentCard = _dbContext.PaymentCards.FirstOrDefault(x => x.CardNumber == dto.CardNumber);
-            return null;
+            PaymentCardDto paymentCardDto = new PaymentCardDto
+            {
+                ExipiringDate = dto.ExipiringDate,
+                CardNumber = dto.CardNumber,
+                CardHolderLastName = dto.CardHolderLastName,
+                CardHolderName = dto.CardHolderName,
+                SecurityCode = dto.SecurityCode
+
+            };
+            _paymentCardService.ValidatePaymentCard(paymentCardDto);
+
+            Transaction transaction = _dbContext.Transactions.Include(x => x.BankClient).FirstOrDefault(x => x.PaymentId == dto.PaymentId);
+            if (transaction == null)
+                throw new InvalidTransactionException("Transaction does not exist");
+
+            if (transaction.IsCompleted)
+                throw new InvalidTransactionException("Transaction already completed");
+
+            BankClient payer = _dbContext.PaymentCards.Include(x => x.BankClient).FirstOrDefault(x => x.CardNumber == paymentCardDto.CardNumber).BankClient;
+            BankAccount payerAccount = _dbContext.BankAccounts.FirstOrDefault(x => x.BankClientId == payer.Id);
+            lock (balanceLock)
+            {
+                if (payerAccount.MoneyAmount - payerAccount.ReservedMoneyAmount < transaction.Amount)
+                {
+                    throw new InsufficientFundsException("Not enough money to process transaction.");
+                }
+                payerAccount.ReservedMoneyAmount += transaction.Amount;
+                transaction.IsCompleted = true;
+                _dbContext.SaveChanges();
+            }
+
+            PaymentResultDto result = new PaymentResultDto
+            {
+                PaymentID = transaction.PaymentId,
+                IsSuccessFull = true,
+                MerchantOrderID  = transaction.MerchantOrderID,
+                IsWithinSameBank  = true,
+                AcquirerOrderID  = null,
+                AcquirerTimestamp  = null
+            };
+            
+
+            return result;
             
         }
 

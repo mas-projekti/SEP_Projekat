@@ -28,5 +28,12 @@ namespace BankApi.Controllers
 
         }
 
+        [HttpPost("pay")]
+        public IActionResult Post([FromBody] PayWithCardDto payWithCard)
+        {
+            return Ok(_paymentService.AuthorizePayment(payWithCard));
+
+        }
+
     }
 }

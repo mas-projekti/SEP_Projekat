@@ -5,6 +5,7 @@ using BankApi.Infrastructure;
 using BankApi.Interfaces;
 using BankApi.Models;
 using BankApi.Options;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -105,6 +106,48 @@ namespace BankApi.Services
 
             return cardReturn;
 
+        }
+
+        public bool ValidatePaymentCard(PaymentCardDto dto)
+        {
+            //Validate number ovde treba uraditi
+            PaymentCard paymentCard = _dbContext.PaymentCards.Include(x => x.BankClient).FirstOrDefault(x => x.CardNumber == dto.CardNumber);
+            if (paymentCard == null)
+                throw new InvalidCardDataException("Card does not exist");
+            //Check card number by Luhns algorithm
+            int nDigits = dto.CardNumber.Length;
+
+            int nSum = 0;
+            bool isSecond = false;
+            for (int i = nDigits - 1; i >= 0; i--)
+            {
+
+                int d = dto.CardNumber[i] - '0';
+
+                if (isSecond == true)
+                    d = d * 2;
+
+                // We add two digits to handle
+                // cases that make two digits
+                // after doubling
+                nSum += d / 10;
+                nSum += d % 10;
+
+                isSecond = !isSecond;
+            }
+            if(nSum % 10 != 0)
+                throw new InvalidCardDataException("Card number is invalid.");
+
+            if (paymentCard.ExipiringDate.Year < DateTime.Now.Year || (paymentCard.ExipiringDate.Month < DateTime.Now.Month && paymentCard.ExipiringDate.Year == DateTime.Now.Year))//Expired
+                throw new InvalidCardDataException("Card is expired");
+
+            if (paymentCard.SecurityCode != dto.SecurityCode)
+                throw new InvalidCardDataException("Invalid security code. Payment failed.");
+
+            if(paymentCard.BankClient.Name != dto.CardHolderName || paymentCard.BankClient.LastName != dto.CardHolderLastName)
+                throw new InvalidCardDataException("Invalid card holder data.");
+
+            return true;
         }
     }
 }

@@ -49,6 +49,21 @@ namespace BankApi.Extensions
                     result = JsonConvert.SerializeObject(passx.Message);
                     break;
 
+                case InsufficientFundsException fundsx:
+                    code = HttpStatusCode.BadRequest;
+                    result = JsonConvert.SerializeObject(fundsx.Message);
+                    break;
+
+                case InvalidCardDataException passx:
+                    code = HttpStatusCode.BadRequest;
+                    result = JsonConvert.SerializeObject(passx.Message);
+                    break;
+
+                case InvalidTransactionException passx:
+                    code = HttpStatusCode.BadRequest;
+                    result = JsonConvert.SerializeObject(passx.Message);
+                    break;
+
             }
 
             context.Response.ContentType = "application/json";
