@@ -12,7 +12,10 @@ namespace WebShop.Repository.Repositories
 {
     public class ProductRepository : GenericRepository<Product>, IProductRepository
     {
-        public ProductRepository(WebShopDbContext context) : base(context) { }
+        public ProductRepository(WebShopDbContext context) : base(context) 
+        {
+            context.Products.Include(i => i.User).FirstOrDefault();
+        }
 
         public async Task<Product> UpdateProductAmount(int productId, int amount)
         {

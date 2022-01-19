@@ -18,5 +18,6 @@ namespace WebShop.Service.Contract.Dto
         public int Amount { get; set; }
         public string ImageURL { get; set; }
         public int UserId { get; set; }
+        public UserDto User { get; set; }
     }
 }

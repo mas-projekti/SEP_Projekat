@@ -33,7 +33,7 @@ class ItemPage extends Component {
                 <div className="row">
                     <div className="col"/>
                     <div className="col-10">
-                        <div className="row" style={{border:'1px solid white', borderRadius:'10px',  overflow: 'hidden', textOverflow: 'ellipsis'}}>
+                        <div className="row" style={{border:'1px solid white', borderRadius:'10px', overflow: 'hidden', textOverflow: 'ellipsis'}}>
                             <div className="col-4">
                                 <img 
                                     src={this.state.product.imageURL} 

@@ -23,6 +23,7 @@ namespace PSP.API.Infrastructure.Configurations
             builder.Property(p => p.PaypalActive).HasDefaultValue(true);
             builder.Property(p => p.BitcoinActive).HasDefaultValue(false);
             builder.Property(p => p.BankActive).HasDefaultValue(false);
+            builder.Property(p => p.ValidatingSecret).HasDefaultValue("");
 
         }
     }
