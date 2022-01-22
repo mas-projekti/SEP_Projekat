@@ -19,6 +19,12 @@ return axios
   .then(handleResponse)
 };
 
+const getClientById = (clientId) =>{    
+return axios 
+  .get(`${BASE_URL}/payment-service/clients/${clientId}/info`) 
+  .then(handleResponse)
+};
+
 const updateClient = (id, client) =>{    
   const config = {
       headers: { 'Authorization': `Bearer ${localStorage.getItem('client-token')}` }
@@ -31,5 +37,6 @@ return axios
 export const apiClientsProvider = { 
     createNewClient,
     getClientByClientId,
-    updateClient
+    getClientById,
+    updateClient,
   };

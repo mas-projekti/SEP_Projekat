@@ -5,13 +5,9 @@ using System.Threading.Tasks;
 
 namespace PSP.API.Dto
 {
-    public class TransactionDto
+    public class CreateTransactionDto
     {
-        public Guid Id { get; set; }
         public List<ItemDto> Items { get; set; }
-        public List<string> MerchantIds { get; set; }
-        public string Currency { get; set; }
-        public int ClientId { get; set; }
         public BankTransactionDto BankTransactionData { get; set; }
     }
 }

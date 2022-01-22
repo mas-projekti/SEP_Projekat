@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 using PSP.API.Infrastructure;
 using PSP.API.Interfaces;
 using PSP.API.Mapping;
@@ -43,7 +44,11 @@ namespace PSP.API
         {
             ConfigureConsul(services);
             services.AddControllers().AddJsonOptions(options =>
-                                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter())); ;
+            {
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
+
+                                     
 
             services.AddDbContext<PaymentServiceProviderDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("TransactionDatabase")));
 
@@ -84,6 +89,7 @@ namespace PSP.API
             services.AddScoped<IItemService, ItemService>();
             services.AddScoped<ITransactionService, TransactionService>();
             services.AddScoped<IClientService, ClientService>();
+            services.AddScoped<IBankingService, BankingService>();
             services.Configure<HookSecretOptions>(Configuration.GetSection(HookSecretOptions.HookSecret));
 
         }

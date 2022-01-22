@@ -19,6 +19,42 @@ namespace PSP.API.Migrations
                 .HasAnnotation("ProductVersion", "5.0.12")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("PSP.API.Models.BankTransaction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<double>("Amount")
+                        .HasColumnType("float");
+
+                    b.Property<string>("BankURL")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MerchantID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("MerchantOrderID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("MerchantPassword")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("MerchantTimestamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("TransactionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TransactionId")
+                        .IsUnique();
+
+                    b.ToTable("BankTransactions");
+                });
+
             modelBuilder.Entity("PSP.API.Models.Item", b =>
                 {
                     b.Property<int>("Id")
@@ -114,6 +150,17 @@ namespace PSP.API.Migrations
                     b.ToTable("Transactions");
                 });
 
+            modelBuilder.Entity("PSP.API.Models.BankTransaction", b =>
+                {
+                    b.HasOne("PSP.API.Models.Transaction", "Transaction")
+                        .WithOne("BankTransaction")
+                        .HasForeignKey("PSP.API.Models.BankTransaction", "TransactionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Transaction");
+                });
+
             modelBuilder.Entity("PSP.API.Models.Item", b =>
                 {
                     b.HasOne("PSP.API.Models.Transaction", "Transaction")
@@ -143,6 +190,8 @@ namespace PSP.API.Migrations
 
             modelBuilder.Entity("PSP.API.Models.Transaction", b =>
                 {
+                    b.Navigation("BankTransaction");
+
                     b.Navigation("Items");
                 });
 #pragma warning restore 612, 618

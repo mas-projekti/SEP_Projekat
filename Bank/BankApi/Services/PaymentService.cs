@@ -87,7 +87,7 @@ namespace BankApi.Services
 
         public PaymentRequestResponseDto CreatePaymentTransaction(PaymentRequestDto request)
         {
-            Random rand = new Random(100);
+            Random rand = new Random(Guid.NewGuid().GetHashCode());
             int paymentID = rand.Next(000000000, 999999999); //Ne skalira kako treba i nije skroz random al bolje ne znam
             BankClient bankClient = _dbContext.BankClients.FirstOrDefault(x => x.MerchantID == request.MerchantID);
 
@@ -114,7 +114,7 @@ namespace BankApi.Services
             PaymentRequestResponseDto response = new PaymentRequestResponseDto
             {
                 PaymentID  = transaction.PaymentId,
-                PaymentURL = "www.google.com" //ovo promeniti obavezno kasnije
+                PaymentURL = "https://www.google.com/" //ovo promeniti obavezno kasnije
             };
 
             return response;
