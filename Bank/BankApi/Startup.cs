@@ -43,11 +43,15 @@ namespace BankApi
             services.AddControllers().AddJsonOptions(options =>
                                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
             services.AddDbContext<BankDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("BankDatabase")));
+            //Services
             services.AddScoped<IBankClientService, BankClientService>();
             services.AddScoped<IPaymentCardService, PaymentCardService>();
             services.AddScoped<IPaymentService, PaymentService>();
+
+            //options
             services.Configure<TokenKeyOptions>(Configuration.GetSection(TokenKeyOptions.TokenKey));
             services.Configure<PaymentCardOptions>(Configuration.GetSection(PaymentCardOptions.PaymentCard));
+            services.Configure<PccOptions>(Configuration.GetSection(PccOptions.PCC));
             var mapperConfig = new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new MappingConfiguration());

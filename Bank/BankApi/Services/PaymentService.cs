@@ -7,9 +7,12 @@ using BankApi.Models;
 using BankApi.Options;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace BankApi.Services
@@ -19,24 +22,74 @@ namespace BankApi.Services
         private readonly BankDbContext _dbContext;
         private readonly IMapper _mapper;
         private readonly PaymentCardOptions _paymentCardOptions;
+        private readonly PccOptions _pccOptions;
         private readonly IPaymentCardService _paymentCardService;
         private readonly object balanceLock = new object();
-        public PaymentService(BankDbContext dbContext, IMapper mapper, IOptions<PaymentCardOptions> paymentCardOptions, IPaymentCardService paymentCardService)
+        public PaymentService(BankDbContext dbContext, IMapper mapper, IOptions<PaymentCardOptions> paymentCardOptions, IOptions<PccOptions> pccOptions, IPaymentCardService paymentCardService)
         {
             _dbContext = dbContext;
             _mapper = mapper;
             _paymentCardOptions = paymentCardOptions.Value;
+            _pccOptions = pccOptions.Value;
             _paymentCardService = paymentCardService;
         }
 
-        public PaymentResultDto AuthorizePayment(PayWithCardDto dto)
+        public async Task<PaymentResultDto> AuthorizePayment(PayWithCardDto dto)
         {
-            if(!dto.CardNumber.StartsWith(_paymentCardOptions.Prefix))
+            Transaction transaction = _dbContext.Transactions.Include(x => x.BankClient).FirstOrDefault(x => x.PaymentId == dto.PaymentId);
+            BankAccount merchantAccount = _dbContext.BankAccounts.FirstOrDefault(x => x.BankClientId == transaction.BankClientId);
+            if (transaction == null)
+                throw new InvalidTransactionException("Transaction does not exist");
+
+            if (transaction.IsCompleted)
+                throw new InvalidTransactionException("Transaction already completed");
+
+            if (!dto.CardNumber.StartsWith(_paymentCardOptions.Prefix))
             {
                 //Slucaj kad nije iz iste banke
-                return null; //za sada
+                Random rand = new Random(Guid.NewGuid().GetHashCode());
+                int acquirerId = rand.Next(000000000, 999999999); //Ne skalira kako treba i nije skroz random al bolje ne znam
+                TransBankPaymentRequestDto transBankPayment = new TransBankPaymentRequestDto 
+                {
+                    PaymentCardNumber = dto.CardNumber,
+                    CardHolderName = dto.CardHolderName,
+                    CardHolderLastName = dto.CardHolderLastName,
+                    SecurityCode = dto.SecurityCode,
+                    ExpirationDate = dto.ExipiringDate,
+                    Amount  = transaction.Amount,
+                    AcquirerOrderId = acquirerId,
+                    AcquirerTimestamp = DateTime.Now
+                };
+
+                TransBankPaymentResponseDto response = await Redirect(transBankPayment);
+                if (response == null)
+                    return new PaymentResultDto
+                    {
+                        IsSuccessFull = false,
+                        IsWithinSameBank = false
+
+                    };
+
+                lock (balanceLock)
+                {
+                    merchantAccount.MoneyAmount += transaction.Amount;
+                    transaction.IsCompleted = true;
+                    _dbContext.SaveChanges();
+                }
+
+                PaymentResultDto resultDto = new PaymentResultDto
+                {
+                    PaymentID = transaction.PaymentId,
+                    IsSuccessFull = true,
+                    MerchantOrderID = transaction.MerchantOrderID,
+                    IsWithinSameBank = false,
+                    AcquirerOrderID = response.AcquirerOrderId,
+                    AcquirerTimestamp = response.AcquirerTimestamp
+                };
 
             }
+            
+            //Unutar iste banke
             PaymentCardDto paymentCardDto = new PaymentCardDto
             {
                 ExipiringDate = dto.ExipiringDate,
@@ -47,20 +100,11 @@ namespace BankApi.Services
 
             };
             _paymentCardService.ValidatePaymentCard(paymentCardDto);
-
-            Transaction transaction = _dbContext.Transactions.Include(x => x.BankClient).FirstOrDefault(x => x.PaymentId == dto.PaymentId);
-            if (transaction == null)
-                throw new InvalidTransactionException("Transaction does not exist");
-
-            if (transaction.IsCompleted)
-                throw new InvalidTransactionException("Transaction already completed");
-
-            BankClient payer = _dbContext.PaymentCards.Include(x => x.BankClient).FirstOrDefault(x => x.CardNumber == paymentCardDto.CardNumber).BankClient;
+            BankClient payer = _dbContext.PaymentCards.Include(x => x.BankClient).FirstOrDefault(x => x.CardNumber == dto.CardNumber).BankClient;
             BankAccount payerAccount = _dbContext.BankAccounts.FirstOrDefault(x => x.BankClientId == payer.Id);
-            BankAccount merchantAccount = _dbContext.BankAccounts.FirstOrDefault(x => x.BankClientId == transaction.BankClientId);
             lock (balanceLock)
             {
-                if (payerAccount.MoneyAmount  < transaction.Amount)
+                if (payerAccount.MoneyAmount < transaction.Amount)
                 {
                     throw new InsufficientFundsException("Not enough money to process transaction.");
                 }
@@ -74,10 +118,10 @@ namespace BankApi.Services
             {
                 PaymentID = transaction.PaymentId,
                 IsSuccessFull = true,
-                MerchantOrderID  = transaction.MerchantOrderID,
-                IsWithinSameBank  = true,
-                AcquirerOrderID  = null,
-                AcquirerTimestamp  = null
+                MerchantOrderID = transaction.MerchantOrderID,
+                IsWithinSameBank = true,
+                AcquirerOrderID = null,
+                AcquirerTimestamp = null
             };
             
 
@@ -118,6 +162,69 @@ namespace BankApi.Services
             };
 
             return response;
+
+        }
+
+        public async Task<TransBankPaymentResponseDto> ProcessExternalPayment(TransBankPaymentRequestDto request)
+        {
+            PaymentCardDto paymentCardDto = new PaymentCardDto
+            {
+                ExipiringDate = request.ExpirationDate,
+                CardNumber = request.PaymentCardNumber,
+                CardHolderLastName = request.CardHolderLastName,
+                CardHolderName = request.CardHolderName,
+                SecurityCode = request.SecurityCode
+
+            };
+            _paymentCardService.ValidatePaymentCard(paymentCardDto);
+
+            BankClient payer = _dbContext.PaymentCards.Include(x => x.BankClient).FirstOrDefault(x => x.CardNumber == request.PaymentCardNumber).BankClient;
+            BankAccount payerAccount = _dbContext.BankAccounts.FirstOrDefault(x => x.BankClientId == payer.Id);
+            lock (balanceLock)
+            {
+                if (payerAccount.MoneyAmount < request.Amount)
+                {
+                    throw new InsufficientFundsException("Not enough money to process transaction.");
+                }
+                payerAccount.MoneyAmount -= request.Amount;
+                _dbContext.SaveChanges();
+            }
+
+            Random rand = new Random(Guid.NewGuid().GetHashCode());
+            int issuerId = rand.Next(000000000, 999999999); //Ne skalira kako treba i nije skroz random al bolje ne znam
+
+
+            return new TransBankPaymentResponseDto
+            {
+                PaymentCardNumber = request.PaymentCardNumber,
+                AcquirerTimestamp = request.AcquirerTimestamp,
+                AcquirerOrderId = request.AcquirerOrderId,
+                IssuerOrderId = issuerId,
+                IssuerTimestamp = DateTime.Now,
+                IsSuccessfull = true
+        
+            };
+        }
+
+        public async Task<TransBankPaymentResponseDto> Redirect(TransBankPaymentRequestDto dto)
+        {
+            var http = new HttpClient
+            {
+                BaseAddress = new Uri(_pccOptions.BaseURL),
+                Timeout = TimeSpan.FromSeconds(60),
+            };
+
+            HttpRequestMessage redirectRequest = new HttpRequestMessage(HttpMethod.Post, _pccOptions.Route);
+
+            redirectRequest.Content = new StringContent(JsonConvert.SerializeObject(dto), Encoding.UTF8, "application/json");
+
+            HttpResponseMessage response = await http.SendAsync(redirectRequest);
+            if (!response.IsSuccessStatusCode)
+                return null;
+            string content = await response.Content.ReadAsStringAsync();
+            TransBankPaymentResponseDto responseDto = JsonConvert.DeserializeObject<TransBankPaymentResponseDto>(content);
+
+            return responseDto;
 
         }
     }

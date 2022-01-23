@@ -35,5 +35,12 @@ namespace BankApi.Controllers
 
         }
 
+        [HttpPost("external")]
+        public async Task<IActionResult> ProcessExternal([FromBody] TransBankPaymentRequestDto request)
+        {
+            return Ok(await _paymentService.ProcessExternalPayment(request));
+
+        }
+
     }
 }

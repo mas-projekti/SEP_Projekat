@@ -9,6 +9,8 @@ namespace BankApi.Interfaces
     public interface IPaymentService
     {
         PaymentRequestResponseDto CreatePaymentTransaction(PaymentRequestDto request);
-        PaymentResultDto AuthorizePayment(PayWithCardDto dto);
+        Task<PaymentResultDto> AuthorizePayment(PayWithCardDto dto);
+        Task<TransBankPaymentResponseDto> Redirect(TransBankPaymentRequestDto dto);
+        Task<TransBankPaymentResponseDto> ProcessExternalPayment(TransBankPaymentRequestDto request);
     }
 }

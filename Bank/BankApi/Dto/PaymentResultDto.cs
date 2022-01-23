@@ -11,7 +11,7 @@ namespace BankApi.Dto
         public bool IsSuccessFull { get; set; }
         public int MerchantOrderID { get; set; }
         public bool IsWithinSameBank { get; set; }
-        public string AcquirerOrderID { get; set; }
+        public int? AcquirerOrderID { get; set; }
         public DateTime? AcquirerTimestamp { get; set; }
 
     }
