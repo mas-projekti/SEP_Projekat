@@ -1,0 +1,40 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 offset-md-4">
+            <div class="login-form bg-light mt-4 p-4">
+                <form #rf="ngForm" (ngSubmit)="pay(rf)" class="row g-3">
+                    <h4 class="text-center">Pay Form</h4>
+                    <div class="col-12">
+                        <label>Card Holder Name</label>
+                        <input type="text" name="cardHolderName" id="cardHolderName" class="form-control" ngModel placeholder="John">
+                    </div>
+                    <div class="col-12">
+                        <label>Card Holder Lastname</label>
+                        <input type="text" name="cardHolderLastName" id="cardHolderLastName" class="form-control" ngModel placeholder="Doe">
+                    </div>
+                    <div class="col-12">
+                        <label>Card Number</label>
+                        <input type="text" name="cardNumber" id="cardNumber" class="form-control" minlength="19" maxlength="19" ngModel placeholder="xxxx-xxxx-xxxx-xxxx [you must include -]">
+                    </div>
+                    <div class="col-12">
+                        <label>Card Security Code (CVV)</label>
+                        <input type="text" name="cardSecurityCode" id="cardSecurityCode" class="form-control" ngModel placeholder="yyy">
+                    </div>
+                    <div *ngIf="invalidRegister === 1" class="alert alert-danger">
+                        <h5>Username already exists</h5>
+                    </div>
+                    <div *ngIf="invalidRegister === 2" class="alert alert-danger">
+                        <h5>Payment didn't pass, some data are not correct!</h5>
+                    </div>
+                    <div *ngIf="invalidRegister === 4" class="alert alert-danger">
+                        <h5>Fields must not be empty</h5>
+                    </div>
+                    <div class="col-12 text-center">
+                        <button type="submit" class="btn btn-dark">Pay</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

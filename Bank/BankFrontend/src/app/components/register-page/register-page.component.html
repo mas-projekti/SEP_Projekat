@@ -1,0 +1,54 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 offset-md-4">
+            <div class="login-form bg-light mt-4 p-4">
+                <form #rf="ngForm" (ngSubmit)="register(rf)" class="row g-3">
+                    <h4 class="text-center">Register</h4>
+                    <div class="col-12">
+                        <label>Username</label>
+                        <input type="text" name="username" id="username" class="form-control" ngModel placeholder="Username">
+                    </div>
+                    <div class="col-12">
+                        <label>Name</label>
+                        <input type="text" name="name" id="name" class="form-control" ngModel placeholder="Username">
+                    </div>
+                    <div class="col-12">
+                        <label>Lastname</label>
+                        <input type="text" name="lastname" id="lastname" class="form-control" ngModel placeholder="Username">
+                    </div>
+                    <div class="col-12">
+                        <label>Password</label>
+                        <input type="password" name="password" id="password" class="form-control" ngModel placeholder="Password">
+                    </div>
+                    <div class="col-12">
+                        <label>Confirm password</label>
+                        <input type="password" name="confirmPassword" id="confirmPassword" class="form-control" ngModel placeholder="ConfirmPassword">
+                    </div>
+                    <div class="col-12">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="clientType" id="clientType" ngModel>
+                            <label class="form-check-label" for="rememberMe">Do you want to be Merchant? [if not then You are considered Standard]</label>
+                        </div>
+                    </div>
+                    <div *ngIf="invalidRegister === 1" class="alert alert-danger">
+                        <h5>Username already exists</h5>
+                    </div>
+                    <div *ngIf="invalidRegister === 2" class="alert alert-danger">
+                        <h5>Passwords do not match</h5>
+                    </div>
+                    <div *ngIf="invalidRegister === 4" class="alert alert-danger">
+                        <h5>Fields must not be empty</h5>
+                    </div>
+                    <div class="col-12 text-center">
+                        <button type="submit" class="btn btn-dark">Register</button>
+                    </div>
+                </form>
+                <hr class="mt-4">
+                <div class="col-12 text-center">
+                    <p class="text-center mb-0">You have an account?</p>
+                    <a class="text-dark" routerLink="/login">Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
