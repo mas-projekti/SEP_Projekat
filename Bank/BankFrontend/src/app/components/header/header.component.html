@@ -1,0 +1,58 @@
+<nav class="navbar navbar-expand-lg navbar-secondary bg-secondary">
+    <div class="container-fluid text-primary">
+      <button class="btn btn-outline-light d-flex align-bottom me-2" routerLink="">
+        <img [src]="env.BANK_LOGO_URL" alt="Bank-logo" width="50" height="50" />
+        <h3 class="mt-2">{{env.BANK_NAME}} Bank</h3>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul *ngIf="isLoggedIn" class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <button class="btn btn-outline-light d-flex align-bottom me-2" aria-current="page" style="visibility: hidden;" routerLink="/cameras">
+              <i class="fas fa-video fa-2x me-2 rounded"></i>
+              <span class="mt-1">Cameras</span>
+            </button>
+          </li>
+          <li *ngIf="isAdmin" class="nav-item">
+            <button class="btn btn-outline-dark d-flex align-bottom me-2" routerLink="/admin">
+              <i class="fas fa-tools fa-2x me-2 rounded"></i>
+              <span class="mt-1">Admin Camera Setup</span>
+            </button>
+          </li>
+        </ul>
+        <ul *ngIf="!isLoggedIn" class="navbar-nav me-auto mb-2 mb-lg-0">
+        </ul>
+        <form class="d-flex align-bottom">
+          <!-- <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-light me-2" type="submit">Search</button> -->
+          <div *ngIf="!isLoggedIn" class="d-flex" >
+            <button class="btn btn-outline-light d-flex align-bottom me-2" routerLink="/login" tabindex="-1" aria-disabled="true">
+              <span class="align-bottom d-flex">
+                <i class="fas fa-lock fa-2x me-2"></i>
+                <span class="mt-1">Login</span>
+              </span>
+            </button>
+            <button class="btn btn-outline-light d-flex align-bottom" routerLink="/register" tabindex="-1" aria-disabled="true">
+              <span class="align-bottom d-flex">
+                <span class="mt-1">Register</span>
+              </span>
+            </button>
+          </div>
+          <div *ngIf="isLoggedIn" class="d-flex">
+            <button class="btn btn-outline-light d-flex align-bottom me-2" tabindex="-1" aria-disabled="true" (click)="navigateToProfile()">
+              <span class="align-bottom d-flex">
+                <i class="fas fa-user fa-2x me-2 rounded"></i>
+                <span class="mt-1">{{username}}</span>
+              </span>
+            </button>
+            <button class="btn btn-outline-light d-flex align-bottom me-2" (click)="logOut()" tabindex="-1" aria-disabled="true">
+              <span class="align-bottom d-flex">
+                <i class="fas fa-door-open fa-2x me-2 rounded"></i>
+                <span class="mt-1">Logout</span>
+              </span>
+            </button>
+          </div>
+          
+        </form>
+      </div>
+    </div>
+  </nav>

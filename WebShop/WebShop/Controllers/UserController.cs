@@ -50,5 +50,21 @@ namespace WebShop.Controllers
             }
         }
 
+        [HttpPost("register")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Register([FromBody] UserDto credentials)
+        {
+            try
+            {
+                var userDto = await _userService.InsertUser(credentials);
+                return Ok(userDto);
+            }
+            catch (Exception e)
+            {
+                return NotFound(e.Message);
+            }
+        }
+
     }
 }

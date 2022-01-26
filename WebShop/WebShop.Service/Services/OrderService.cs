@@ -28,7 +28,7 @@ namespace WebShop.Service.Services
         }
 
         public async Task<OrderDto> GetOrderById(int orderId) => _mapper.Map<OrderDto>(await _orderRepository.GetOrderWithOrderItems(orderId));
-        public async Task<IEnumerable<OrderDto>> GetUserOrders(int userId) => _mapper.Map<IEnumerable<OrderDto>>(_orderRepository.GetUserOrders(userId));
+        public async Task<IEnumerable<OrderDto>> GetUserOrders(int userId) => _mapper.Map<IEnumerable<OrderDto>>(await _orderRepository.GetUserOrders(userId));
 
         public async Task<OrderDto> InsertOrder(InputOrderDto inputOrder)
         {
