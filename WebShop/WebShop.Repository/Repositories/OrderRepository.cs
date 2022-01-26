@@ -17,9 +17,9 @@ namespace WebShop.Repository.Repositories
 
         public async Task<Order> GetOrderWithOrderItems(int orderId) => await _context.Orders.Include(order => order.OrderItems).ThenInclude(orderItem => orderItem.Product).FirstOrDefaultAsync(order => order.Id == orderId);
 
-        public IEnumerable<Order> GetUserOrders(int userId) => _context.Orders.Include(x => x.OrderItems)
+        public async Task<IEnumerable<Order>> GetUserOrders(int userId) => await _context.Orders.Include(x => x.OrderItems)
                                                                               .ThenInclude(ordeItem => ordeItem.Product)
-                                                                              .Where(order => order.CustomerId == userId);
+                                                                              .Where(order => order.CustomerId == userId).ToListAsync();
 
         public async Task<Order> UpdateOrderStatus(Guid transactionId, OrderStatus status)
         {
