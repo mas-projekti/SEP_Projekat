@@ -13,17 +13,6 @@ const getTransactionById = (transactionId) =>{
     .catch(handleError); 
 };
 
-const payWithBank = (transactionId) =>{    
-  const config = {
-      headers: { 'Authorization': `Bearer ${localStorage.getItem('psp-token')}` }
-  };
-return axios 
-  .post(`${BASE_URL}/payment-service/transactions/bank-payment/${transactionId}`, {}, config) 
-  .then(handleResponse) 
-  .catch(handleError); 
-};
-
 export const apiTransactionsProvider = { 
     getTransactionById,
-    payWithBank
   };
