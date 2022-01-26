@@ -24,7 +24,7 @@
                         <h5>Username already exists</h5>
                     </div>
                     <div *ngIf="invalidRegister === 2" class="alert alert-danger">
-                        <h5>Payment didn't pass, some data are not correct!</h5>
+                        <h5>{{errorText}}</h5>
                     </div>
                     <div *ngIf="invalidRegister === 4" class="alert alert-danger">
                         <h5>Fields must not be empty</h5>

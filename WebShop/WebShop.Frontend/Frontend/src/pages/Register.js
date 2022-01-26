@@ -14,7 +14,9 @@ const Register = () => {
             return;
         }
 
-        if (credentials.password === credentials.confirmPassword)  {
+        console.log(credentials);
+
+        if (credentials.password !== credentials.confirmPassword)  {
             setErrorMessage("Passwords do not match");
             return;
         }

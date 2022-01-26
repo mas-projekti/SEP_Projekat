@@ -19,7 +19,7 @@ const routes: Routes = [
   { path: 'profile/:username', component: ProfilePageComponent, canActivate: [AuthGuardService] },
 
   //payment
-  { path: 'payment/card/pay', component: PayFormComponentComponent}
+  { path: 'payment/card/pay/:paymentId', component: PayFormComponentComponent}
 
 ];
 

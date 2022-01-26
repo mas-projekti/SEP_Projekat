@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PAY_API } from 'src/environments/environment';
 
 @Component({
@@ -10,9 +10,12 @@ import { PAY_API } from 'src/environments/environment';
   styleUrls: ['./pay-form-component.component.css']
 })
 export class PayFormComponentComponent implements OnInit {
-invalidRegister: number = 0;
-
-  constructor(private router: Router, private http: HttpClient) { }
+  invalidRegister: number = 0;
+  public errorText: string = "";
+  paymentId: number = 0;
+  constructor(private router: Router, private http: HttpClient, private route: ActivatedRoute) {
+    this.paymentId = +this.route.snapshot.paramMap.get("paymentId")!; 
+   }
 
   ngOnInit(): void {
   }
@@ -26,11 +29,13 @@ invalidRegister: number = 0;
     let ccn: string = form.value.cardNumber;
     ccn = ccn.replace("-", "").replace("-", "").replace("-", "");
     console.log(ccn);
+
     const credentials = {
       'cardHolderName': form.value.cardHolderName,
       'cardHolderLastName': form.value.cardHolderLastName,
       'cardNumber': ccn,
-      'securityCode': form.value.cardSecurityCode
+      'securityCode': form.value.cardSecurityCode,
+      'paymentId': this.paymentId
     }
 
     console.log(credentials);
@@ -43,6 +48,7 @@ invalidRegister: number = 0;
       error: (err) => {
         console.log(err);
         this.invalidRegister = 2;
+        this.errorText = err.error;
       }
     }); 
 

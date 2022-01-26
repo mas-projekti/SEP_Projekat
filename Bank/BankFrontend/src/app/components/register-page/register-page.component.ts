@@ -29,11 +29,6 @@ export class RegisterPageComponent implements OnInit {
       return;
     }
 
-    if (!form.value.clientType) {
-      this.invalidRegister = 3;
-      return;
-    }
-
     const credentials = {
       'username': form.value.username,
       'password': form.value.password,
