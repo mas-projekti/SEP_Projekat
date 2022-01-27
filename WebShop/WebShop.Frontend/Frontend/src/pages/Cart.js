@@ -29,7 +29,7 @@ export default function Cart(props) {
     let decodedToken = jwtDecode(token);
 
     const customerId = decodedToken[`http://schemas.microsoft.com/ws/2008/06/identity/claims/serialnumber`];
-    const loggedUserMerchantId = decodedToken[`http://schemas.microsoft.com/ws/2008/06/identity/claims/userdata`];
+    // const loggedUserMerchantId = decodedToken[`http://schemas.microsoft.com/ws/2008/06/identity/claims/userdata`];
 
     let newOrder = {
         customerId: customerId,

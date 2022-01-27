@@ -18,5 +18,11 @@ namespace WebShop.Repository.Repositories
         {
             return await _context.Set<User>().Where(x => x.Username == username && x.Password == password).FirstOrDefaultAsync();   
         }
+
+        public async Task<User> GetByUsername(string username)
+        {
+            return await _context.Set<User>().Where(x => x.Username == username).FirstOrDefaultAsync();
+        }
+
     }
 }

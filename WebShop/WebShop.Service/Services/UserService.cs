@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using WebShop.Repository.Contract.Interfaces;
 using WebShop.Service.Contract.Dto;
 using WebShop.Service.Contract.Services;
+using WebShop.Models.Generator;
+using WebShop.Models.DomainModels;
 
 namespace WebShop.Service.Services
 {
@@ -28,7 +30,10 @@ namespace WebShop.Service.Services
 
         public async Task<UserDto> InsertUser(UserDto newUser)
         {
-            throw new NotImplementedException();
+            newUser.Salt = Degenerator.GenerateRandomString();
+            newUser.Password = Degenerator.GeneratePasswordWithSalt(newUser.Password + newUser.Salt);
+            await _userRepository.Add(_mapper.Map<User>(newUser));
+            return newUser;
         }
 
         public async Task<UserDto> UpdateUser(UserDto user)
@@ -38,8 +43,9 @@ namespace WebShop.Service.Services
 
         public async Task<string> GetUserByUsernameAndPassword(string username, string password)
         {
-            UserDto userDTO = _mapper.Map<UserDto>(await _userRepository.GetByUsernameAndPassword(username, password));
-            if (userDTO == null) return null;
+            var user = await _userRepository.GetByUsername(username);
+            if (!User.isPasswordMatch(password, user)) throw new ArgumentNullException();
+            UserDto userDTO = _mapper.Map<UserDto>(user);
             var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("SECRET_KEY"))); // IZ .env izvuci info
             var signingCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
 

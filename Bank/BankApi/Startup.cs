@@ -85,8 +85,10 @@ namespace BankApi
             services.AddCors(options =>
             {
                 options.AddPolicy(name: _cors, builder => {
-                    builder.AllowAnyHeader()
-                           .AllowAnyMethod().AllowCredentials();
+                    builder
+                    .AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
                 });
             });
         }
@@ -103,6 +105,8 @@ namespace BankApi
             app.UseCustomExceptionHandler();
             app.UseHttpsRedirection();
             app.UseCors(_cors);
+
+            
 
 
             app.UseRouting();
