@@ -29,9 +29,9 @@ namespace BankApi.Controllers
         }
 
         [HttpPost("pay")]
-        public IActionResult Post([FromBody] PayWithCardDto payWithCard)
+        public async Task<IActionResult> Post([FromBody] PayWithCardDto payWithCard)
         {
-            return Ok(_paymentService.AuthorizePayment(payWithCard));
+            return Ok(await _paymentService.AuthorizePayment(payWithCard));
 
         }
 

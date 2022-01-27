@@ -9,6 +9,8 @@ import * as React from 'react'
 import  {useEffect, useState} from 'react';
 import { useParams , useNavigate} from 'react-router'
 import CircularProgress from '@mui/material/CircularProgress';
+import { apiClientsProvider } from './../services/api/client-service';
+import Button from '@mui/material/Button';
 
 //MAKE THIS NOT HARDCODED LATER
 var psp_client_id = 'klijentneki';
@@ -17,6 +19,8 @@ var psp_client_secret = 'tajnovitatajna';
 
 function Checkout() {
   const [isLoaded, setIsLoaded] = useState(false)
+  const [bitcoinActive, setBitcoinActive] = useState(false)
+  const [bankActive, setBankActive] = useState(false)
   const routeParams = useParams();
   const [orderItems, setOrderItems] = useState([])
   const [paypalOptions, setOptions] = useState({
@@ -41,6 +45,13 @@ function Checkout() {
       
           }else
           {
+            apiClientsProvider.getClientById(resp.clientId)
+                              .then(function(data){
+                                  setBitcoinActive(data.bitcoinActive)
+                                  setBankActive(data.bankActive)
+                                  setIsLoaded(true)
+                              });
+
             setOptions({
               'client-id': "ATa_snSHZWQqqwq_ahDhynNClktGWCdwLr_bTbNCNxE-h8j4gZ3ByOYwrtu-PC2l3aFO8Wf_Pyaj71Xl",
               currency: resp.currency,
@@ -48,7 +59,6 @@ function Checkout() {
               'merchant-id': resp.merchantIds,
             });
             setOrderItems(resp.items);
-            setIsLoaded(true)
           }
        });
     });
@@ -64,7 +74,7 @@ function Checkout() {
         <Grid style={{textAlign: "center"}} item xs={10}>
           <OrderBreakdown items={orderItems}/>
         </Grid>
-        <Grid item xs={6}>        
+        <Grid item xs={4}>        
             <PayPalScriptProvider options={paypalOptions}>
                     <PayPalButtons
                     style={{ layout: "horizontal" }}
@@ -73,7 +83,14 @@ function Checkout() {
                     />
             </PayPalScriptProvider>
         </Grid>
-  
+        <Grid item xs={4}>
+          { bankActive ? (      
+          <Button onClick={(data) => onBankTransactionCreate(routeParams.transactionId)} variant="contained">Pay with credit card</Button>
+          )
+           :
+           (<></>)
+           }  
+        </Grid>  
       </Grid>
     </Box>
      ) : (
@@ -90,6 +107,13 @@ function Checkout() {
   );
 }
 export default Checkout;
+
+function onBankTransactionCreate(transactionId){
+  apiTransactionsProvider.payWithBank(transactionId)
+  .then(function(data){
+    window.open(data.paymentURL,"_self");
+  });
+}
 
 function onApproveCallback(data, actions, orderItems){
   console.log(data)

@@ -13,6 +13,9 @@ namespace BankApi.Dto
         public bool IsWithinSameBank { get; set; }
         public int? AcquirerOrderID { get; set; }
         public DateTime? AcquirerTimestamp { get; set; }
+        public string SuccessURL { get; set; }
+        public string ErrorURL { get; set; }
+        public string FailedURL { get; set; }
 
     }
 }

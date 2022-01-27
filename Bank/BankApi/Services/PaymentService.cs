@@ -84,7 +84,10 @@ namespace BankApi.Services
                     MerchantOrderID = transaction.MerchantOrderID,
                     IsWithinSameBank = false,
                     AcquirerOrderID = response.AcquirerOrderId,
-                    AcquirerTimestamp = response.AcquirerTimestamp
+                    AcquirerTimestamp = response.AcquirerTimestamp,
+                    SuccessURL = transaction.SuccessURL,
+                    ErrorURL = transaction.ErrorURL,
+                    FailedURL = transaction.FailedURL
                 };
 
             }
@@ -121,7 +124,10 @@ namespace BankApi.Services
                 MerchantOrderID = transaction.MerchantOrderID,
                 IsWithinSameBank = true,
                 AcquirerOrderID = null,
-                AcquirerTimestamp = null
+                AcquirerTimestamp = null,
+                SuccessURL = transaction.SuccessURL,
+                ErrorURL = transaction.ErrorURL,
+                FailedURL = transaction.FailedURL
             };
             
 
@@ -158,7 +164,7 @@ namespace BankApi.Services
             PaymentRequestResponseDto response = new PaymentRequestResponseDto
             {
                 PaymentID  = transaction.PaymentId,
-                PaymentURL = "https://www.google.com/" //ovo promeniti obavezno kasnije
+                PaymentURL = $"http://localhost:4200/payment/card/pay/{transaction.PaymentId}" 
             };
 
             return response;

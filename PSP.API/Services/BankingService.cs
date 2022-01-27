@@ -31,9 +31,9 @@ namespace PSP.API.Services
             HttpClient bankClient = GetBankHttpClient(bankTransaction.BankURL);
 
             BankPaymentRequestDto paymentRequestDto = _mapper.Map<BankPaymentRequestDto>(bankTransaction);
-            paymentRequestDto.SuccessURL = "nekiurl"; //TODO: Promeniti ovo da gadja moj front
-            paymentRequestDto.ErrorURL = "nekiurl2"; //TODO: Promeniti ovo da gadja moj front
-            paymentRequestDto.FailedURL = "nekiurl3"; //TODO: Promeniti ovo da gadja moj front
+            paymentRequestDto.SuccessURL = $"http://localhost:3000/transaction-passed/{transactionID}";
+            paymentRequestDto.ErrorURL = "http://localhost:3000/transaction-error"; 
+            paymentRequestDto.FailedURL = "http://localhost:3000/transaction-failed"; 
 
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, $"api/payments");
             request.Content = new StringContent(JsonConvert.SerializeObject(paymentRequestDto), Encoding.UTF8, "application/json");

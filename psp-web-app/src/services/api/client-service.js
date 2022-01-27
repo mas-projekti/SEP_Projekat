@@ -9,6 +9,17 @@ const createNewClient = (clientData) =>{
     .then(handleResponse) 
 };
 
+const notifyClientTransactionFinished = (transactionId) =>{    
+  return axios 
+    .post(`${BASE_URL}/payment-service/clients/notify/${transactionId}`, {}, {}) 
+    .then(handleResponse) 
+};
+
+const getClientById = (clientId) =>{    
+  return axios 
+    .get(`${BASE_URL}/payment-service/clients/${clientId}/info`) 
+    .then(handleResponse)
+  };
 
 const getClientByClientId = (clientId) =>{    
   const config = {
@@ -31,5 +42,7 @@ return axios
 export const apiClientsProvider = { 
     createNewClient,
     getClientByClientId,
-    updateClient
+    updateClient,
+    notifyClientTransactionFinished,
+    getClientById
   };
