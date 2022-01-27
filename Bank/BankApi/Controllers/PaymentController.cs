@@ -42,5 +42,12 @@ namespace BankApi.Controllers
 
         }
 
+        [HttpGet("{paymentId}")]
+        public async Task<IActionResult> ProcessExternal(int paymentId)
+        {
+            return Ok(await _paymentService.GetTransactionByPaymentId(paymentId));
+
+        }
+
     }
 }

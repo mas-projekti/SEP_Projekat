@@ -171,6 +171,13 @@ namespace BankApi.Services
 
         }
 
+        public async Task<TransactionDto> GetTransactionByPaymentId(int paymentId)
+        {
+            TransactionDto trans = _mapper.Map<TransactionDto>(await _dbContext.Transactions.FirstOrDefaultAsync(x => x.PaymentId == paymentId));
+            return trans;
+
+        }
+
         public async Task<TransBankPaymentResponseDto> ProcessExternalPayment(TransBankPaymentRequestDto request)
         {
             PaymentCardDto paymentCardDto = new PaymentCardDto

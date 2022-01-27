@@ -12,5 +12,6 @@ namespace BankApi.Interfaces
         Task<PaymentResultDto> AuthorizePayment(PayWithCardDto dto);
         Task<TransBankPaymentResponseDto> Redirect(TransBankPaymentRequestDto dto);
         Task<TransBankPaymentResponseDto> ProcessExternalPayment(TransBankPaymentRequestDto request);
+        Task<TransactionDto> GetTransactionByPaymentId(int paymentId);
     }
 }
