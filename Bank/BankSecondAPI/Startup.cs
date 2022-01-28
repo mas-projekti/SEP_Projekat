@@ -42,7 +42,7 @@ namespace BankApi
 
             services.AddControllers().AddJsonOptions(options =>
                                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
-            services.AddDbContext<BankDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("BankSecondDatabase")));
+            services.AddDbContext<BankDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("BankDatabase")));
             //Services
             services.AddScoped<IBankClientService, BankClientService>();
             services.AddScoped<IPaymentCardService, PaymentCardService>();
@@ -76,8 +76,8 @@ namespace BankApi
                    ValidateAudience = true,
                    ValidateLifetime = true,
                    ValidateIssuerSigningKey = true,
-                   ValidIssuer = "http://localhost:44356",
-                   ValidAudience = "http://localhost:44356",
+                   ValidIssuer = "http://localhost:44355",
+                   ValidAudience = "http://localhost:44355",
                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetValue<string>("TokenKey:Key")))
                };
            });
@@ -100,7 +100,7 @@ namespace BankApi
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "BankSecondApi v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "BankApi v1"));
             }
             app.UseCustomExceptionHandler();
             app.UseHttpsRedirection();
