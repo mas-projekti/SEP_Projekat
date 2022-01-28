@@ -1,10 +1,11 @@
 import * as React from 'react'
 import  {useState, useEffect} from 'react';
-import { useParams , useNavigate} from 'react-router'
+import { useParams } from 'react-router'
 import { apiClientsProvider } from './../../services/api/client-service';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import CircularProgress from '@mui/material/CircularProgress';
+import TransactionFailed from './transaction-failed';
 
 function TransactionPassed() {
     const routeParams = useParams();
@@ -41,7 +42,7 @@ function TransactionPassed() {
           <Grid container justifyContent="center" alignItems="center" rowSpacing={1} spacing={1}>
             <Grid item xs={12}>   
             { isError ? (
-                <center><h1>Transaction Failed!</h1></center>     
+                <TransactionFailed/>    
 
             ):(
                 <center><h1>Transaction successfull!</h1></center>  

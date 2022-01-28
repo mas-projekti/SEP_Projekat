@@ -1,22 +1,25 @@
-import * as React from 'react'
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-
+import * as React from 'react';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 function TransactionError() {
 
     return (
-        <>
-
-          <Box>
-          <Grid container justifyContent="center" alignItems="center" rowSpacing={1} spacing={1}>
-            <Grid item xs={12}>   
-                <center><h1>Transaction could not be finished bacuse of internal error!</h1></center>     
-            </Grid>
-          </Grid>
-        </Box>
-        </>
-
+      <div>
+        <div className='row'/>
+          <div className='row' style={{marginTop:'20vh'}}>
+          <div className='col-3'/>
+          <div className='col rounded bg-danger'>
+              <center>
+              <div>
+                  <h1 className='text-white'>Transaction Error</h1>
+                  <i className="fas fa-exclamation-triangle"></i>
+                  <CancelIcon className='my-3' style={{ color: 'white', fontSize: 200  }} />
+              </div>
+              </center>
+          </div>
+          <div className='col-3'/>
+        </div>
+      </div>
     );
 
 }

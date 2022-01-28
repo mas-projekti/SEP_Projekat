@@ -11,6 +11,7 @@ import { useParams , useNavigate} from 'react-router'
 import CircularProgress from '@mui/material/CircularProgress';
 import { apiClientsProvider } from './../services/api/client-service';
 import Button from '@mui/material/Button';
+import CreditCardIcon from '@mui/icons-material/CreditCard';
 
 //MAKE THIS NOT HARDCODED LATER
 var psp_client_id = 'klijentneki';
@@ -74,7 +75,7 @@ function Checkout() {
         <Grid style={{textAlign: "center"}} item xs={10}>
           <OrderBreakdown items={orderItems}/>
         </Grid>
-        <Grid item xs={4}>        
+        <Grid item xs={4} className="mt-4">        
             <PayPalScriptProvider options={paypalOptions}>
                     <PayPalButtons
                     style={{ layout: "horizontal" }}
@@ -85,7 +86,10 @@ function Checkout() {
         </Grid>
         <Grid item xs={4}>
           { bankActive ? (      
-          <Button onClick={(data) => onBankTransactionCreate(routeParams.transactionId)} variant="contained">Pay with credit card</Button>
+          <Button onClick={(data) => onBankTransactionCreate(routeParams.transactionId)} variant="contained">
+            <CreditCardIcon fontSize="large" color="white" className="me-2"/>
+            Pay with credit card
+          </Button>
           )
            :
            (<></>)

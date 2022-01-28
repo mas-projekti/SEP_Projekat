@@ -25,27 +25,32 @@ export class PayFormComponentComponent implements OnInit {
       this.invalidRegister = 4;
       return;
     }
-    console.log(form.value);
+    // Parsing Credit Card Number 
     let ccn: string = form.value.cardNumber;
     ccn = ccn.replace("-", "").replace("-", "").replace("-", "");
-    console.log(ccn);
+
+    // Parsing VALID THRU Date
+    let dateString: string = <string>(form.value.cardValidDate);
+    let parts: Array<string> = dateString.split("/");
+    let year: number = 2000 + +parts[1];
+    let month: number = +parts[0];
+    let dateParse: Date = new Date(year, month, 0);
 
     const credentials = {
       'cardHolderName': form.value.cardHolderName,
       'cardHolderLastName': form.value.cardHolderLastName,
       'cardNumber': ccn,
       'securityCode': form.value.cardSecurityCode,
+      'exipiringDate': dateParse,
       'paymentId': this.paymentId
     }
 
-    console.log(credentials);
     this.http.post(PAY_API(), credentials)
     .subscribe({ 
-      next: (resp) => {
-        
+      next: (resp: any) => {
         this.invalidRegister = 0;
-        //window.open(resp.successURL)//Moras uzeti successURL iz responsa
-        window.open("http://localhost:3000/transaction-passed/955ea526-4e4a-44c8-c223-08d9b998c036","_self");
+        window.open(resp.successURL)//Moras uzeti successURL iz responsa
+        //window.open("http://localhost:3000/transaction-passed/955ea526-4e4a-44c8-c223-08d9b998c036","_self");
       },
       error: (err) => {
         console.log(err);
