@@ -6,6 +6,7 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import CircularProgress from '@mui/material/CircularProgress';
 import TransactionFailed from './transaction-failed';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 function TransactionPassed() {
     const routeParams = useParams();
@@ -45,11 +46,23 @@ function TransactionPassed() {
                 <TransactionFailed/>    
 
             ):(
-                <center><h1>Transaction successfull!</h1></center>  
-
-            )}
-                
-                
+                <div>
+                    <div className='row'/>
+                    <div className='row' style={{marginTop:'20vh'}}>
+                        <div className='col-3'/>
+                        <div className='col rounded bg-success'>
+                            <center>
+                            <div>
+                                <h1 className='text-white'>Transaction Succeeded</h1>
+                                <i className="fas fa-exclamation-triangle"></i>
+                                <CheckCircleOutlineIcon className='my-3' style={{ color: 'white', fontSize: 200  }} />
+                            </div>
+                            </center>
+                        </div>
+                        <div className='col-3'/>
+                    </div>
+                </div>
+            )} 
             </Grid>
           </Grid>
         </Box>
