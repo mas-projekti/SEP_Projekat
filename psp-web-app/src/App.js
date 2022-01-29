@@ -11,6 +11,9 @@ import FrontPage from './views/frontpage';
 import Login from './views/login/login'
 import Registration from './views/registration/registration'
 import ClientSettings from './views/client-settings'
+import TransactionPassed from './views/transaction-outcomes/transaction-passed';
+import TransactionFailed from './views/transaction-outcomes/transaction-failed';
+import TransactionError from 'views/transaction-outcomes/transaction-error';
 
 function App() {
 
@@ -24,6 +27,9 @@ function App() {
         <Route path="/login" element={<Login/>}/>
         <Route path="/register" element={<Registration/>}/>
         <Route path="/checkout/:transactionId" element={<Checkout/>}/>
+        <Route path="/transaction-passed/:transactionId" element={<TransactionPassed/>}/>
+        <Route path="/transaction-failed" element={<TransactionFailed/>}/>
+        <Route path="/transaction-error" element={<TransactionError/>}/>
         <Route  path="*" element={<FrontPage/>}/>
       </Routes>
     </div>

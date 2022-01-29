@@ -11,5 +11,6 @@ namespace PSP.API.Models
         public int PspClientId { get; set; }
         public PspClient Client { get; set; }
         public List<Item> Items { get; set; }
+        public BankTransaction BankTransaction { get; set; }
     }
 }

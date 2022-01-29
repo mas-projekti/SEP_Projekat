@@ -16,7 +16,8 @@ namespace PSP.API.Mapping
             CreateMap<Item, ItemDto>().ReverseMap();
             CreateMap<PspClient, CreatedPspClientDto>().ReverseMap();
             CreateMap<PspClient, PspClientDto>().ReverseMap();
-
+            CreateMap<BankTransaction, BankTransactionDto>().ReverseMap();
+            CreateMap<BankTransaction, BankPaymentRequestDto>().ReverseMap();
         }
     }
 }

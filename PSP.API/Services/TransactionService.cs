@@ -39,10 +39,10 @@ namespace PSP.API.Services
             throw new NotImplementedException();
         }
 
-        public async Task<TransactionDto> Insert(List<ItemDto> items, string clientID)
+        public async Task<TransactionDto> Insert(CreateTransactionDto transaction, string clientID)
         {
             PspClient client = _dbContext.PspClients.FirstOrDefault(x => x.ClientID == clientID);
-            List<Item> transactionItems = _mapper.Map<List<Item>>(items);
+            List<Item> transactionItems = _mapper.Map<List<Item>>(transaction.Items);
             Guid newGuid = Guid.NewGuid();
             Transaction t = new Transaction() { Id = newGuid  };
             foreach (Item item in transactionItems)
@@ -53,6 +53,10 @@ namespace PSP.API.Services
             t.Items = transactionItems;
             t.PspClientId = client.Id;
 
+            if(transaction.BankTransactionData != null) //Add bank data in case it exists
+            {
+                t.BankTransaction = _mapper.Map<BankTransaction>(transaction.BankTransactionData);
+            }
           
             await _dbContext.Transactions.AddAsync(t);
             await _dbContext.SaveChangesAsync();
@@ -81,12 +85,14 @@ namespace PSP.API.Services
             return new TransactionDto()
             {
                 Id = transaction.Id,
+                ClientId = transaction.PspClientId,
                 Currency = transaction.Items[0].Currency,
                 Items = items,
-                MerchantIds = merchantIds
+                MerchantIds = merchantIds,
+                BankTransactionData = _mapper.Map<BankTransactionDto>(transaction.BankTransaction)
             };
 
                 
-    }
+        }
     }
 }

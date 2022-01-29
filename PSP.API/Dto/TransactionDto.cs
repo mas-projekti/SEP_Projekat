@@ -11,5 +11,7 @@ namespace PSP.API.Dto
         public List<ItemDto> Items { get; set; }
         public List<string> MerchantIds { get; set; }
         public string Currency { get; set; }
+        public int ClientId { get; set; }
+        public BankTransactionDto BankTransactionData { get; set; }
     }
 }

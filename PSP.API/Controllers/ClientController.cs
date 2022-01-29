@@ -33,6 +33,17 @@ namespace PSP.API.Controllers
 
         }
 
+        [HttpGet("{id}/info")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PspClientDto))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetClientAsync(int id)
+        {
+
+            return Ok(await _clientService.GetClient(id));
+
+        }
+
+
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreatedPspClientDto))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

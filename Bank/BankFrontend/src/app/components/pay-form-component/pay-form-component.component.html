@@ -18,7 +18,11 @@
                     </div>
                     <div class="col-12">
                         <label>Card Security Code (CVV)</label>
-                        <input type="text" name="cardSecurityCode" id="cardSecurityCode" class="form-control" ngModel placeholder="yyy">
+                        <input type="password" name="cardSecurityCode" id="cardSecurityCode" class="form-control" ngModel placeholder="yyy">
+                    </div>
+                    <div class="col-12">
+                        <label>Valid Thru</label>
+                        <input type="text" name="cardValidDate" id="cardValidDate" class="form-control" ngModel placeholder="12/26 (MM/yy) [you must include /]">
                     </div>
                     <div *ngIf="invalidRegister === 1" class="alert alert-danger">
                         <h5>Username already exists</h5>

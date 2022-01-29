@@ -1,4 +1,4 @@
-import { handleResponse, handleError } from './response'; 
+import { handleResponse } from './response'; 
 var ClientOAuth2 = require('client-oauth2')
 
 

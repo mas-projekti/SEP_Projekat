@@ -15,12 +15,13 @@ namespace PSP.API.Controllers
     public class TransactionController : ControllerBase
     {
         private readonly ITransactionService _transactionService;
+        private readonly IBankingService _bankingService;
 
-        public TransactionController(ITransactionService transactionService)
+        public TransactionController(ITransactionService transactionService, IBankingService bankingService)
         {
             _transactionService = transactionService;
+            _bankingService = bankingService;
         }
-
 
         [HttpGet("{id}")]
         [Authorize]
@@ -39,12 +40,12 @@ namespace PSP.API.Controllers
         [HttpPost]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<IActionResult> AddTransaction([FromBody] List<ItemDto> items)
+        public async Task<IActionResult> AddTransaction([FromBody] CreateTransactionDto transaction)
         {
             try
             {
                 var clientID = User.Claims.FirstOrDefault(x => x.Type == "client_id").Value;
-                TransactionDto transacitonDto = await _transactionService.Insert(items, clientID);
+                TransactionDto transacitonDto = await _transactionService.Insert(transaction, clientID);
                 return CreatedAtAction(nameof(AddTransaction), new { id = transacitonDto.Id }, transacitonDto);
             }
             catch (Exception e)
@@ -53,6 +54,12 @@ namespace PSP.API.Controllers
             }
        
 
+        }
+
+        [HttpPost("bank-payment/{transactionId}")]
+        public async Task<IActionResult> InitBankPayment(Guid transactionId)
+        {
+            return Ok(await _bankingService.InitiateBankPayment(transactionId));
         }
 
     }
