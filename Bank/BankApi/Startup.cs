@@ -23,6 +23,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
 
 namespace BankApi
 {
@@ -123,6 +124,7 @@ namespace BankApi
                 var context = serviceScope.ServiceProvider.GetService<BankDbContext>();
                 context.Database.Migrate();
             }
+            app.UseSerilogRequestLogging();
         }
     }
 }

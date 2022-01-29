@@ -79,7 +79,10 @@ function Checkout() {
             <PayPalScriptProvider options={paypalOptions}>
                     <PayPalButtons
                     style={{ layout: "horizontal" }}
-                    onApprove={(data, actions) => onApproveCallback(data, actions, orderItems)}
+                    onError =  {(data, actions) =>
+                      navigate("/transaction-error")
+                    }
+                    onApprove={(data, actions) => onApproveCallback(data, actions, orderItems, navigate, routeParams.transactionId)}
                     createOrder={(data, actions) => onCreateOrder(data, actions, orderItems, routeParams.transactionId)}
                     />
             </PayPalScriptProvider>
@@ -112,6 +115,7 @@ function Checkout() {
 }
 export default Checkout;
 
+
 function onBankTransactionCreate(transactionId){
   apiTransactionsProvider.payWithBank(transactionId)
   .then(function(data){
@@ -119,7 +123,7 @@ function onBankTransactionCreate(transactionId){
   });
 }
 
-function onApproveCallback(data, actions, orderItems){
+function onApproveCallback(data, actions, orderItems, navigate, transactionId){
   console.log(data)
   return apiPaypalProvider.capturePaypalOrder(data.orderID)
   .then(function(orderData) {
@@ -140,7 +144,7 @@ function onApproveCallback(data, actions, orderItems){
           // Successful capture! For demo purposes:
           console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
           var transaction = orderData.purchase_units[0].payments.captures[0];
-          alert('Transaction '+ transaction.status + ': ' + transaction.id + '\n\nSee console for all available details');
+          navigate(`/transaction-passed/${transactionId}`, { replace: true, transactionId: transactionId  });
   });
                   
 }

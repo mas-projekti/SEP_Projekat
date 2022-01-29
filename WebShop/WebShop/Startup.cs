@@ -11,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -144,6 +145,7 @@ namespace WebShop
                 var context = serviceScope.ServiceProvider.GetService<WebShopDbContext>();
                 context.Database.Migrate();
             }
+            app.UseSerilogRequestLogging();
         }
     }
 }

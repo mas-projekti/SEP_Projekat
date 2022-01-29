@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
+using Common.Security;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using PSP.API.Dto;
 using PSP.API.Infrastructure;
 using PSP.API.Interfaces;
 using PSP.API.Models;
+using PSP.API.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,11 +18,13 @@ namespace PSP.API.Services
     {
         private readonly PaymentServiceProviderDbContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly HookSecretOptions _hookOptions;
 
-        public TransactionService(PaymentServiceProviderDbContext dbContext, IMapper mapper)
+        public TransactionService(PaymentServiceProviderDbContext dbContext, IMapper mapper, IOptions<HookSecretOptions> hookOptions)
         {
             _dbContext = dbContext;
             _mapper = mapper;
+            _hookOptions = hookOptions.Value;
         }
 
         public Task Delete(Guid id)
@@ -52,10 +57,13 @@ namespace PSP.API.Services
             }
             t.Items = transactionItems;
             t.PspClientId = client.Id;
-
-            if(transaction.BankTransactionData != null) //Add bank data in case it exists
+           
+            if (transaction.BankTransactionData != null) //Add bank data in case it exists
             {
-                t.BankTransaction = _mapper.Map<BankTransaction>(transaction.BankTransactionData);
+                BankTransaction banktransaction = _mapper.Map<BankTransaction>(transaction.BankTransactionData);
+                AesCryptoProvider provider = new AesCryptoProvider(_hookOptions.Key);
+                banktransaction.MerchantPassword = provider.EncryptString(banktransaction.MerchantPassword);
+                t.BankTransaction = banktransaction;
             }
           
             await _dbContext.Transactions.AddAsync(t);
