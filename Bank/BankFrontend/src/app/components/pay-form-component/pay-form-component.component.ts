@@ -49,7 +49,7 @@ export class PayFormComponentComponent implements OnInit {
     .subscribe({ 
       next: (resp: any) => {
         this.invalidRegister = 0;
-        window.open(resp.successURL)//Moras uzeti successURL iz responsa
+        window.open(resp.successURL, "_self")//Moras uzeti successURL iz responsa
         //window.open("http://localhost:3000/transaction-passed/955ea526-4e4a-44c8-c223-08d9b998c036","_self");
       },
       error: (err) => {

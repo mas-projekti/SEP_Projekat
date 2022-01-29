@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace BankSecondApi.Migrations
+namespace BankApi.Migrations
 {
     [DbContext(typeof(BankDbContext))]
     partial class BankDbContextModelSnapshot : ModelSnapshot
