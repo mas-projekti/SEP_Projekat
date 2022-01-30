@@ -29,7 +29,7 @@ namespace PSP.API.Services
 
         public async Task<TransactionDto> Get(Guid id)
         {
-            Transaction transaction =  await _dbContext.Transactions.Include(x => x.Items).FirstOrDefaultAsync(x => x.Id == id);
+            Transaction transaction =  await _dbContext.Transactions.Include(x => x.Items).Include(x => x.BankTransaction).FirstOrDefaultAsync(x => x.Id == id);
             TransactionDto transactionDto = CreateTransactionDto(transaction);
             return transactionDto;
         }
