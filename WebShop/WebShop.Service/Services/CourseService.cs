@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,12 +24,12 @@ namespace WebShop.Service.Services
 
         public CourseDto GetCourse(int id)
         {
-            return _mapper.Map<CourseDto>(_dbContext.Courses.Find(id));
+            return _mapper.Map<CourseDto>(_dbContext.Courses.Include(x => x.User).First(x=> x.Id == id));
         }
 
         public List<CourseDto> GetCourses()
         {
-            return _mapper.Map<List<CourseDto>>(_dbContext.Courses.ToList());
+            return _mapper.Map<List<CourseDto>>(_dbContext.Courses.Include(x => x.User).ToList());
         }
     }
 }

@@ -15,6 +15,11 @@ namespace WebShop.Infrastructure.Configurations
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).ValueGeneratedOnAdd();
+
+
+            builder.HasOne(x => x.User)
+                   .WithMany(x => x.Courses)
+                   .HasForeignKey(x => x.UserID);
         }
     }
 }

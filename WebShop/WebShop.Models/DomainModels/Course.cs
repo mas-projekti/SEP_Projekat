@@ -14,5 +14,7 @@ namespace WebShop.Models.DomainModels
         public string Description{ get; set; }
         public string SubscriptionPeriod { get; set; }
         public string PlanId { get; set; }
+        public User User { get; set; }
+        public int? UserID { get; set; }
     }
 }

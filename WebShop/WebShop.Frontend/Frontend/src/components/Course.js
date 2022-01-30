@@ -34,6 +34,7 @@ const Course = (props) => {
 
 function subscribeToCourse(course)
 {
+    console.log(course)
     const BASE_URL = "https://localhost:44313";
     const PSP_FRONT = "http://localhost:3000/checkout/";
     const config = {
@@ -51,9 +52,21 @@ function subscribeToCourse(course)
         merchantId: null
     });
 
+    let min = Math.ceil(1);
+    let max = Math.floor(100000);
+    let num = Math.floor(Math.random() * (max - min) + min); 
+    let bankTransData = {
+        merchantID: course.user.bankMerchantID,
+        merchantPassword: course.user.merchantPassword,
+        amount: course.price,
+        merchantOrderId: num,
+        merchantTimestamp:  new Date(),
+        bankURL: course.user.bankURL
+    }
+
     let transaction = {
         items:listOfOrders,
-        bankTransactionData:null,
+        bankTransactionData:bankTransData,
         subscriptionTransaction:{
             id:0,
             subscriptionPlanId:course.planId,
