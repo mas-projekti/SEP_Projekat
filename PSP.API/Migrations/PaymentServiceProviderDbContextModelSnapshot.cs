@@ -134,6 +134,27 @@ namespace PSP.API.Migrations
                     b.ToTable("PspClients");
                 });
 
+            modelBuilder.Entity("PSP.API.Models.SubscriptionTransaction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("SubscriptionPlanId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("TransactionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TransactionId")
+                        .IsUnique();
+
+                    b.ToTable("SubscriptionTransaction");
+                });
+
             modelBuilder.Entity("PSP.API.Models.Transaction", b =>
                 {
                     b.Property<Guid>("Id")
@@ -172,6 +193,17 @@ namespace PSP.API.Migrations
                     b.Navigation("Transaction");
                 });
 
+            modelBuilder.Entity("PSP.API.Models.SubscriptionTransaction", b =>
+                {
+                    b.HasOne("PSP.API.Models.Transaction", "Transaction")
+                        .WithOne("SubscriptionTransaction")
+                        .HasForeignKey("PSP.API.Models.SubscriptionTransaction", "TransactionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Transaction");
+                });
+
             modelBuilder.Entity("PSP.API.Models.Transaction", b =>
                 {
                     b.HasOne("PSP.API.Models.PspClient", "Client")
@@ -193,6 +225,8 @@ namespace PSP.API.Migrations
                     b.Navigation("BankTransaction");
 
                     b.Navigation("Items");
+
+                    b.Navigation("SubscriptionTransaction");
                 });
 #pragma warning restore 612, 618
         }

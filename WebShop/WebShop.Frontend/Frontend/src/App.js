@@ -11,6 +11,7 @@ import Cart from './pages/Cart';
 import CreateItemPage from './pages/CreateItemPage';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { useState } from 'react';
+import Courses from './pages/Courses';
 
 
 
@@ -111,6 +112,9 @@ function App() {
                 </Route>
                 <Route path='/register'>
                   <Register/>
+                </Route>
+                <Route path='/courses'>
+                  <Courses/>
                 </Route>
                 <Route path='/user/:userId' render={(props) => <Profile {...props} authGuardFunction={authGuardFunction}/>}>
                   {/* <Profile/> */}

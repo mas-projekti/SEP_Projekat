@@ -21,14 +21,22 @@ var psp_client_secret = 'tajnovitatajna';
 function Checkout() {
   const [isLoaded, setIsLoaded] = useState(false)
   const [bitcoinActive, setBitcoinActive] = useState(false)
+  const [transaction, setTransaction] = useState(null)
   const [bankActive, setBankActive] = useState(false)
   const routeParams = useParams();
   const [orderItems, setOrderItems] = useState([])
-  const [paypalOptions, setOptions] = useState({
+  const [planId, setPlanId] = useState(null)
+  const [paypalPayOptions, setPayOptions] = useState({
     'client-id': "ATa_snSHZWQqqwq_ahDhynNClktGWCdwLr_bTbNCNxE-h8j4gZ3ByOYwrtu-PC2l3aFO8Wf_Pyaj71Xl",
     currency: "USD",
-    intent: "capture",
+    intent:'capture',
     'merchant-id': [],
+  });
+  const [paypalSubscribeOptions, setSubscribeOptions] = useState({
+    'client-id': "ATa_snSHZWQqqwq_ahDhynNClktGWCdwLr_bTbNCNxE-h8j4gZ3ByOYwrtu-PC2l3aFO8Wf_Pyaj71Xl",
+    currency: "USD",
+    intent:'subscribe',
+    vault:true
   });
   const navigate = useNavigate()
 
@@ -46,19 +54,35 @@ function Checkout() {
       
           }else
           {
+            setTransaction(resp)
             apiClientsProvider.getClientById(resp.clientId)
                               .then(function(data){
                                   setBitcoinActive(data.bitcoinActive)
                                   setBankActive(data.bankActive)
                                   setIsLoaded(true)
                               });
+            if(resp.subscriptionTransaction == null)
+            {
+              setPayOptions({
+                'client-id': "ATa_snSHZWQqqwq_ahDhynNClktGWCdwLr_bTbNCNxE-h8j4gZ3ByOYwrtu-PC2l3aFO8Wf_Pyaj71Xl",
+                currency: resp.currency,
+                intent: "capture",
+                'merchant-id': resp.merchantIds,
+              });
+              
 
-            setOptions({
-              'client-id': "ATa_snSHZWQqqwq_ahDhynNClktGWCdwLr_bTbNCNxE-h8j4gZ3ByOYwrtu-PC2l3aFO8Wf_Pyaj71Xl",
-              currency: resp.currency,
-              intent: "capture",
-              'merchant-id': resp.merchantIds,
-            });
+            }else
+            {
+              setPlanId(resp.subscriptionTransaction.subscriptionPlanId)
+              setSubscribeOptions({
+                'client-id': "ATa_snSHZWQqqwq_ahDhynNClktGWCdwLr_bTbNCNxE-h8j4gZ3ByOYwrtu-PC2l3aFO8Wf_Pyaj71Xl",
+                currency: resp.currency,
+                intent: "subscription",
+                vault:true
+              });
+
+            }
+            
             setOrderItems(resp.items);
           }
        });
@@ -75,17 +99,31 @@ function Checkout() {
         <Grid style={{textAlign: "center"}} item xs={10}>
           <OrderBreakdown items={orderItems}/>
         </Grid>
-        <Grid item xs={4} className="mt-4">        
-            <PayPalScriptProvider options={paypalOptions}>
+        <Grid item xs={4} className="mt-4"> 
+        { planId === null ? (   
+            <>
+            <PayPalScriptProvider options={paypalPayOptions}>
                     <PayPalButtons
                     style={{ layout: "horizontal" }}
                     onApprove={(data, actions) => onApproveCallback(data, actions, orderItems)}
                     createOrder={(data, actions) => onCreateOrder(data, actions, orderItems, routeParams.transactionId)}
                     />
             </PayPalScriptProvider>
+            </>
+          ):(    
+
+            <PayPalScriptProvider options={paypalSubscribeOptions}>
+                    <PayPalButtons
+                    style={{ layout: "horizontal", label:"subscribe" }}
+                    createSubscription={(data, actions) => onCreateSubscription(data, actions, planId)}
+                    onApprove={(data, actions) => onSubscriptionApproveCallback(data, actions, routeParams.transactionId, navigate)}
+                    />
+            </PayPalScriptProvider>
+          )}
+            
         </Grid>
         <Grid item xs={4}>
-          { bankActive ? (      
+          { bankActive && transaction.bankTransactionData!=null ? (      
           <Button onClick={(data) => onBankTransactionCreate(routeParams.transactionId)} variant="contained">
             <CreditCardIcon fontSize="large" color="white" className="me-2"/>
             Pay with credit card
@@ -111,6 +149,19 @@ function Checkout() {
   );
 }
 export default Checkout;
+
+function onCreateSubscription(data, actions, subPlanId)
+{
+  return actions.subscription.create({
+    /* Creates the subscription */
+    plan_id: subPlanId
+  });
+}
+
+function onSubscriptionApproveCallback(data, actions, transactionId, navigate)
+{
+  navigate(`/transaction-passed/${transactionId}`)
+}
 
 function onBankTransactionCreate(transactionId){
   apiTransactionsProvider.payWithBank(transactionId)
@@ -160,3 +211,4 @@ function onCreateOrder(data, actions, orderItems, transactionId){
       });
 
 }
+
