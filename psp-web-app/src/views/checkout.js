@@ -12,6 +12,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { apiClientsProvider } from './../services/api/client-service';
 import Button from '@mui/material/Button';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
+import QrCode2Icon from '@mui/icons-material/QrCode2';
 
 //MAKE THIS NOT HARDCODED LATER
 var psp_client_id = 'klijentneki';
@@ -31,6 +32,7 @@ function Checkout() {
     'merchant-id': [],
   });
   const navigate = useNavigate()
+  const [qrCode, setQrCode] = useState("");
 
   useEffect(() => {
     
@@ -39,7 +41,7 @@ function Checkout() {
       localStorage.setItem('psp-token', resp.access_token)
       apiTransactionsProvider.getTransactionById(routeParams.transactionId)
         .then(function(resp){
-          console.log(resp)
+          console.log(resp);
           if(resp === undefined || resp.isAxiosError)
           {
             navigate("/", { replace: true });
@@ -60,6 +62,9 @@ function Checkout() {
               'merchant-id': resp.merchantIds,
             });
             setOrderItems(resp.items);
+            let QRData = 'INFO';
+            let size = 100;
+            setQrCode(`http://api.qrserver.com/v1/create-qr-code/?data=${QRData}&size=${size}x${size}`);
           }
        });
     });
@@ -70,39 +75,92 @@ function Checkout() {
     <>
     {
      isLoaded === true ? (
-      <Box>
-      <Grid container justifyContent="center" alignItems="center" rowSpacing={1} spacing={1}>
-        <Grid style={{textAlign: "center"}} item xs={10}>
-          <OrderBreakdown items={orderItems}/>
-        </Grid>
-        <Grid item xs={4} className="mt-4">        
-            <PayPalScriptProvider options={paypalOptions}>
-                    <PayPalButtons
-                    style={{ layout: "horizontal" }}
-                    onApprove={(data, actions) => onApproveCallback(data, actions, orderItems)}
-                    createOrder={(data, actions) => onCreateOrder(data, actions, orderItems, routeParams.transactionId)}
-                    />
-            </PayPalScriptProvider>
-        </Grid>
-        <Grid item xs={4}>
-          { bankActive ? (      
-          <Button onClick={(data) => onBankTransactionCreate(routeParams.transactionId)} variant="contained">
-            <CreditCardIcon fontSize="large" color="white" className="me-2"/>
-            Pay with credit card
-          </Button>
-          )
-           :
-           (<></>)
-           }  
-        </Grid>  
-      </Grid>
-    </Box>
+      <div className="container">
+      {/* <Grid container justifyContent="center" alignItems="center" rowSpacing={1} spacing={1}>
+
+      </Grid> */}
+      <div className="row my-3">
+        <div className="col-1"></div>
+        <div className="col-10">
+          <Grid style={{textAlign: "center"}} item xs={12}>
+              <OrderBreakdown items={orderItems}/>
+          </Grid>
+        </div>
+        <div className="col-1"></div>
+      </div>
+        <div className="row">
+          <div className="col-1"></div>
+          <div className="col-10 d-flex">
+            <Grid item xs={4} className="me-2">  
+              <center className="mx-2 my-2">
+                <PayPalScriptProvider options={paypalOptions}>
+                        <PayPalButtons
+                        style={{ layout: "horizontal" }}
+                        onApprove={(data, actions) => onApproveCallback(data, actions, orderItems)}
+                        createOrder={(data, actions) => onCreateOrder(data, actions, orderItems, routeParams.transactionId)}
+                        />
+                </PayPalScriptProvider>
+              </center>      
+            </Grid>
+            <Grid item xs={4} className="me-2" >
+              <center className="mx-2 my-2">
+                { bankActive ? (      
+                <Button onClick={(data) => onBankTransactionCreate(routeParams.transactionId)} variant="contained">
+                  <CreditCardIcon fontSize="large" color="white" className="me-2"/>
+                  Pay with credit card
+                </Button>
+                )
+                :
+                (<></>)
+                } 
+              </center>
+              <hr className="mx-3"></hr>
+              <center>
+                <Button onClick={(data) => onBankTransactionCreate(routeParams.transactionId)} variant="contained" disabled>
+                  <QrCode2Icon fontSize="large" color="white" className="me-2"></QrCode2Icon>
+                  Pay with QR Code
+                </Button>
+                
+                <h3></h3>
+                <div className="col">
+                  <img src={qrCode} alt="" />
+                </div>
+                <div className="col my-3">
+                  <a href={qrCode} download="QRCode">
+                    <Button variant="contained">Download</Button>
+                  </a>
+                </div>
+              </center>
+            </Grid>
+            <Grid item xs={4}>
+              <center className="mx-2 my-2">
+                { bankActive ? (      
+                <Button onClick={(data) => onBankTransactionCreate(routeParams.transactionId)} variant="contained">
+                  <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.svg?v=018" width={30} height={30} alt="" className="me-2"></img>
+                  PODESITI OVO DUGME ZA BITKOIN, NE RADI POSAO KOJI TREBA
+                </Button>
+                )
+                :
+                (<></>)
+                }  
+              </center>
+            </Grid>
+          </div>
+          <div className="col-1"></div>
+        </div>
+        <div className="row">
+          
+        </div> 
+
+    </div>
      ) : (
-       <center>
+       <div className="container my-3">
+        <center>
           <CircularProgress
           size={400}
           thickness={4}/>
         </center>
+       </div>
         )
     }
     
