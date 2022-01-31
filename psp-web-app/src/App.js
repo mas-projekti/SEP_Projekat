@@ -14,6 +14,7 @@ import ClientSettings from './views/client-settings'
 import TransactionPassed from './views/transaction-outcomes/transaction-passed';
 import TransactionFailed from './views/transaction-outcomes/transaction-failed';
 import TransactionError from 'views/transaction-outcomes/transaction-error';
+import QRCodePage from 'views/qrCode/qrCodePage';
 
 function App() {
 
@@ -30,7 +31,10 @@ function App() {
         <Route path="/transaction-passed/:transactionId" element={<TransactionPassed/>}/>
         <Route path="/transaction-failed" element={<TransactionFailed/>}/>
         <Route path="/transaction-error" element={<TransactionError/>}/>
-        <Route  path="*" element={<FrontPage/>}/>
+        <Route path="/qrCode" element={<QRCodePage/>}>
+          <Route path=":obj" index element={<QRCodePage/>}/>
+        </Route>
+        <Route path="*" element={<FrontPage/>}/>
       </Routes>
     </div>
   </Router>

@@ -16,10 +16,11 @@ export default function Cart(props) {
 
   const text = `You must login first`;
   const [ isTextVisible, setIsTextVisible ] = useState(false);
+  const [ loading, setLoading ] = useState(false);
   const history = useHistory();
 
   function checkout() {
-      
+    setLoading(true);
     let token = localStorage.getItem(`jwt`);
     if (token === null) {
         setIsTextVisible(true);
@@ -51,13 +52,31 @@ export default function Cart(props) {
         })
     ));
 
-    
+    let user = {}
+    axios.get(process.env.REACT_APP_WEB_SHOP_USERS_BACKEND_API + '/' + customerId, config)
+    .then((userResp) => {
+        user = userResp.data;
+    });
 
+    // DODATI user.merchantID, user.merchantPassword    
+    let pspRequestBody = 
+    {
+        "items": listOfOrders,
+        "bankTransactionData": {
+            "merchantID": "7pVm8HesM99rObo1odZLYlnt8X/OWR0sVY+8LoyK",
+            "merchantPassword": "h4EIuXc19VcZKwpjRWEg665/92lekArgREGaO3HIckc/X47sq4RmgRO9MLoV5Rz9eYrq5iGI/Tqh6fs2uPDxN7uRSwzfImVhR7T4Q0oIDGEcz+S3vHnxaqJTAegc6AvHYytfXQ==",
+            "amount": 0,
+            "merchantOrderID": 0,
+            "merchantTimestamp": "2022-01-29T16:39:54.707Z",
+            "bankURL": "string"
+        }
+    }
+    
     
 
     // Otkomentarisati posle radi PSP API-ja
 
-    axios.post(`${BASE_URL}/payment-service/transactions`, listOfOrders, config)
+    axios.post(`${BASE_URL}/payment-service/transactions`, pspRequestBody, config)
     .then((pspResp) => {
         //Lista za WebShop
         cartItems.map((item) => (
@@ -74,6 +93,7 @@ export default function Cart(props) {
         .then((webShopResp) => {
             emptyCart();
             const putanjica = PSP_FRONT + pspResp.data.id;
+            setLoading(false);
             window.open(putanjica);
             history.push(`user/${customerId}`);
         })
@@ -151,7 +171,14 @@ export default function Cart(props) {
                             
                             
                             <button className="btn btn-secondary" onClick={() => checkout()}>
-                                Checkout
+                                {loading ?
+                                    <div>
+                                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                :
+                                    <>Checkout</>
+                                }
                             </button>
                         </div>
                         <div className='col-4'>
