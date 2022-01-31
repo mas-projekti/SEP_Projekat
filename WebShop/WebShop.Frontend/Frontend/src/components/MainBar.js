@@ -67,6 +67,12 @@ const MainBar = (props) => {
                     <NavLink to="/about">
                         About
                     </NavLink>
+                    <div className="mx-5">
+                        |
+                    </div>
+                    <NavLink to="/courses">
+                        Courses
+                    </NavLink>
                 </Navbar.Brand>
                 <Navbar.Collapse id="responsive-navbar-nav ">
                 </Navbar.Collapse>

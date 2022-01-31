@@ -26,6 +26,7 @@ namespace WebShop.Mapping
                .ReverseMap();
 
             CreateMap<PaymentOption, PaymentOptionDto>().ReverseMap();
+            CreateMap<Course, CourseDto>().ReverseMap();
 
 
 

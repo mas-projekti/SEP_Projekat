@@ -85,6 +85,7 @@ namespace WebShop
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IPaymentOptionService, PaymentOptionService>();
+            services.AddScoped<ICourseService, CourseService>();
 
             services.Configure<WebhookOptions>(Configuration.GetSection(WebhookOptions.HookSecret));
 

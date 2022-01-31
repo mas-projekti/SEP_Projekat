@@ -20,5 +20,8 @@ namespace WebShop.Service.Contract.Dto
         public string ImageURL { get; set; }
         public UserType UserType { get; set; }
         public string MerchantId { get; set; }
+        public string BankMerchantID { get; set; }
+        public string MerchantPassword { get; set; }
+        public string BankURL { get; set; }
     }
 }

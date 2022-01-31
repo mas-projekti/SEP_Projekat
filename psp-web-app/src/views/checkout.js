@@ -19,6 +19,9 @@ var psp_client_secret = 'tajnovitatajna';
 
 
 function Checkout() {
+
+  const [transaction, setTransaction] = useState(null)
+  const [planId, setPlanId] = useState(null)
   const [isLoaded, setIsLoaded] = useState(false);
   const [bitcoinActive, setBitcoinActive] = useState(true);
   const [bankActive, setBankActive] = useState(false);
@@ -29,8 +32,14 @@ function Checkout() {
   const [paypalOptions, setOptions] = useState({
     'client-id': "ATa_snSHZWQqqwq_ahDhynNClktGWCdwLr_bTbNCNxE-h8j4gZ3ByOYwrtu-PC2l3aFO8Wf_Pyaj71Xl",
     currency: "USD",
-    intent: "capture",
+    intent:'capture',
     'merchant-id': [],
+  });
+  const [paypalSubscribeOptions, setSubscribeOptions] = useState({
+    'client-id': "ATa_snSHZWQqqwq_ahDhynNClktGWCdwLr_bTbNCNxE-h8j4gZ3ByOYwrtu-PC2l3aFO8Wf_Pyaj71Xl",
+    currency: "USD",
+    intent:'subscribe',
+    vault:true
   });
   const navigate = useNavigate()
   const [qrCode, setQrCode] = useState("");
@@ -49,6 +58,8 @@ function Checkout() {
       
           }else
           {
+            setTransaction(resp)
+
             
             let qrCodeData = {
               merchantId: resp.bankTransactionData.merchantID,
@@ -61,19 +72,35 @@ function Checkout() {
               failedrUrl: `http://localhost:3000/transaction-failed`,
               errorUrl: `http://localhost:3000/transaction-error`
             };
+
             apiClientsProvider.getClientById(resp.clientId)
                               .then(function(data){
                                   setBitcoinActive(data.bitcoinActive);
                                   setBankActive(data.bankActive);
                                   setIsLoaded(true);
                               });
+            if(resp.subscriptionTransaction == null)
+            {
+              setPayOptions({
+                'client-id': "ATa_snSHZWQqqwq_ahDhynNClktGWCdwLr_bTbNCNxE-h8j4gZ3ByOYwrtu-PC2l3aFO8Wf_Pyaj71Xl",
+                currency: resp.currency,
+                intent: "capture",
+                'merchant-id': resp.merchantIds,
+              });
+              
 
-            setOptions({
-              'client-id': "ATa_snSHZWQqqwq_ahDhynNClktGWCdwLr_bTbNCNxE-h8j4gZ3ByOYwrtu-PC2l3aFO8Wf_Pyaj71Xl",
-              currency: resp.currency,
-              intent: "capture",
-              'merchant-id': resp.merchantIds,
-            });
+            }else
+            {
+              setPlanId(resp.subscriptionTransaction.subscriptionPlanId)
+              setSubscribeOptions({
+                'client-id': "ATa_snSHZWQqqwq_ahDhynNClktGWCdwLr_bTbNCNxE-h8j4gZ3ByOYwrtu-PC2l3aFO8Wf_Pyaj71Xl",
+                currency: resp.currency,
+                intent: "subscription",
+                vault:true
+              });
+
+            }
+            
             setOrderItems(resp.items);
             let qrEncodedObject = encodeURIComponent(JSON.stringify(qrCodeData, null, 4));
             let qrString = `http://localhost:3000/qrCode/` + qrEncodedObject;
@@ -99,46 +126,45 @@ function Checkout() {
     <>
     {
      isLoaded === true ? (
-      <div className="container">
-      {/* <Grid container justifyContent="center" alignItems="center" rowSpacing={1} spacing={1}>
+      <Box>
+      <Grid container justifyContent="center" alignItems="center" rowSpacing={1} spacing={1}>
+        <Grid style={{textAlign: "center"}} item xs={10}>
+          <OrderBreakdown items={orderItems}/>
+        </Grid>
+        <Grid item xs={4} className="mt-4"> 
+        { planId === null ? (   
+            <>
+            <PayPalScriptProvider options={paypalPayOptions}>
+                    <PayPalButtons
+                    style={{ layout: "horizontal" }}
+                    onApprove={(data, actions) => onApproveCallback(data, actions, orderItems)}
+                    createOrder={(data, actions) => onCreateOrder(data, actions, orderItems, routeParams.transactionId)}
+                    />
+            </PayPalScriptProvider>
+            </>
+          ):(    
 
-      </Grid> */}
-      <div className="row my-3">
-        <div className="col-1"></div>
-        <div className="col-10">
-          <Grid style={{textAlign: "center"}} item xs={12}>
-              <OrderBreakdown items={orderItems}/>
-          </Grid>
-        </div>
-        <div className="col-1"></div>
-      </div>
-        <div className="row">
-          <div className="col-1"></div>
-          <div className="col-10 d-flex">
-            <Grid item xs={4} className="me-2">  
-              <center className="mx-2 my-2">
-                <PayPalScriptProvider options={paypalOptions}>
-                        <PayPalButtons
-                        style={{ layout: "horizontal" }}
-                        onApprove={(data, actions) => onApproveCallback(data, actions, orderItems)}
-                        createOrder={(data, actions) => onCreateOrder(data, actions, orderItems, routeParams.transactionId)}
-                        />
-                </PayPalScriptProvider>
-              </center>      
-            </Grid>
-            <Grid item xs={4} className="me-2" >
-              <center className="mx-2 my-2">
-                { bankActive ? (      
-                <Button onClick={() => onBankTransactionCreate(routeParams.transactionId)} variant="contained">
-                  <CreditCardIcon fontSize="large" color="white" className="me-2"/>
-                  Pay with credit card
-                </Button>
-                )
-                :
-                (<></>)
-                } 
-              </center>
-              <hr className="mx-3"></hr>
+            <PayPalScriptProvider options={paypalSubscribeOptions}>
+                    <PayPalButtons
+                    style={{ layout: "horizontal", label:"subscribe" }}
+                    createSubscription={(data, actions) => onCreateSubscription(data, actions, planId)}
+                    onApprove={(data, actions) => onSubscriptionApproveCallback(data, actions, routeParams.transactionId, navigate)}
+                    />
+            </PayPalScriptProvider>
+          )}
+            
+        </Grid>
+        <Grid item xs={4}>
+          { bankActive && transaction.bankTransactionData!=null ? (      
+          <Button onClick={(data) => onBankTransactionCreate(routeParams.transactionId)} variant="contained">
+            <CreditCardIcon fontSize="large" color="white" className="me-2"/>
+            Pay with credit card
+          </Button>
+          )
+           :
+           (<></>)
+           }
+           <hr className="mx-3"></hr>
               <center>
                 <Button variant="contained" onClick={toggleBtn}>
                   <QrCode2Icon fontSize="large" color="white" className="me-2"></QrCode2Icon>
@@ -153,8 +179,8 @@ function Checkout() {
                   </div>
                 </div>
               </center>
-            </Grid>
-            <Grid item xs={4}>
+        </Grid>
+        <Grid item xs={4}>
               <center className="mx-2 my-2">
                 { bitcoinActive ? (      
                 <Button onClick={(data) => onBankTransactionCreate(routeParams.transactionId)} variant="contained">
@@ -167,14 +193,10 @@ function Checkout() {
                 }  
               </center>
             </Grid>
-          </div>
-          <div className="col-1"></div>
-        </div>
-        <div className="row">
-          
-        </div> 
+      </Grid>
+    </Box>
 
-    </div>
+      
      ) : (
        <div className="container my-3">
         <center>
@@ -190,6 +212,19 @@ function Checkout() {
 }
 export default Checkout;
 
+
+function onCreateSubscription(data, actions, subPlanId)
+{
+  return actions.subscription.create({
+    /* Creates the subscription */
+    plan_id: subPlanId
+  });
+}
+
+function onSubscriptionApproveCallback(data, actions, transactionId, navigate)
+{
+  navigate(`/transaction-passed/${transactionId}`)
+}
 
 
 function onBankTransactionCreate(transactionId){
@@ -241,3 +276,4 @@ function onCreateOrder(data, actions, orderItems, transactionId){
       });
 
 }
+
