@@ -12,6 +12,7 @@ import { apiClientsProvider } from './../services/api/client-service';
 import Button from '@mui/material/Button';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
 import QrCode2Icon from '@mui/icons-material/QrCode2';
+import  Box  from '@mui/material/Box';
 
 //MAKE THIS NOT HARDCODED LATER
 var psp_client_id = 'klijentneki';
@@ -29,7 +30,7 @@ function Checkout() {
   const [isQRBtnVisible, setIsQRBtnVisible] = useState("hidden");
   const [QRURL, setQRURL] = useState("");
   const [orderItems, setOrderItems] = useState([]);
-  const [paypalOptions, setOptions] = useState({
+  const [paypalPayOptions, setPayOptions] = useState({
     'client-id': "ATa_snSHZWQqqwq_ahDhynNClktGWCdwLr_bTbNCNxE-h8j4gZ3ByOYwrtu-PC2l3aFO8Wf_Pyaj71Xl",
     currency: "USD",
     intent:'capture',
@@ -131,13 +132,13 @@ function Checkout() {
         <Grid style={{textAlign: "center"}} item xs={10}>
           <OrderBreakdown items={orderItems}/>
         </Grid>
-        <Grid item xs={4} className="mt-4"> 
+        <Grid item xs={3} > 
         { planId === null ? (   
             <>
             <PayPalScriptProvider options={paypalPayOptions}>
                     <PayPalButtons
                     style={{ layout: "horizontal" }}
-                    onApprove={(data, actions) => onApproveCallback(data, actions, orderItems)}
+                    onApprove={(data, actions) => onApproveCallback(data, actions, orderItems, routeParams.transactionId, navigate)}
                     createOrder={(data, actions) => onCreateOrder(data, actions, orderItems, routeParams.transactionId)}
                     />
             </PayPalScriptProvider>
@@ -155,11 +156,13 @@ function Checkout() {
             
         </Grid>
         <Grid item xs={4}>
-          { bankActive && transaction.bankTransactionData!=null ? (      
+          { bankActive && transaction.bankTransactionData!=null ? (   
+            <center>  
           <Button onClick={(data) => onBankTransactionCreate(routeParams.transactionId)} variant="contained">
             <CreditCardIcon fontSize="large" color="white" className="me-2"/>
             Pay with credit card
           </Button>
+          </center> 
           )
            :
            (<></>)
@@ -180,8 +183,8 @@ function Checkout() {
                 </div>
               </center>
         </Grid>
-        <Grid item xs={4}>
-              <center className="mx-2 my-2">
+        <Grid item xs={3}>
+              <center>
                 { bitcoinActive ? (      
                 <Button onClick={(data) => onBankTransactionCreate(routeParams.transactionId)} variant="contained">
                   <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.svg?v=018" width={30} height={30} alt="" className="me-2"></img>
@@ -231,11 +234,11 @@ function onBankTransactionCreate(transactionId){
   apiTransactionsProvider.payWithBank(transactionId)
   .then(function(data){
     console.log(data);
-    //window.open(data.paymentURL,"_self");
+    window.open(data.paymentURL,"_self");
   });
 }
 
-function onApproveCallback(data, actions, orderItems){
+function onApproveCallback(data, actions, orderItems,transactionId, navigate){
   console.log(data)
   return apiPaypalProvider.capturePaypalOrder(data.orderID)
   .then(function(orderData) {
@@ -256,7 +259,8 @@ function onApproveCallback(data, actions, orderItems){
           // Successful capture! For demo purposes:
           console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
           var transaction = orderData.purchase_units[0].payments.captures[0];
-          alert('Transaction '+ transaction.status + ': ' + transaction.id + '\n\nSee console for all available details');
+         navigate(`/transaction-passed/${transactionId}`)
+          
   });
                   
 }

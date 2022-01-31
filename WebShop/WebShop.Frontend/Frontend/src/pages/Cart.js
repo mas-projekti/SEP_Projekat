@@ -40,6 +40,9 @@ export default function Cart(props) {
 
     // Lista za PSP
     let listOfOrders = []
+    let total = 0
+
+
     cartItems.map((item) => (
         listOfOrders.push({
             // id: item.id,
@@ -53,22 +56,27 @@ export default function Cart(props) {
     ));
 
     let user = {}
+    let usermerchant = cartItems[0].user
     axios.get(process.env.REACT_APP_WEB_SHOP_USERS_BACKEND_API + '/' + customerId, config)
     .then((userResp) => {
         user = userResp.data;
-    });
+    
+
+    let min = Math.ceil(1);
+    let max = Math.floor(100000);
+    let num = Math.floor(Math.random() * (max - min) + min); 
 
     // DODATI user.merchantID, user.merchantPassword    
     let pspRequestBody = 
     {
-        "items": listOfOrders,
-        "bankTransactionData": {
-            "merchantID": "7pVm8HesM99rObo1odZLYlnt8X/OWR0sVY+8LoyK",
-            "merchantPassword": "h4EIuXc19VcZKwpjRWEg665/92lekArgREGaO3HIckc/X47sq4RmgRO9MLoV5Rz9eYrq5iGI/Tqh6fs2uPDxN7uRSwzfImVhR7T4Q0oIDGEcz+S3vHnxaqJTAegc6AvHYytfXQ==",
-            "amount": 0,
-            "merchantOrderID": 0,
-            "merchantTimestamp": "2022-01-29T16:39:54.707Z",
-            "bankURL": "string"
+        items: listOfOrders,
+        bankTransactionData: {
+            merchantID: usermerchant.bankMerchantID,
+            merchantPassword: usermerchant.merchantPassword,
+            amount: totalPrice,
+            merchantOrderID: num,
+            merchantTimestamp: new Date(),
+            bankURL: usermerchant.bankURL
         }
     }
     
@@ -94,9 +102,9 @@ export default function Cart(props) {
             emptyCart();
             const putanjica = PSP_FRONT + pspResp.data.id;
             setLoading(false);
-            window.open(putanjica);
-            history.push(`user/${customerId}`);
+            window.open(putanjica, "_blank");
         })
+    });
     });
   }
 
