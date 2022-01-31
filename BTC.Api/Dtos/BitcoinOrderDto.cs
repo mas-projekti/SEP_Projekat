@@ -11,5 +11,8 @@ namespace BTC.Api.Dtos
         public List<OrderItemDto> OrderItems { get; set; }
         public string Email { get; set; }
         public string MerchantId { get; set; }
+        public string CancelUrl { get; set; }
+        public string SuccessUrl { get; set; }
+
     }
 }

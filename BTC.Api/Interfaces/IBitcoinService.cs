@@ -9,6 +9,6 @@ namespace BTC.Api.Interfaces
 {
     public interface IBitcoinService
     {
-        Task<BitcoinOrderResult> CreatePaypalOrderAsync(BitcoinOrderDto order);
+        Task<BitcoinOrderResult> CreateBitcoinOrderAsync(BitcoinOrderDto order);
     }
 }

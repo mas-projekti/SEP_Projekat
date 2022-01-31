@@ -36,12 +36,12 @@ namespace BTC.Api.Services
 
         }
 
-        public async Task<BitcoinOrderResult> CreatePaypalOrderAsync(BitcoinOrderDto order)
+        public async Task<BitcoinOrderResult> CreateBitcoinOrderAsync(BitcoinOrderDto order)
         {
 
             string _token = _config.GetValue<string>(_coingateToken);
 
-            _logger.LogInformation($"{nameof(BitcoinService)}::{nameof(CreatePaypalOrderAsync)}::Sedning request to Coingate API...");
+            _logger.LogInformation($"{nameof(BitcoinService)}::{nameof(CreateBitcoinOrderAsync)}::Sedning request to Coingate API...");
 
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, $"v2/orders");
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _token);
@@ -52,7 +52,7 @@ namespace BTC.Api.Services
             HttpResponseMessage response = await httpClient.SendAsync(request);
             string content = await response.Content.ReadAsStringAsync();
 
-            _logger.LogInformation($"{nameof(BitcoinService)}::{nameof(CreatePaypalOrderAsync)}::Recieved data from Coingate API.");
+            _logger.LogInformation($"{nameof(BitcoinService)}::{nameof(CreateBitcoinOrderAsync)}::Recieved data from Coingate API.");
 
             BitcoinOrderResult createdOrder = JsonConvert.DeserializeObject<BitcoinOrderResult>(content);
             if (createdOrder == null || createdOrder.Id == 0)

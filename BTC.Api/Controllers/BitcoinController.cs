@@ -23,7 +23,7 @@ namespace BTC.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateOrder([FromBody] BitcoinOrderDto dto)
         {
-            var createdOrder = await _bitcoinService.CreatePaypalOrderAsync(dto);
+            var createdOrder = await _bitcoinService.CreateBitcoinOrderAsync(dto);
             return Ok(createdOrder);
         }
     }

@@ -47,8 +47,9 @@ namespace BTC.Api.Services
                 title = "New purchase",
                 description = description,
                 purchaser_email = dto.Email,
-                //dodati urlove one za cancel, success itd
-                
+                success_url = dto.SuccessUrl,
+                cancel_url = dto.CancelUrl
+
             });
             return order;
         }
