@@ -29,6 +29,7 @@ namespace PSP.API.Services
 
         public async Task<TransactionDto> Get(Guid id)
         {
+
             Transaction transaction =  await _dbContext.Transactions.Include(x => x.Items)
                                                                     .Include(x => x.BankTransaction)
                                                                     .Include(x => x.SubscriptionTransaction)

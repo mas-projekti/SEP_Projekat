@@ -118,11 +118,11 @@ namespace BankApi
                 endpoints.MapControllers();
             });
 
-            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
-            {
-                var context = serviceScope.ServiceProvider.GetService<BankDbContext>();
-                context.Database.Migrate();
-            }
+            //using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            //{
+            //    var context = serviceScope.ServiceProvider.GetService<BankDbContext>();
+            //    context.Database.Migrate();
+            //}
         }
     }
 }

@@ -11,6 +11,7 @@ namespace WebShop.Service.Contract.Dto
         public string OrderStatus { get; set; }
         public DateTime? Timestamp { get; set; }
         public int CustomerId { get; set; }
+        public Guid TransactionId { get; set; }
         public List<InputOrderProductDto> Products { get; set; }
     }
 }
