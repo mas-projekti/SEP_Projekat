@@ -1,6 +1,7 @@
 // response.js
 
 export function handleResponse(response) {
+  console.log(response);
     if (response.results) {
       return response.results;
     }

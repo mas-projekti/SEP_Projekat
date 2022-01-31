@@ -5,7 +5,10 @@ import React from 'react';
 function FrontPage() {
 
     return(
-        <h1>Dobrodosao na ovaj nas skrnavi sajt.</h1>
+        <center className="mt-3">
+            <h1>Dobrodosao na ovaj nas skrnavi sajt.</h1>
+        </center>
+        
 
     );
 } 

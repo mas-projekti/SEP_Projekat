@@ -83,11 +83,11 @@ namespace Paypal.API
             {
                 endpoints.MapControllers();
             });
-            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
-            {
-                var context = serviceScope.ServiceProvider.GetService<PaypalDbContext>();
-                context.Database.Migrate();
-            }
+            //using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            //{
+            //    var context = serviceScope.ServiceProvider.GetService<PaypalDbContext>();
+            //    context.Database.Migrate();
+            //}
             app.UseSerilogRequestLogging();
         }
 

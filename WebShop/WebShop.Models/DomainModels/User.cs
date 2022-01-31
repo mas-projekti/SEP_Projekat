@@ -19,7 +19,11 @@ namespace WebShop.Models.DomainModels
         public DateTime? BirthDay { get; set; }
         public string ImageURL { get; set; }
         public List<Product> Products { get; set; }
+        public List<Course> Courses { get; set; }
         public List<Order> Orders { get; set; }
+        public string BankMerchantID { get; set; }
+        public string MerchantPassword { get; set; }
+        public string BankURL { get; set; }
 
         public static bool isPasswordMatch(string password, User user)
         {   

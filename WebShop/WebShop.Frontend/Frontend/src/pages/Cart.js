@@ -16,10 +16,11 @@ export default function Cart(props) {
 
   const text = `You must login first`;
   const [ isTextVisible, setIsTextVisible ] = useState(false);
+  const [ loading, setLoading ] = useState(false);
   const history = useHistory();
 
   function checkout() {
-      
+    setLoading(true);
     let token = localStorage.getItem(`jwt`);
     if (token === null) {
         setIsTextVisible(true);
@@ -39,6 +40,9 @@ export default function Cart(props) {
 
     // Lista za PSP
     let listOfOrders = []
+    let total = 0
+
+
     cartItems.map((item) => (
         listOfOrders.push({
             // id: item.id,
@@ -51,13 +55,36 @@ export default function Cart(props) {
         })
     ));
 
+    let user = {}
+    let usermerchant = cartItems[0].user
+    axios.get(process.env.REACT_APP_WEB_SHOP_USERS_BACKEND_API + '/' + customerId, config)
+    .then((userResp) => {
+        user = userResp.data;
     
 
+    let min = Math.ceil(1);
+    let max = Math.floor(100000);
+    let num = Math.floor(Math.random() * (max - min) + min); 
+
+    // DODATI user.merchantID, user.merchantPassword    
+    let pspRequestBody = 
+    {
+        items: listOfOrders,
+        bankTransactionData: {
+            merchantID: usermerchant.bankMerchantID,
+            merchantPassword: usermerchant.merchantPassword,
+            amount: totalPrice,
+            merchantOrderID: num,
+            merchantTimestamp: new Date(),
+            bankURL: usermerchant.bankURL
+        }
+    }
+    
     
 
     // Otkomentarisati posle radi PSP API-ja
 
-    axios.post(`${BASE_URL}/payment-service/transactions`, listOfOrders, config)
+    axios.post(`${BASE_URL}/payment-service/transactions`, pspRequestBody, config)
     .then((pspResp) => {
         //Lista za WebShop
         cartItems.map((item) => (
@@ -74,9 +101,10 @@ export default function Cart(props) {
         .then((webShopResp) => {
             emptyCart();
             const putanjica = PSP_FRONT + pspResp.data.id;
-            window.open(putanjica);
-            history.push(`user/${customerId}`);
+            setLoading(false);
+            window.open(putanjica, "_blank");
         })
+    });
     });
   }
 
@@ -151,7 +179,14 @@ export default function Cart(props) {
                             
                             
                             <button className="btn btn-secondary" onClick={() => checkout()}>
-                                Checkout
+                                {loading ?
+                                    <div>
+                                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                :
+                                    <>Checkout</>
+                                }
                             </button>
                         </div>
                         <div className='col-4'>

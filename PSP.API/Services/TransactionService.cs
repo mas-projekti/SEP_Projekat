@@ -34,7 +34,11 @@ namespace PSP.API.Services
 
         public async Task<TransactionDto> Get(Guid id)
         {
-            Transaction transaction =  await _dbContext.Transactions.Include(x => x.Items).FirstOrDefaultAsync(x => x.Id == id);
+
+            Transaction transaction =  await _dbContext.Transactions.Include(x => x.Items)
+                                                                    .Include(x => x.BankTransaction)
+                                                                    .Include(x => x.SubscriptionTransaction)
+                                                                    .FirstOrDefaultAsync(x => x.Id == id);
             TransactionDto transactionDto = CreateTransactionDto(transaction);
             return transactionDto;
         }
@@ -65,7 +69,12 @@ namespace PSP.API.Services
                 banktransaction.MerchantPassword = provider.EncryptString(banktransaction.MerchantPassword);
                 t.BankTransaction = banktransaction;
             }
-          
+
+            if (transaction.SubscriptionTransaction != null) //Add subscription data in case it exists
+            {
+                t.SubscriptionTransaction = _mapper.Map<SubscriptionTransaction>(transaction.SubscriptionTransaction);
+            }
+
             await _dbContext.Transactions.AddAsync(t);
             await _dbContext.SaveChangesAsync();
         
@@ -97,7 +106,8 @@ namespace PSP.API.Services
                 Currency = transaction.Items[0].Currency,
                 Items = items,
                 MerchantIds = merchantIds,
-                BankTransactionData = _mapper.Map<BankTransactionDto>(transaction.BankTransaction)
+                BankTransactionData = _mapper.Map<BankTransactionDto>(transaction.BankTransaction),
+                SubscriptionTransaction = _mapper.Map<SubscriptionTransactionDto>(transaction.SubscriptionTransaction)
             };
 
                 

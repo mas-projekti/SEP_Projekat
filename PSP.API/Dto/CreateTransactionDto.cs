@@ -9,5 +9,6 @@ namespace PSP.API.Dto
     {
         public List<ItemDto> Items { get; set; }
         public BankTransactionDto BankTransactionData { get; set; }
+        public SubscriptionTransactionDto SubscriptionTransaction { get; set; }
     }
 }
