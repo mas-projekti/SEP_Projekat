@@ -158,6 +158,9 @@ namespace BankApi.Services
             if(paymentCard.BankClient.Name != dto.CardHolderName || paymentCard.BankClient.LastName != dto.CardHolderLastName)
                 throw new InvalidCardDataException("Invalid card holder data.");
 
+            paymentCard.CardNumber = provider.EncryptString(paymentCard.CardNumber);
+            paymentCard.SecurityCode = provider.EncryptString(paymentCard.SecurityCode);
+
             return true;
         }
     }

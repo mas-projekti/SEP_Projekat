@@ -138,9 +138,6 @@ function Checkout() {
             <PayPalScriptProvider options={paypalPayOptions}>
                     <PayPalButtons
                     style={{ layout: "horizontal" }}
-                    onError =  {(data, actions) =>
-                      navigate("/transaction-error")
-                    }
                     onApprove={(data, actions) => onApproveCallback(data, actions, orderItems, navigate, routeParams.transactionId)}
                     createOrder={(data, actions) => onCreateOrder(data, actions, orderItems, routeParams.transactionId)}
                     />
