@@ -35,9 +35,9 @@ namespace PSP.API.Services
             BankTransaction bankTransaction = _dbContext.BankTransactions.FirstOrDefault(x => x.TransactionId == transactionID);
             HttpClient bankClient = GetBankHttpClient(bankTransaction.BankURL);
 
-            AesCryptoProvider provider = new AesCryptoProvider(_hookOptions.Key);
+            AESCryptographyProvider provider = new AESCryptographyProvider(_hookOptions.Key);
             BankPaymentRequestDto paymentRequestDto = _mapper.Map<BankPaymentRequestDto>(bankTransaction);
-            paymentRequestDto.MerchantPassword = provider.DecryptString(paymentRequestDto.MerchantPassword);
+            paymentRequestDto.MerchantPassword = provider.Decrypt(paymentRequestDto.MerchantPassword);
             paymentRequestDto.SuccessURL = $"http://localhost:3000/transaction-passed/{transactionID}";
             paymentRequestDto.ErrorURL = "http://localhost:3000/transaction-error"; 
             paymentRequestDto.FailedURL = "http://localhost:3000/transaction-failed"; 

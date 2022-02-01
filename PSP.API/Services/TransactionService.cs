@@ -39,6 +39,9 @@ namespace PSP.API.Services
                                                                     .Include(x => x.BankTransaction)
                                                                     .Include(x => x.SubscriptionTransaction)
                                                                     .FirstOrDefaultAsync(x => x.Id == id);
+
+            AESCryptographyProvider provider = new AESCryptographyProvider(_hookOptions.Key);
+            transaction.BankTransaction.MerchantPassword = provider.Decrypt(transaction.BankTransaction.MerchantPassword);
             TransactionDto transactionDto = CreateTransactionDto(transaction);
             return transactionDto;
         }
@@ -65,8 +68,8 @@ namespace PSP.API.Services
             if (transaction.BankTransactionData != null) //Add bank data in case it exists
             {
                 BankTransaction banktransaction = _mapper.Map<BankTransaction>(transaction.BankTransactionData);
-                AesCryptoProvider provider = new AesCryptoProvider(_hookOptions.Key);
-                banktransaction.MerchantPassword = provider.EncryptString(banktransaction.MerchantPassword);
+                AESCryptographyProvider provider = new AESCryptographyProvider(_hookOptions.Key);
+                banktransaction.MerchantPassword = provider.Encrypt(banktransaction.MerchantPassword);
                 t.BankTransaction = banktransaction;
             }
 
@@ -77,7 +80,13 @@ namespace PSP.API.Services
 
             await _dbContext.Transactions.AddAsync(t);
             await _dbContext.SaveChangesAsync();
-        
+
+            if (t.BankTransaction != null) 
+            {
+                AESCryptographyProvider provider = new AESCryptographyProvider(_hookOptions.Key);
+                t.BankTransaction.MerchantPassword = provider.Decrypt(t.BankTransaction.MerchantPassword);
+
+            }
 
             return CreateTransactionDto(t);
 

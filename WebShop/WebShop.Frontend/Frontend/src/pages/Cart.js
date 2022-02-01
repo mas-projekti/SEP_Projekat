@@ -102,7 +102,8 @@ export default function Cart(props) {
             emptyCart();
             const putanjica = PSP_FRONT + pspResp.data.id;
             setLoading(false);
-            window.open(putanjica, "_blank");
+            console.log(putanjica)
+            window.open(putanjica, "_self");
         })
     });
     });

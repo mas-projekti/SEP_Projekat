@@ -100,7 +100,7 @@ namespace BankApi.Services
 
             };
             _paymentCardService.ValidatePaymentCard(paymentCardDto);
-            BankClient payer = _dbContext.PaymentCards.Include(x => x.BankClient).FirstOrDefault(x => x.CardNumber == dto.CardNumber).BankClient;
+            BankClient payer = _dbContext.PaymentCards.Include(x => x.BankClient).FirstOrDefault(x => x.BankClient.Name == dto.CardHolderName && x.BankClient.LastName == dto.CardHolderLastName).BankClient;
             BankAccount payerAccount = _dbContext.BankAccounts.FirstOrDefault(x => x.BankClientId == payer.Id);
             lock (balanceLock)
             {
@@ -188,7 +188,7 @@ namespace BankApi.Services
             };
             _paymentCardService.ValidatePaymentCard(paymentCardDto);
 
-            BankClient payer = _dbContext.PaymentCards.Include(x => x.BankClient).FirstOrDefault(x => x.CardNumber == request.PaymentCardNumber).BankClient;
+            BankClient payer = _dbContext.PaymentCards.Include(x => x.BankClient).FirstOrDefault(x => x.BankClient.Name == request.CardHolderName && x.BankClient.LastName == request.CardHolderLastName).BankClient;
             BankAccount payerAccount = _dbContext.BankAccounts.FirstOrDefault(x => x.BankClientId == payer.Id);
             lock (balanceLock)
             {

@@ -1,25 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BankApi.Security
+namespace Common.Security
 {
-    public class AesCryptoProvider
+    public class AESCryptographyProvider
     {
-        private string keyString;
-
-        public AesCryptoProvider(string keyString)
+        private string key; 
+        public AESCryptographyProvider(string key)
         {
-            this.keyString = keyString;
+            this.key = key;
         }
-        public string DecryptString(string cyphertext)
+
+        public string Decrypt(string cyphertext)
         {
             var bytes = Convert.FromBase64String(cyphertext);
-            byte[] keyBytes = ASCIIEncoding.ASCII.GetBytes(keyString);
+            byte[] keyBytes = ASCIIEncoding.ASCII.GetBytes(key);
             var aes = new AesCryptoServiceProvider();
             //aes.Padding = PaddingMode.PKCS7;
             using (var memStream = new System.IO.MemoryStream(bytes))
@@ -36,11 +35,11 @@ namespace BankApi.Security
             }
         }
 
-        public string EncryptString(string plaintext)
+        public string Encrypt(string plaintext)
         {
             var aes = new AesCryptoServiceProvider();
             var iv = aes.IV;
-            byte[] keyBytes = ASCIIEncoding.ASCII.GetBytes(keyString);
+            byte[] keyBytes = ASCIIEncoding.ASCII.GetBytes(key);
             //aes.Padding = PaddingMode.PKCS7;
             using (var memStream = new System.IO.MemoryStream())
             {
@@ -56,7 +55,5 @@ namespace BankApi.Security
                 return Convert.ToBase64String(buf, 0, buf.Length);
             }
         }
-        
-
     }
 }

@@ -89,6 +89,7 @@ namespace WebShop
             services.AddScoped<ICourseService, CourseService>();
 
             services.Configure<WebhookOptions>(Configuration.GetSection(WebhookOptions.HookSecret));
+            services.Configure<ApiKeyOptions>(Configuration.GetSection(ApiKeyOptions.HookSecret));
 
 
 
