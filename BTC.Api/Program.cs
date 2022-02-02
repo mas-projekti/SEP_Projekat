@@ -10,19 +10,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace WebShop
+namespace BTC.Api
 {
     public class Program
     {
         public static void Main(string[] args)
         {
-
             Log.Logger = new LoggerConfiguration()
-            .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-            .Enrich.FromLogContext()
-            .WriteTo.Debug(new RenderedCompactJsonFormatter())
-            .WriteTo.File("Logs/webshop_log.txt", rollingInterval: RollingInterval.Day, retainedFileCountLimit: 5, rollOnFileSizeLimit: true)
-            .CreateLogger();
+           .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+           .Enrich.FromLogContext()
+           .WriteTo.Debug(new RenderedCompactJsonFormatter())
+           .WriteTo.File("Logs/bitcoin_service_log.txt", rollingInterval: RollingInterval.Day, retainedFileCountLimit: 5, rollOnFileSizeLimit: true)
+           .CreateLogger();
 
             try
             {
@@ -42,11 +41,11 @@ namespace WebShop
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .UseSerilog()
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
+        Host.CreateDefaultBuilder(args)
+            .UseSerilog()
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Startup>();
+            });
     }
 }

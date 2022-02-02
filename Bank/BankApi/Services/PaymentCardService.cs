@@ -5,6 +5,7 @@ using BankApi.Infrastructure;
 using BankApi.Interfaces;
 using BankApi.Models;
 using BankApi.Options;
+using BankApi.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System;
@@ -20,13 +21,15 @@ namespace BankApi.Services
         private readonly IMapper _mapper;
         private readonly BankDbContext _dbContext;
         private readonly PaymentCardOptions _paymentCardOptions;
+        private readonly EncryptionKeyOptions _encryptionKeyOptions;
         private static Random random = new Random();
 
-        public PaymentCardService(IMapper mapper, BankDbContext dbContext, IOptions<PaymentCardOptions> paymentCardOptions)
+        public PaymentCardService(IMapper mapper, BankDbContext dbContext, IOptions<EncryptionKeyOptions> encryptionKeyOptions, IOptions<PaymentCardOptions> paymentCardOptions)
         {
             _mapper = mapper;
             _dbContext = dbContext;
             _paymentCardOptions = paymentCardOptions.Value;
+            _encryptionKeyOptions = encryptionKeyOptions.Value;
         }
 
         public PaymentCardDto GeneratePaymentCard(int id)
@@ -87,12 +90,12 @@ namespace BankApi.Services
                 Convert.ToInt32((Math.Floor((decimal)sum / 10) + 1) * 10 - sum) % 10;
 
             ccnumber += checkdigit;
-
+            AesCryptoProvider aes = new AesCryptoProvider(_encryptionKeyOptions.Key);
             PaymentCard card = new PaymentCard
             { 
                 ExipiringDate = DateTime.Now.AddYears(5),
-                CardNumber = ccnumber,
-                SecurityCode = secNum,
+                CardNumber = aes.EncryptString(ccnumber),
+                SecurityCode = aes.EncryptString(secNum),
                 BankClient = user
 
             };
@@ -100,6 +103,8 @@ namespace BankApi.Services
             _dbContext.PaymentCards.Add(card);
             _dbContext.SaveChanges();
 
+            card.CardNumber = aes.DecryptString(card.CardNumber);
+            card.SecurityCode = aes.DecryptString(card.SecurityCode);
             PaymentCardDto cardReturn = _mapper.Map<PaymentCardDto>(card);
             cardReturn.CardHolderName = card.BankClient.Name;
             cardReturn.CardHolderLastName = card.BankClient.LastName;
@@ -110,10 +115,16 @@ namespace BankApi.Services
 
         public bool ValidatePaymentCard(PaymentCardDto dto)
         {
+            AesCryptoProvider provider = new AesCryptoProvider(_encryptionKeyOptions.Key);
             //Validate number ovde treba uraditi
-            PaymentCard paymentCard = _dbContext.PaymentCards.Include(x => x.BankClient).FirstOrDefault(x => x.CardNumber == dto.CardNumber);
+
+            PaymentCard paymentCard = _dbContext.PaymentCards.Include(x => x.BankClient).FirstOrDefault(x => x.BankClient.Name == dto.CardHolderName && x.BankClient.LastName == dto.CardHolderLastName);
+
             if (paymentCard == null)
                 throw new InvalidCardDataException("Card does not exist");
+
+            paymentCard.CardNumber = provider.DecryptString(paymentCard.CardNumber);
+            paymentCard.SecurityCode = provider.DecryptString(paymentCard.SecurityCode);
             //Check card number by Luhns algorithm
             int nDigits = dto.CardNumber.Length;
 
@@ -146,6 +157,9 @@ namespace BankApi.Services
 
             if(paymentCard.BankClient.Name != dto.CardHolderName || paymentCard.BankClient.LastName != dto.CardHolderLastName)
                 throw new InvalidCardDataException("Invalid card holder data.");
+
+            paymentCard.CardNumber = provider.EncryptString(paymentCard.CardNumber);
+            paymentCard.SecurityCode = provider.EncryptString(paymentCard.SecurityCode);
 
             return true;
         }

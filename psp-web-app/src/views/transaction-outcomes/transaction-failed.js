@@ -11,7 +11,7 @@ function TransactionFailed() {
           <div className='col rounded bg-warning'>
             <center>
               <div>
-                <h1 className='text-white'>Transaction Succeeded, <br/> but didn't notify WebShop!</h1>
+                <h1 className='text-white'>Transaction succeded, <br/> but couldn't notify WebShop!</h1>
                 <i className="fas fa-exclamation-triangle"></i>
                 <ReportGmailerrorredIcon className='my-3' style={{ color: 'white', fontSize: 200  }} />
               </div>

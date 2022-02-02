@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WebShop.Infrastructure;
+using WebShop.Models.DomainModels;
 using WebShop.Service.Contract.Dto;
 using WebShop.Service.Contract.Services;
 
@@ -24,7 +25,9 @@ namespace WebShop.Service.Services
 
         public CourseDto GetCourse(int id)
         {
-            return _mapper.Map<CourseDto>(_dbContext.Courses.Include(x => x.User).First(x=> x.Id == id));
+            Course k = _dbContext.Courses.Include(x => x.User).First(x => x.Id == id);
+
+            return _mapper.Map<CourseDto>(k);
         }
 
         public List<CourseDto> GetCourses()

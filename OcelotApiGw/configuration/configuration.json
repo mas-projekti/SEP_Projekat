@@ -104,6 +104,22 @@
         "Type": "LeastConnection"
       }
 
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/bitcoin",
+      "DownstreamScheme": "https",
+      "UpstreamPathTemplate": "/payment-service/bitcoin",
+      "UpstreamHttpMethod": [ "POST", "PUT", "GET", "DELETE" ],
+      "ServiceName": "btc",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "IdentityApiKey",
+        "AllowedScopes": []
+      },
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      }
+
     }
 
   ],

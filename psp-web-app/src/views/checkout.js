@@ -13,6 +13,7 @@ import Button from '@mui/material/Button';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
 import QrCode2Icon from '@mui/icons-material/QrCode2';
 import  Box  from '@mui/material/Box';
+import { apiBitcoinProvider } from './../services/api/btc-service';
 
 //MAKE THIS NOT HARDCODED LATER
 var psp_client_id = 'klijentneki';
@@ -138,7 +139,7 @@ function Checkout() {
             <PayPalScriptProvider options={paypalPayOptions}>
                     <PayPalButtons
                     style={{ layout: "horizontal" }}
-                    onApprove={(data, actions) => onApproveCallback(data, actions, orderItems, routeParams.transactionId, navigate)}
+                    onApprove={(data, actions) => onApproveCallback(data, actions, orderItems, navigate, routeParams.transactionId)}
                     createOrder={(data, actions) => onCreateOrder(data, actions, orderItems, routeParams.transactionId)}
                     />
             </PayPalScriptProvider>
@@ -186,9 +187,9 @@ function Checkout() {
         <Grid item xs={3}>
               <center>
                 { bitcoinActive ? (      
-                <Button onClick={(data) => onBankTransactionCreate(routeParams.transactionId)} variant="contained">
+                <Button onClick={(data) => onCreateBitcoinOrder(transaction)} variant="contained">
                   <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.svg?v=018" width={30} height={30} alt="" className="me-2"></img>
-                  PODESITI OVO DUGME ZA BITKOIN, NE RADI POSAO KOJI TREBA
+                  Pay with bitcoin
                 </Button>
                 )
                 :
@@ -216,6 +217,34 @@ function Checkout() {
 export default Checkout;
 
 
+function onCreateBitcoinOrder(transaction)
+{
+  let btcOrder = {
+    transactionId:transaction.id,
+    orderItems:[],
+    cancelUrl:`http://localhost:3000/checkout/${transaction.id}`,
+    successUrl:`http://localhost:3000/transaction-passed/${transaction.id}`
+  }
+
+  transaction.items.map((item) => (
+    btcOrder.orderItems.push({
+        // id: item.id,
+        name: item.name,
+        description: item.description,
+        quantity: item.quantity,
+        currency: "USD",
+        value: item.value  
+    })
+  ));
+
+  apiBitcoinProvider.createOrder(btcOrder)
+  .then(function(data){
+    window.open(data.payment_url, "_self")
+  });
+}
+
+
+
 function onCreateSubscription(data, actions, subPlanId)
 {
   return actions.subscription.create({
@@ -238,7 +267,7 @@ function onBankTransactionCreate(transactionId){
   });
 }
 
-function onApproveCallback(data, actions, orderItems,transactionId, navigate){
+function onApproveCallback(data, actions, orderItems,navigate,transactionId){
   console.log(data)
   return apiPaypalProvider.capturePaypalOrder(data.orderID)
   .then(function(orderData) {

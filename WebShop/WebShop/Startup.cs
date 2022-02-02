@@ -11,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -88,6 +89,7 @@ namespace WebShop
             services.AddScoped<ICourseService, CourseService>();
 
             services.Configure<WebhookOptions>(Configuration.GetSection(WebhookOptions.HookSecret));
+            services.Configure<ApiKeyOptions>(Configuration.GetSection(ApiKeyOptions.HookSecret));
 
 
 
@@ -145,6 +147,7 @@ namespace WebShop
                 var context = serviceScope.ServiceProvider.GetService<WebShopDbContext>();
                 context.Database.Migrate();
             }
+            app.UseSerilogRequestLogging();
         }
     }
 }

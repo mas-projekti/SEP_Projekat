@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
+using Common.Security;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using PSP.API.Dto;
 using PSP.API.Infrastructure;
 using PSP.API.Interfaces;
 using PSP.API.Models;
+using PSP.API.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,11 +21,13 @@ namespace PSP.API.Services
     {
         private readonly IMapper _mapper;
         private readonly PaymentServiceProviderDbContext _dbContext;
+        private readonly HookSecretOptions _hookOptions;
 
-        public BankingService(IMapper mapper, PaymentServiceProviderDbContext dbContext)
+        public BankingService(IMapper mapper, PaymentServiceProviderDbContext dbContext, IOptions<HookSecretOptions> hookOptions)
         {
             _mapper = mapper;
             _dbContext = dbContext;
+            _hookOptions = hookOptions.Value;
         }
 
         public async Task<BankPaymentRequestResponseDto> InitiateBankPayment(Guid transactionID)
@@ -30,7 +35,9 @@ namespace PSP.API.Services
             BankTransaction bankTransaction = _dbContext.BankTransactions.FirstOrDefault(x => x.TransactionId == transactionID);
             HttpClient bankClient = GetBankHttpClient(bankTransaction.BankURL);
 
+            AESCryptographyProvider provider = new AESCryptographyProvider(_hookOptions.Key);
             BankPaymentRequestDto paymentRequestDto = _mapper.Map<BankPaymentRequestDto>(bankTransaction);
+            paymentRequestDto.MerchantPassword = provider.Decrypt(paymentRequestDto.MerchantPassword);
             paymentRequestDto.SuccessURL = $"http://localhost:3000/transaction-passed/{transactionID}";
             paymentRequestDto.ErrorURL = "http://localhost:3000/transaction-error"; 
             paymentRequestDto.FailedURL = "http://localhost:3000/transaction-failed"; 

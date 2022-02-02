@@ -23,6 +23,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
 
 namespace BankApi
 {
@@ -51,6 +52,7 @@ namespace BankApi
             //options
             services.Configure<TokenKeyOptions>(Configuration.GetSection(TokenKeyOptions.TokenKey));
             services.Configure<PaymentCardOptions>(Configuration.GetSection(PaymentCardOptions.PaymentCard));
+            services.Configure<EncryptionKeyOptions>(Configuration.GetSection(EncryptionKeyOptions.EncryptionKey));
             services.Configure<PccOptions>(Configuration.GetSection(PccOptions.PCC));
             var mapperConfig = new MapperConfiguration(mc =>
             {
