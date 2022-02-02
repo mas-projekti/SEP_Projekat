@@ -3,19 +3,25 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31410.357
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebShop", "WebShop.csproj", "{7787108E-1F36-4A80-BA96-3405141C5BAF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebShop", "WebShop.csproj", "{7787108E-1F36-4A80-BA96-3405141C5BAF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebShop.Models", "..\WebShop.Models\WebShop.Models.csproj", "{1B27BD7A-B959-474D-8102-2695DF1043C5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebShop.Models", "..\WebShop.Models\WebShop.Models.csproj", "{1B27BD7A-B959-474D-8102-2695DF1043C5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebShop.Infrastructure", "..\WebShop.Infrastructure\WebShop.Infrastructure.csproj", "{AC6E0A62-F25E-40BA-9E1A-D028A55637A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebShop.Infrastructure", "..\WebShop.Infrastructure\WebShop.Infrastructure.csproj", "{AC6E0A62-F25E-40BA-9E1A-D028A55637A2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebShop.Repository.Contract", "..\WebShop.Repository.Contract\WebShop.Repository.Contract.csproj", "{28CDCB41-4F3D-407F-9A91-F6884B2D830B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebShop.Repository.Contract", "..\WebShop.Repository.Contract\WebShop.Repository.Contract.csproj", "{28CDCB41-4F3D-407F-9A91-F6884B2D830B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebShop.Repository", "..\WebShop.Repository\WebShop.Repository.csproj", "{B06D6E16-AB06-4B95-A408-EA19A57C7226}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebShop.Repository", "..\WebShop.Repository\WebShop.Repository.csproj", "{B06D6E16-AB06-4B95-A408-EA19A57C7226}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebShop.Service.Contract", "..\WebShop.Service.Contract\WebShop.Service.Contract.csproj", "{A70A7DA1-3D74-4B1A-B051-18DD9E545DB8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebShop.Service.Contract", "..\WebShop.Service.Contract\WebShop.Service.Contract.csproj", "{A70A7DA1-3D74-4B1A-B051-18DD9E545DB8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebShop.Service", "..\WebShop.Service\WebShop.Service.csproj", "{E934E8B5-048F-434D-B001-C3EB881CFD38}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebShop.Service", "..\WebShop.Service\WebShop.Service.csproj", "{E934E8B5-048F-434D-B001-C3EB881CFD38}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentCardCenter.Api", "..\..\PCC\PaymentCardCenter.Api\PaymentCardCenter.Api.csproj", "{B3AB40B5-59B7-4E57-9387-0256677C8C76}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BankApi", "..\..\Bank\BankAPI\BankApi.csproj", "{42297B5F-759F-43A6-8BF0-28E186AB7ED9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BankSecondApi", "..\..\Bank\BankSecondApi\BankSecondApi.csproj", "{E4AC9B08-5760-4F8E-8DAB-5F2DB6A319DB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +57,18 @@ Global
 		{E934E8B5-048F-434D-B001-C3EB881CFD38}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E934E8B5-048F-434D-B001-C3EB881CFD38}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E934E8B5-048F-434D-B001-C3EB881CFD38}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3AB40B5-59B7-4E57-9387-0256677C8C76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3AB40B5-59B7-4E57-9387-0256677C8C76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3AB40B5-59B7-4E57-9387-0256677C8C76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3AB40B5-59B7-4E57-9387-0256677C8C76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42297B5F-759F-43A6-8BF0-28E186AB7ED9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42297B5F-759F-43A6-8BF0-28E186AB7ED9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42297B5F-759F-43A6-8BF0-28E186AB7ED9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42297B5F-759F-43A6-8BF0-28E186AB7ED9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4AC9B08-5760-4F8E-8DAB-5F2DB6A319DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4AC9B08-5760-4F8E-8DAB-5F2DB6A319DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4AC9B08-5760-4F8E-8DAB-5F2DB6A319DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4AC9B08-5760-4F8E-8DAB-5F2DB6A319DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
