@@ -14,7 +14,7 @@ const Item = (props) => {
           </div>
           <img
             src={props.product.imageURL}
-            className="card-img-top"
+            className="card-img"
             alt=""
             style={{ height: "200px" }}
           />

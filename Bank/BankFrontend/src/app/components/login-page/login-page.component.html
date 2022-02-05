@@ -1,0 +1,36 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 offset-md-4">
+            <div class="login-form bg-light mt-4 p-4">
+                <form #lf="ngForm" (ngSubmit)="login(lf)" class="row g-3">
+                    <h4 class="text-center">Login</h4>
+                    <div class="col-12">
+                        <label>Username</label>
+                        <input type="text" name="username" class="form-control" id="username" ngModel placeholder="Username" required autofocus>
+                    </div>
+                    <div class="col-12">
+                        <label>Password</label>
+                        <input type="password" name="password" class="form-control" id="password" ngModel placeholder="Password" required>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="rememberMe">
+                            <label class="form-check-label" for="rememberMe">Remember me</label>
+                        </div>
+                    </div>
+                    <div *ngIf="invalidLogin" class="alert alert-danger">
+                        <h5>Invalid username or password</h5>
+                    </div>
+                    <div class="col-12 text-center">
+                        <button type="submit" class="btn btn-dark">Login</button>
+                    </div>
+                </form>
+                <hr class="mt-4">
+                <div class="col-12 text-center">
+                    <p class="text-center mb-0">Don't have an account?</p>
+                    <a class="text-dark" routerLink="/register">Register</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,7 +1,9 @@
+using Common.ServiceDiscovery;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -10,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Paypal.API.CustomMiddleware;
 using Paypal.API.DataAdapter;
+using Paypal.API.Infrastructure;
 using Paypal.API.Interfaces;
 using Paypal.API.Options;
 using Paypal.API.Services;
@@ -33,12 +36,15 @@ namespace Paypal.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            ConfigureConsul(services);
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Paypal.API", Version = "v1" });
             });
+            services.AddDbContext<PaypalDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("PaypalDatabase")));
+
+
             services.Configure<PaypalOptions>(Configuration.GetSection(PaypalOptions.Paypal));
             services.AddScoped<IPaypalService, PaypalService>();
             services.AddSingleton<IDataAdapter, OrderDataAdapter>();
@@ -77,8 +83,23 @@ namespace Paypal.API
             {
                 endpoints.MapControllers();
             });
-
+            //using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            //{
+            //    var context = serviceScope.ServiceProvider.GetService<PaypalDbContext>();
+            //    context.Database.Migrate();
+            //}
             app.UseSerilogRequestLogging();
         }
+
+
+        private void ConfigureConsul(IServiceCollection services)
+        {
+            var serviceConfig = Configuration.GetServiceConfig();
+
+            services.RegisterConsulServices(serviceConfig);
+        }
+
     }
+
+
 }

@@ -13,6 +13,7 @@ namespace WebShop.Models.DomainModels
         public OrderStatus OrderStatus { get; set; }
         public DateTime? Timestamp { get; set; }
         public int CustomerId { get; set; }
+        public Guid TransactionId { get; set; }
         public User Customer { get; set; }
         public List<OrderItem> OrderItems { get; set; }
     }

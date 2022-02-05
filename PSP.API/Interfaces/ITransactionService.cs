@@ -10,7 +10,7 @@ namespace PSP.API.Interfaces
     {
         Task<List<TransactionDto>> GetAll();
         Task<TransactionDto> Get(Guid id);
-        Task<TransactionDto> Insert(List<ItemDto> items);
+        Task<TransactionDto> Insert(CreateTransactionDto transaction, string initiatorId);
         Task Delete(Guid id);
     }
 }

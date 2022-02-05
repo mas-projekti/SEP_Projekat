@@ -19,6 +19,42 @@ namespace PSP.API.Migrations
                 .HasAnnotation("ProductVersion", "5.0.12")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("PSP.API.Models.BankTransaction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<double>("Amount")
+                        .HasColumnType("float");
+
+                    b.Property<string>("BankURL")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MerchantID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("MerchantOrderID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("MerchantPassword")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("MerchantTimestamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("TransactionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TransactionId")
+                        .IsUnique();
+
+                    b.ToTable("BankTransactions");
+                });
+
             modelBuilder.Entity("PSP.API.Models.Item", b =>
                 {
                     b.Property<int>("Id")
@@ -54,15 +90,96 @@ namespace PSP.API.Migrations
                     b.ToTable("Items");
                 });
 
+            modelBuilder.Entity("PSP.API.Models.PspClient", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("BankActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<bool>("BitcoinActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("ClientID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PaypalActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<string>("SettingsUpdatedCallback")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TransactionOutcomeCallback")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ValidatingSecret")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValue("");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PspClients");
+                });
+
+            modelBuilder.Entity("PSP.API.Models.SubscriptionTransaction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("SubscriptionPlanId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("TransactionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TransactionId")
+                        .IsUnique();
+
+                    b.ToTable("SubscriptionTransaction");
+                });
+
             modelBuilder.Entity("PSP.API.Models.Transaction", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("PspClientId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("PspClientId");
+
                     b.ToTable("Transactions");
+                });
+
+            modelBuilder.Entity("PSP.API.Models.BankTransaction", b =>
+                {
+                    b.HasOne("PSP.API.Models.Transaction", "Transaction")
+                        .WithOne("BankTransaction")
+                        .HasForeignKey("PSP.API.Models.BankTransaction", "TransactionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Transaction");
                 });
 
             modelBuilder.Entity("PSP.API.Models.Item", b =>
@@ -76,9 +193,40 @@ namespace PSP.API.Migrations
                     b.Navigation("Transaction");
                 });
 
+            modelBuilder.Entity("PSP.API.Models.SubscriptionTransaction", b =>
+                {
+                    b.HasOne("PSP.API.Models.Transaction", "Transaction")
+                        .WithOne("SubscriptionTransaction")
+                        .HasForeignKey("PSP.API.Models.SubscriptionTransaction", "TransactionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Transaction");
+                });
+
             modelBuilder.Entity("PSP.API.Models.Transaction", b =>
                 {
+                    b.HasOne("PSP.API.Models.PspClient", "Client")
+                        .WithMany("Transactions")
+                        .HasForeignKey("PspClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Client");
+                });
+
+            modelBuilder.Entity("PSP.API.Models.PspClient", b =>
+                {
+                    b.Navigation("Transactions");
+                });
+
+            modelBuilder.Entity("PSP.API.Models.Transaction", b =>
+                {
+                    b.Navigation("BankTransaction");
+
                     b.Navigation("Items");
+
+                    b.Navigation("SubscriptionTransaction");
                 });
 #pragma warning restore 612, 618
         }

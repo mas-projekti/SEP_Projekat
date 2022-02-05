@@ -19,6 +19,15 @@ namespace WebShop.Mapping
 
             CreateMap<User, UserDto>().ReverseMap();
 
+            CreateMap<OrderItem, OrderItemDto>().ReverseMap();
+
+            CreateMap<Order, OrderDto>()
+               .ForMember(mem => mem.OrderStatus, op => op.MapFrom(o => o.OrderStatus))
+               .ReverseMap();
+
+            CreateMap<PaymentOption, PaymentOptionDto>().ReverseMap();
+            CreateMap<Course, CourseDto>().ReverseMap();
+
 
 
         }

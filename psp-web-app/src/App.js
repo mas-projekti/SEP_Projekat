@@ -8,6 +8,13 @@ import {
 import NavBar from './components/navbar';
 import Checkout from './views/checkout';
 import FrontPage from './views/frontpage';
+import Login from './views/login/login'
+import Registration from './views/registration/registration'
+import ClientSettings from './views/client-settings'
+import TransactionPassed from './views/transaction-outcomes/transaction-passed';
+import TransactionFailed from './views/transaction-outcomes/transaction-failed';
+import TransactionError from 'views/transaction-outcomes/transaction-error';
+import QRCodePage from 'views/qrCode/qrCodePage';
 
 function App() {
 
@@ -17,8 +24,17 @@ function App() {
     <div>
       <NavBar></NavBar>
       <Routes>
+        <Route path="/client-settings/:clientID" element={<ClientSettings/>}/>
+        <Route path="/login" element={<Login/>}/>
+        <Route path="/register" element={<Registration/>}/>
         <Route path="/checkout/:transactionId" element={<Checkout/>}/>
-        <Route  path="*" element={<FrontPage/>}/>
+        <Route path="/transaction-passed/:transactionId" element={<TransactionPassed/>}/>
+        <Route path="/transaction-failed" element={<TransactionFailed/>}/>
+        <Route path="/transaction-error" element={<TransactionError/>}/>
+        <Route path="/qrCode" element={<QRCodePage/>}>
+          <Route path=":obj" index element={<QRCodePage/>}/>
+        </Route>
+        <Route path="*" element={<FrontPage/>}/>
       </Routes>
     </div>
   </Router>

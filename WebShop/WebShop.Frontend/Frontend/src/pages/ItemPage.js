@@ -7,33 +7,24 @@ class ItemPage extends Component {
         this.state = {
             product: {},
             user: {},
-            quantity: 1
+            quantity: 1,
+            onAdd : props.onAdd
         }
     }
 
     componentDidMount() {
-        axios.get(process.env.REACT_APP_WEB_SHOP_PRDUCTS_BACKEND_API + `/` + this.props.match.params.itemId)
+        axios.get(process.env.REACT_APP_WEB_SHOP_PRODUCTS_BACKEND_API + `/` + this.props.match.params.itemId)
             .then((res) => { 
                 this.setState({
                     product : res.data,
                 }); 
-                
-                // Uncomment when Users API are finished
 
-                // axios.get(process.env.REACT_APP_WEB_SHOP_USERS_BACKEND_API + `/` + this.state.product.userId)
-                // .then((res2) => { 
-                // this.setState({
-                //     user : res2.data,
-                // }); 
-                // });
+                axios.get(process.env.REACT_APP_WEB_SHOP_USERS_BACKEND_API + `/` + res.data.userId)
+                .then((userRes) => {
+                    this.setState({ user: userRes.data });
+                })
             });
     }
-
-    buy() {
-        console.log(this.state);
-        // Redirect to Paypal
-    }
-
 
     render() {
         return (
@@ -42,7 +33,7 @@ class ItemPage extends Component {
                 <div className="row">
                     <div className="col"/>
                     <div className="col-10">
-                        <div className="row" style={{border:'1px solid white', borderRadius:'10px',  overflow: 'hidden', textOverflow: 'ellipsis'}}>
+                        <div className="row" style={{border:'1px solid white', borderRadius:'10px', overflow: 'hidden', textOverflow: 'ellipsis'}}>
                             <div className="col-4">
                                 <img 
                                     src={this.state.product.imageURL} 
@@ -69,8 +60,8 @@ class ItemPage extends Component {
                                     alt="itemImage" 
                                     style={{height:'50%', width:'50%', margin:'5%', borderRadius:'10px'}} />
                                 <p>Name: {this.state.user.name}</p>
+                                <p>Lastname: {this.state.user.lastname}</p>
                                 <p>Email: {this.state.user.email}</p>
-                                <p>Phone number: {this.state.user.phoneNumber}</p>
                             </div>
                         </div>
                         <div className="row">
@@ -79,7 +70,7 @@ class ItemPage extends Component {
                                     Wanted Amount: <input className="mx-2" type="number" min={1} max={this.state.product.amount} defaultValue={this.state.quantity} onChange={e => this.setState({quantity: e.target.value})} style={{width:'100px'}}/>
                                     Total Cost : <input className="mx-2" type="string" value={`$${this.state.quantity*this.state.product.price}`} readOnly style={{width:'100px'}}/>
                                 </p>
-                                <button type="button" className="btn btn-outline-light" onClick={this.buy.bind(this)}>Buy via paypal</button>
+                                <button type="button" className="btn btn-outline-light" onClick={() => this.state.onAdd(this.state.product, this.state.quantity)}>Add to cart</button>
                             </nav>
                         </div>
                         {/* <div className="row">
@@ -91,8 +82,6 @@ class ItemPage extends Component {
             </div>
         </div>
         )
-
-        
     }
 }
 

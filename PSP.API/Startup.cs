@@ -1,4 +1,7 @@
 using AutoMapper;
+using Common.CustomMiddleware;
+using Common.Identity;
+using Common.ServiceDiscovery;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -10,10 +13,13 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 using PSP.API.Infrastructure;
 using PSP.API.Interfaces;
 using PSP.API.Mapping;
+using PSP.API.Options;
 using PSP.API.Services;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,9 +42,13 @@ namespace PSP.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            ConfigureConsul(services);
             services.AddControllers().AddJsonOptions(options =>
-                                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter())); ;
+            {
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
+
+                                     
 
             services.AddDbContext<PaymentServiceProviderDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("TransactionDatabase")));
 
@@ -68,7 +78,7 @@ namespace PSP.API
             services.AddAuthentication("Bearer")
              .AddJwtBearer("Bearer", options =>
              {
-                 options.Authority = "https://localhost:44389";
+                 options.Authority = Configuration.GetIdentityConfig().IdentityURL.ToString();
                  options.TokenValidationParameters = new TokenValidationParameters
                  {
                      ValidateAudience = false
@@ -78,6 +88,9 @@ namespace PSP.API
 
             services.AddScoped<IItemService, ItemService>();
             services.AddScoped<ITransactionService, TransactionService>();
+            services.AddScoped<IClientService, ClientService>();
+            services.AddScoped<IBankingService, BankingService>();
+            services.Configure<HookSecretOptions>(Configuration.GetSection(HookSecretOptions.HookSecret));
 
         }
 
@@ -90,13 +103,13 @@ namespace PSP.API
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "PSP.API v1"));
             }
-
+            app.UseCustomExceptionHandler();
             app.UseHttpsRedirection();
             app.UseCors(_cors);
 
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -109,6 +122,14 @@ namespace PSP.API
                 var context = serviceScope.ServiceProvider.GetService<PaymentServiceProviderDbContext>();
                 context.Database.Migrate();
             }
+            app.UseSerilogRequestLogging();
+        }
+
+        private void ConfigureConsul(IServiceCollection services)
+        {
+            var serviceConfig = Configuration.GetServiceConfig();
+
+            services.RegisterConsulServices(serviceConfig);
         }
     }
 }

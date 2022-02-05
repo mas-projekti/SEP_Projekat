@@ -15,6 +15,8 @@ namespace PSP.API.Infrastructure
 
         public DbSet<Item> Items { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<PspClient> PspClients { get; set; }
+        public DbSet<BankTransaction> BankTransactions { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
